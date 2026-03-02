@@ -1,7 +1,7 @@
 # ABP - Aprendizagem baseada emm projeto
 
 <p align="center">
-  <img src="./documentação/imagens/NexaTech.png"
+  <img src="./documentacao/imagens/NexaTech.jpeg"
        alt="Logo NexaTech"
        style="max-width: 260px; width: 60%; height: auto;">
 </p>
