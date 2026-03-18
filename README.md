@@ -14,56 +14,59 @@
   <a href="#equipe">Nossa Equipe</a>
 </p>
 
-## Descrição do Projeto
+## 📌 Descrição do Projeto
 O projeto ABP (Aprendizagem Baseada em Projeto) desenvolvido como atividade do 2° semestre do curso de **Desenvolvimento de Software Multiplataforma** da **Fatec Jacareí**.  
 
-O site busca:
+O sistema de **Secretaria Acadêmica** tem como objetivo:
 
-- Centralizar informações importantes sobre o laboratório.
-- Ampliar a visibilidade das pesquisas e projetos do AgriRS Lab.
-- Facilitar o acesso do público às iniciativas e atividades do laboratório.
-- Divulgar informações sobre a equipe, áreas de atuação, publicações científicas, oportunidades de trabalho e formas de contato.
+- Centralizar informações acadêmicas da Instituição de Ensino.  
+- Facilitar o gerenciamento de **alunos, professores, cursos e disciplinas**.  
+- Automatizar processos de **matrícula** e controle acadêmico.  
+- Disponibilizar documentos oficiais como **histórico escolar, boletim e declarações**.  
+- Apoiar a secretaria na organização e atualização dos dados acadêmicos.  
 
-O projeto contribui para manter as atividades e descobertas científicas atualizadas para a comunidade e promove a divulgação do laboratório para interessados em conhecer ou colaborar com o trabalho desenvolvido.
+O projeto contribui para modernizar os processos internos da secretaria, garantindo maior eficiência, transparência e acessibilidade para alunos, professores e gestores.
+
+---
 
 <a id="sprint"></a>
-## Entregas de Sprints
+## 📅 Entregas de Sprints
 
-Todas as entregas serão realizadas conforme os prazos acordados com o cliente. Para cada ciclo de desenvolvimento, será gerado um relatório completo por sprint e uma planilha de tarefas, na aba **Tasks**, que detalha cada atividade executada, o responsável, a data de conclusão e uma descrição do trabalho realizado. A relação detalhada das sprints e tarefas é apresentada abaixo.
+Todas as entregas serão realizadas conforme os prazos acordados com o cliente. Para cada ciclo de desenvolvimento, será gerado um relatório completo por sprint e uma planilha de tarefas, na aba **Tasks**, que detalha cada atividade executada, o responsável, a data de conclusão e uma descrição do trabalho realizado.  
 
 <div align="center">
 
 | Sprint | Entrega       | Status |                 Relatório                  |
 |------: |---------------|:------:|:------------------------------------------:|
-| 1      | 📅 08/10/2025 | 🚧     | [Ver Backlog](./)|
-| 2      | 📅 04/11/2025 | `—`  | [Ver Backlog](./)|
-| 3      | 📅 25/11/2025 | `—`     | [Ver Backlog](./)|
-
+| 1      | 📅 08/10/2025 | 🚧     | [Ver Backlog](./documentacao/sprints/sprint_1.md)|
+| 2      | 📅 04/11/2025 | `—`    | [Ver Backlog](./documentacao/sprints/sprint_2.md)|
+| 3      | 📅 25/11/2025 | `—`    | [Ver Backlog](./documentacao/sprints/sprint_3.md)|
 
 </div>
 
-**Legenda:**
-- ✅ **Finalizada**
-- 🚧 **Em Progresso**
-- `—` **Não iniciado**
+**Legenda:**  
+- ✅ **Finalizada**  
+- 🚧 **Em Progresso**  
+- `—` **Não iniciado**  
 
-## Recursos do Produto 
+---
 
-- **Backlog do Produto:** [Acesse aqui](./)  
-  Lista detalhada de requisitos funcionais e não funcionais, utilizados como referência para o desenvolvimento do projeto.
+## 📑 Recursos do Produto  
+
+- **Backlog do Produto:** [Acesse aqui](./documentacao/requisitos.md)  
+  Lista detalhada de requisitos funcionais e não funcionais, organizados em **User Stories**, utilizados como referência para o desenvolvimento do sistema da secretaria acadêmica.  
 
 - **Modelagem do Banco de Dados:** [Acesse aqui](./)  
-  Descrição e diagrama das entidades, relacionamentos e estrutura do banco de dados utilizado no sistema, servindo como base para o desenvolvimento e integração com o backend.
+  Descrição e diagrama das entidades, relacionamentos e estrutura do banco de dados utilizado no sistema, servindo como base para o desenvolvimento e integração com o backend.  
 
-- **Definition of Ready (DoR):** [Acesse aqui](./)  
-  Critérios que definem quando uma *user story* está devidamente preparada para entrar em uma sprint, garantindo clareza, estimativa e entendimento pelo time.
+- **Definition of Ready (DoR):** [Acesse aqui](./documentacao/Definition-of-Ready-NexaTech.md)  
+  Critérios que definem quando uma *user story* está devidamente preparada para entrar em uma sprint, garantindo clareza, estimativa e entendimento pelo time.  
 
-- **Definition of Done (DoD):** [Acesse aqui](./)  
-  Conjunto de critérios que determinam quando uma tarefa ou *user story* é considerada concluída, assegurando qualidade, revisão e alinhamento com os padrões do projeto.
+- **Definition of Done (DoD):** [Acesse aqui](./documentacao/Definition-of-Done-NexaTech.md)  
+  Conjunto de critérios que determinam quando uma tarefa ou *user story* é considerada concluída, assegurando qualidade, revisão e alinhamento com os padrões do projeto.  
 
-- **Diagrama de Caso de Uso (UML):** [Acesse aqui](./)  
-  Representação visual das interações entre os usuários (atores) e o sistema, ilustrando os principais casos de uso e funcionalidades do projeto.
-
+- **Diagrama de Caso de Uso (UML):** [Acesse aqui](./documentacao/UML/)  
+  Representação visual das interações entre os usuários (atores) e o sistema, ilustrando os principais casos de uso e funcionalidades da secretaria acadêmica.  
 
 ## Protótipo no Figma
 
