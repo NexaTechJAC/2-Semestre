@@ -1,48 +1,46 @@
-# ABP - Aprendizagem baseada emm projeto
+# ABP – Aprendizagem Baseada em Projetos  
 
-<p align="center">
-  <img src="./documentacao/imagens/NexaTech.jpeg"
-       alt="Logo NexaTech"
-       style="max-width: 260px; width: 60%; height: auto;">
-</p>
+<p align="center">  
+  <img src="./documentacao/imagens/NexaTech.jpeg"  
+       alt="Logo NexaTech"  
+       style="max-width: 260px; width: 60%; height: auto;">  
+</p>  
 
-<p align="center">
-  <a href="#descrição-do-projeto">Sobre o Projeto</a> |
-  <a href="#entregas-de-sprints">Entrega de Sprints</a> |
-  <a href="#recursos-do-produto">Recursos do Produto</a> |
-  <a href="#protótipo-no-figma">Protótipo</a> |
-  <a href="#equipe">Nossa Equipe</a>
-</p>
-
-## 📌 Descrição do Projeto
-O projeto ABP (Aprendizagem Baseada em Projeto) desenvolvido como atividade do 2° semestre do curso de **Desenvolvimento de Software Multiplataforma** da **Fatec Jacareí**.  
-
-O sistema de **Secretaria Acadêmica** tem como objetivo:
-
-- Centralizar informações acadêmicas da Instituição de Ensino.  
-- Facilitar o gerenciamento de **alunos, professores, cursos e disciplinas**.  
-- Automatizar processos de **matrícula** e controle acadêmico.  
-- Disponibilizar documentos oficiais como **histórico escolar, boletim e declarações**.  
-- Apoiar a secretaria na organização e atualização dos dados acadêmicos.  
-
-O projeto contribui para modernizar os processos internos da secretaria, garantindo maior eficiência, transparência e acessibilidade para alunos, professores e gestores.
+<p align="center">  
+  <a href="#descrição-do-projeto">Sobre o Projeto</a> |  
+  <a href="#entregas-de-sprints">Entrega de Sprints</a> |  
+  <a href="#recursos-do-produto">Recursos do Produto</a> |  
+  <a href="#protótipo-no-figma">Protótipo</a> |  
+  <a href="#equipe">Nossa Equipe</a>  
+</p>  
 
 ---
 
-<a id="sprint"></a>
-## 📅 Entregas de Sprints
+## 📌 Descrição do Projeto  
+Este projeto foi desenvolvido como atividade do **2º semestre do curso de Desenvolvimento de Software Multiplataforma da Fatec Jacareí**.  
 
-Todas as entregas serão realizadas conforme os prazos acordados com o cliente. Para cada ciclo de desenvolvimento, será gerado um relatório completo por sprint e uma planilha de tarefas, na aba **Tasks**, que detalha cada atividade executada, o responsável, a data de conclusão e uma descrição do trabalho realizado.  
+O desafio consiste na criação de uma **Aplicação Web de Autoatendimento da Secretaria Acadêmica**, baseada em um **chatbot conversacional**, com os seguintes objetivos:  
 
-<div align="center">
+- Reduzir a sobrecarga operacional da secretaria.  
+- Conduzir o usuário por uma árvore de navegação estruturada (menus e perguntas guiadas).  
+- Permitir consultas diretas e fornecer respostas objetivas e verificáveis.  
+- Exibir evidências documentais (Regulamento, Manual de Estágio, Calendário Acadêmico, PPC).  
+- Garantir rastreabilidade, confiabilidade da informação e redução de ambiguidades.  
 
-| Sprint | Entrega       | Status |                 Relatório                  |
-|------: |---------------|:------:|:------------------------------------------:|
-| 1      | 📅 08/10/2025 | 🚧     | [Ver Backlog](./documentacao/sprints/sprint_1.md)|
-| 2      | 📅 04/11/2025 | `—`    | [Ver Backlog](./documentacao/sprints/sprint_2.md)|
-| 3      | 📅 25/11/2025 | `—`    | [Ver Backlog](./documentacao/sprints/sprint_3.md)|
+---
 
-</div>
+## 📅 Entregas de Sprints  
+As entregas seguem o cronograma definido com o cliente. Cada sprint gera um relatório e backlog detalhado.  
+
+<div align="center">  
+
+| Sprint | Entrega       | Status | Relatório |  
+|------: |---------------|:------:|:------------------------------------------:|  
+| 1      | 📅 08/10/2025 | 🚧     | [Ver Backlog](./documentacao/sprints/sprint_1.md) |  
+| 2      | 📅 04/11/2025 | `—`    | [Ver Backlog](./documentacao/sprints/sprint_2.md) |  
+| 3      | 📅 25/11/2025 | `—`    | [Ver Backlog](./documentacao/sprints/sprint_3.md) |  
+
+</div>  
 
 **Legenda:**  
 - ✅ **Finalizada**  
@@ -54,25 +52,31 @@ Todas as entregas serão realizadas conforme os prazos acordados com o cliente. 
 ## 📑 Recursos do Produto  
 
 - **Backlog do Produto:** [Acesse aqui](./documentacao/requisitos.md)  
-  Lista detalhada de requisitos funcionais e não funcionais, organizados em **User Stories**, utilizados como referência para o desenvolvimento do sistema da secretaria acadêmica.  
+  Lista de requisitos funcionais e não funcionais, organizados em **User Stories**, conforme o desafio da Secretaria Acadêmica.  
 
-- **Modelagem do Banco de Dados:** [Acesse aqui](./)  
-  Descrição e diagrama das entidades, relacionamentos e estrutura do banco de dados utilizado no sistema, servindo como base para o desenvolvimento e integração com o backend.  
+- **Modelagem do Banco de Dados:** [Acesse aqui](./documentacao/modelagem_bd.md)  
+  Estrutura de entidades e relacionamentos para suportar navegação, perguntas e respostas.  
 
 - **Definition of Ready (DoR):** [Acesse aqui](./documentacao/Definition-of-Ready-NexaTech.md)  
-  Critérios que definem quando uma *user story* está devidamente preparada para entrar em uma sprint, garantindo clareza, estimativa e entendimento pelo time.  
+  Critérios que definem quando uma *user story* está pronta para entrar em sprint.  
 
 - **Definition of Done (DoD):** [Acesse aqui](./documentacao/Definition-of-Done-NexaTech.md)  
-  Conjunto de critérios que determinam quando uma tarefa ou *user story* é considerada concluída, assegurando qualidade, revisão e alinhamento com os padrões do projeto.  
+  Critérios que garantem qualidade e conclusão das tarefas.  
 
-- **Diagrama de Caso de Uso (UML):** [Acesse aqui](./documentacao/UML/)  
-  Representação visual das interações entre os usuários (atores) e o sistema, ilustrando os principais casos de uso e funcionalidades da secretaria acadêmica.  
+- **Diagramas UML:** [Acesse aqui](./documentacao/UML/)  
+  Casos de uso, classes, sequência e componentes, representando o fluxo do chatbot e gestão de conteúdo.  
 
-## Protótipo no Figma
+---
 
-O protótipo do website pode ser acessado clicando no link abaixo:  
+## 🎨 Protótipo no Figma  
+👉 [Acessar o protótipo no Figma](https://)  
 
-👉 [Acessar o protótipo no Figma](https:)
+---
+
+## 👥 Nossa Equipe Pedagógica
+- Parceiro Interno: Secretaria Acadêmica – Fatec Jacareí  
+- Focal Point: Prof. André Olímpio  
+- Kick-off: 27/03/2026  
 
 
 ## Equipe
