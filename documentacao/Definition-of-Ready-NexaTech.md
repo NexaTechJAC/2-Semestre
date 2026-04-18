@@ -1,236 +1,28 @@
-# Definition of Ready – NexaTech
+# Definition of Ready (DoR) - NexaTech
 
-## RF01.1 – Apresentar botões/menus de navegação para todas as páginas do site
-**User Story:**  
-Em processo.
-
-**Critérios de Aceitação – DoR:**
-Em processo.
+Este documento define os critérios que uma User Story ou tarefa deve atender antes de ser incluída em uma Sprint (coluna "To Do").
 
 ---
 
-## RF01.2 – Exibir seções em destaque (cards) com chamadas para notícias, projetos, publicações ou outras atualizações
-**User Story:**  
-Em processo.
+## 1. Descrição e Contexto
+- [ ] **Título Claro:** A tarefa possui um título objetivo que resume a funcionalidade.
+- [ ] **User Story Estruturada:** A funcionalidade segue o formato: "Como [perfil], quero [ação], para [valor de negócio]".
+- [ ] **Critérios de Aceite:** A tarefa lista exatamente o que será testado para ser aprovada (ex: "O botão deve abrir um modal", "A senha deve ser criptografada").
 
-**Critérios de Aceitação – DoR:**
-Em processo.
+## 2. Requisitos de Design (Figma)
+- [ ] **Protótipo Visual:** O design da interface no Figma está finalizado e o link está acessível na tarefa.
+- [ ] **Fluxo de Navegação:** Para o chatbot, o nó da árvore de decisão correspondente está mapeado (quem é o pai e quais são os filhos do nó).
 
----
+## 3. Requisitos Técnicos e Dados
+- [ ] **Modelo de Dados:** Se a tarefa exige persistência, as tabelas e colunas necessárias no PostgreSQL já foram identificadas (conforme o diagrama de BD).
+- [ ] **Definição de API:** Para tarefas de Backend, os endpoints (URL, Método HTTP e Formato do JSON) já estão definidos.
+- [ ] **Dependências:** Todas as dependências externas ou de outras tarefas foram resolvidas (ex: "Para fazer o RF06, o banco do RF02 já deve estar pronto").
 
-## RF01.3 – Link para redes sociais e contato no final da página
-**User Story:**  
-Em processo.
+## 4. Estimativa e Divisão
+- [ ] **Tamanho Adequado:** A tarefa é pequena o suficiente para ser completada dentro de uma única Sprint. Caso contrário, foi dividida em subtarefas.
+- [ ] **Esforço Estimado:** A equipe discutiu e concorda com o nível de complexidade da tarefa.
 
-**Critérios de Aceitação – DoR:**
-Em processo.
-
----
-
-## RF01.4 – Incluir colaboradores e financiadores (CNPq, CAPES, FAPESP)
-**User Story:**  
-Em processo.
-
-**Critérios de Aceitação – DoR:**
-Em processo.
+## 5. Infraestrutura (Docker)
+- [ ] **Ambiente:** A tarefa pode ser desenvolvida e testada localmente utilizando o ambiente atual do `docker-compose`.
 
 ---
-
-## RF02.1 – Deve descrever o laboratório, objetivo e foco
-**User Story:**  
-Em processo.
-
-**Critérios de Aceitação – DoR:**
-Em processo.
-
----
-
-## RF02.2 – Deve descrever as áreas de atuação com pequenos textos explicativos
-**User Story:**  
-Em processo.
-
-**Critérios de Aceitação – DoR:**
-Em processo.
-
----
-
-## RF03.1 – Listar todos os integrantes com nome, foto, função e breve descrição
-**User Story:**  
-Em processo.
-
-**Critérios de Aceitação – DoR:**
-Em processo.
-
----
-
-## RF03.2 – Categorizar por tipo de membro (Pesquisadores titulares, pesquisadores colaboradores, etc.)
-**User Story:**  
-Em processo.
-
-**Critérios de Aceitação – DoR:**
-Em processo.
-
----
-
-## RF03.3 – Ordenar cada categoria por ordem alfabética
-**User Story:**  
-Em processo.
-
-**Critérios de Aceitação – DoR:**
-Em processo.
-
----
-
-## RF04.1 – Listar oportunidades como estágios, IC, pós-graduação e parcerias
-**User Story:**  
-Em processo.
-**Critérios de Aceitação – DoR:**
-Em processo.
-
-## RF04.2 – Informar como se candidatar (documentos, critérios, prazos etc.)
-**User Story:**  
-Em processo.
-
-**Critérios de Aceitação – DoR:**
-Em processo.
-
----
-
-## RF05.1 – Listar projetos com título, resumo, ano de início, status e equipe envolvida
-**User Story:**  
-Em processo.
-
-**Critérios de Aceitação – DoR:**
-Em processo.
-
----
-
-## RF05.2 – Permitir a inclusão de imagens ou links para mais informações
-**User Story:**  
-Em processo.
-
-**Critérios de Aceitação – DoR:**
-Em processo.
-
----
-
-## RF06.1 – Permitir a publicação de notícias com título, data, imagem e texto
-**User Story:**  
-Em processo.
-
-**Critérios de Aceitação – DoR:**
-Em processo.
-
----
-
-## RF06.2 – Devem ser organizadas cronologicamente
-**User Story:**  
-Em processo.
-
-**Critérios de Aceitação – DoR:**
-Em processo.
-
----
-
-## RF07.1 – Listar artigos, livros, capítulos etc., com título, revista, autores, ano e link
-**User Story:**  
-Em processo.
-
-**Critérios de Aceitação – DoR:**
-Em processo.
-
----
-
-## RF07.2 – Deve ter campo de pesquisa por palavra-chave
-**User Story:**  
-Em processo.
-
-**Critérios de Aceitação – DoR:**
-Em processo.
----
-
-## RF08.1 – Conter um formulário com campos: nome, e-mail, assunto e mensagem que redireciona
-**User Story:**  
-Em processo.
-
-**Critérios de Aceitação – DoR:**
-Em processo.
-
----
-
-## RF08.2 – Exibir informações institucionais como telefone, e-mail e endereço
-**User Story:**  
-Em processo.
-
-**Critérios de Aceitação – DoR:**
-Em processo.
-
----
-
-## RF08.3 – Incluir links para as redes sociais do laboratório
-**User Story:**  
-Em processo.
-
-**Critérios de Aceitação – DoR:**
-Em processo.
-
----
-
-## RF08.4 – Incluir um mapa para localização do laboratório dentro do INPE
-**User Story:**  
-Em processo.
-
-**Critérios de Aceitação – DoR:**
-Em processo.
-
-## RNF01 – Responsividade
-**User Story:**  
-Em processo.
-
-**Critérios de Aceitação – DoR:**
-Em processo.
-
----
-
-## RNF02 – Facilidade de Atualização
-**User Story:**  
-Em processo.
-
-**Critérios de Aceitação – DoR:**
-Em processo.
-
----
-
-## RNF03 – Tempo de Carregamento
-**User Story:**  
-Em processo.
-
-**Critérios de Aceitação – DoR:**
-Em processo.
-
----
-
-## RNF04 – Idiomas
-**User Story:**  
-Em processo.
-
-**Critérios de Aceitação – DoR:**
-Em processo.
-
----
-
-## RNF05 – Hospedagem e domínio
-**User Story:**  
-Em processo.
-
-**Critérios de Aceitação – DoR:**
-Em processo.
-
----
-
-## RNF06 – Identidade visual
-**User Story:**  
-Em processo.
-
-**Critérios de Aceitação – DoR:**
-Em processo.

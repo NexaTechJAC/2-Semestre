@@ -2,7 +2,9 @@
 
 ## 🎯 Objetivo da Sprint 1
 
-Em processo...
+Entregar o **design completo da interface no Figma**, focado na experiência do usuário (UX) para **fluxos conversacionais, e a infraestrutura base do projeto.**
+
+Nesta etapa, foram definidos o guia de estilos (cores, tipografia e componentes) e o mapeamento da árvore de decisão do chatbot. No aspecto técnico, foi realizada a estruturação do Backend em Node.js com TypeScript e a modelagem e implementação do Banco de Dados PostgreSQL, seguindo o diagrama de entidades e relacionamentos para suporte aos menus e perfis de acesso. Além disso, foi concluída a configuração do ambiente de desenvolvimento utilizando Docker e Docker Compose para orquestração dos serviços.
 
 ---
 
@@ -25,13 +27,12 @@ Em processo...
 
 ## 📅 Distribuição de Atividades - Sprint 1
 
-| Integrantes | **** | **** | **** | **** | **** |
+| Integrantes | 17/04 | **** | **** | **** | **** |
 |--------------|--------|--------|--------|--------|--------|
 | **Breno Augusto Santos Jesus (SM)** | **** | **** | **** | **** | **** |
 | **Luka Gomes de Souza Chaves (PO)** | **** | **** | **** | **** | **** |
 | **Gabriel Moura** | **** | **** | **** | **** | **** |
 | **Gustavo Zago** | **** | **** | **** | **** | **** |
-| **João Otávio** | **** | **** | **** | **** | **** |
 | **Ronaldo Avila** | **** | **** | **** | **** | **** |
 
 ---

@@ -1,106 +1,36 @@
-# Requisitos do Sistema
+# Definition of Done (DoD) - NexaTech
 
-## RF01 – Página Inicial e Navegação
+Este documento estabelece os critérios obrigatórios para que uma funcionalidade seja considerada concluída e pronta para entrega.
 
-### RF01.1 – Menus de navegação
-Em processo.
+---
 
-### RF01.2 – Seções em destaque
-Em processo.
+## 1. Requisitos de Código e Qualidade
+- [ ] **TypeScript:** Código 100% tipado, sem o uso de `any`, tanto no Frontend quanto no Backend.
+- [ ] **Arquitetura:** Backend estruturado seguindo padrões de organização (MVC/Clean Architecture) para facilitar a manutenção.
+- [ ] **Segurança (Backend):** - Senhas armazenadas com hash seguro (bcrypt).
+    - Variáveis sensíveis configuradas via `.env`.
+    - Rotas protegidas com Middleware de autenticação JWT e verificação de nível de acesso (RBAC).
 
-### RF01.3 – Rodapé com redes sociais e contato
-Em processo.
+## 2. Banco de Dados (PostgreSQL)
+- [ ] **Persistência:** Scripts DDL/DML atualizados e testados conforme o diagrama de classes.
+- [ ] **Integridade:** Consultas respeitando as chaves estrangeiras (FKs) e relacionamentos entre tabelas 
 
-### RF01.4 – Colaboradores e financiadores
-Em processo.
-## RF02 – Sobre e Equipe
+## 3. Frontend e Experiência do Usuário (UX/UI)
+- [ ] **Fidelidade ao Design:** Interface implementada rigorosamente conforme o protótipo do Figma.
+- [ ] **Responsividade:** Testado e funcional em resoluções Desktop e Mobile.
+- [ ] **Feedback ao Usuário:** Exibição clara de estados de carregamento (loading), sucesso e tratamento de erros.
 
-### RF02.1 – Página "Sobre"
-Em processo.
+## 4. Infraestrutura e Docker
+- [ ] **Containerização:** Dockerfile configurado corretamente para o serviço em questão.
+- [ ] **Orquestração:** Testado via `docker-compose up`, garantindo comunicação entre Banco, API e Web.
 
-### RF02.2.1 – Lista de membros
-Em processo.
+## 5. Documentação Técnica
+- [ ] **API:** Rotas documentadas (Swagger ou Markdown) especificando métodos, parâmetros e retornos.
+- [ ] **Diagramas:** Atualização dos diagramas UML (Sequência/Classes) se a funcionalidade alterar a lógica do sistema.
+- [ ] **Repositório:** README local atualizado com instruções de execução específicas, se houver.
 
-### RF02.2.2 / RF02.2.3 – Categorias e ordenação
-Em processo.
+## 6. Validação de Entrega
+- [ ] **Code Review:** Pull Request revisado e aprovado por pelo menos um membro do grupo.
+- [ ] **Demo:** Funcionalidade apresentada e validada dentro do fluxo principal do chatbot.
 
-### RF02.3.1 – Colaboradores e financiadores (página dedicada)
-Em processo.
-
-### RF02.4.1 / RF02.4.2 – Página de vagas
-Em processo.
-
-## RF03 – Projetos
-
-### RF03.1 – Listar integrantes
-Em processo.
-
-### RF03.2 – Categorizar por tipo de membro
-Em processo.
-
-### RF03.3 – Ordenar alfabeticamente
-Em processo.
-## RF04 – Publicações e Pesquisa
-
-### RF04.1 – Listar publicações
-Em processo.
-
-### RF04.2 – Campo de pesquisa
-Em processo.
-
-## RF05 – Projetos (detalhamento)
-
-### RF05.1 – Listar projetos com detalhes
-Em processo.
-
-### RF05.2 – Imagens e links adicionais
-Em processo.
-
-## RF06 – Notícias
-
-### RF06.1 – Publicação de notícias
-Em processo.
-
-### RF06.2 – Organização cronológica
-Em processo.
-
-## RF07 – Produção Científica
-
-### RF07.1 – Listar artigos e livros
-Em processo.
-
-### RF07.2 – Campo de pesquisa por palavra-chave
-Em processo.
-
-## RF08 – Contato
-
-### RF08.1 – Formulário de contato
-Em processo.
-
-### RF08.2 – Informações institucionais
-Em processo.
-### RF08.3 – Links para redes sociais
-Em processo.
-
-### RF08.4 – Mapa de localização
-Em processo.
-
-## Requisitos Não Funcionais (RNF)
-
-### RNF01 – Responsividade
-Em processo.
-
-### RNF02 – Facilidade de atualização
-Em processo.
-
-### RNF03 – Tempo de carregamento
-Em processo.
-
-### RNF04 – Idiomas
-Em processo.
-
-### RNF05 – Hospedagem e domínio
-Em processo.
-
-### RNF06 – Identidade visual
-Em processo.
+---

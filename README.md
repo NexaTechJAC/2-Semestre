@@ -87,5 +87,4 @@ As entregas seguem o cronograma definido com o cliente. Cada sprint gera um rela
 | Luka Gomes | Product Owner | [Github](https://github.com/LukaGomes) | [LinkedIn](https://www.linkedin.com/in/luka-gomes-12b68718a/) |
 | Gabriel Moura | Desenvolvedor | [Github](https://github.com/gafmoura7) | [LinkedIn](https://www.linkedin.com/in/gabriel-moura7/) |
 | Gustavo Zago | Desenvolvedor | [Github](https://github.com/Gustavo-Zago) | [LinkedIn](https://www.linkedin.com/in/gustavo-zago-23459526b/) |
-| João Otávio | Desenvolvedor | [Github](https://github.com/jotavionm) | [LinkedIn](https://www.linkedin.com/in/joao-otavio-mesquita/) |
 | Ronaldo Avila | Desenvolvedor | [Github](https://github.com/RonaldoAvilaa) | [LinkedIn](https://www.linkedin.com/in/ronaldoavilaa/) |
