@@ -36,9 +36,9 @@ As entregas seguem o cronograma definido com o cliente. Cada sprint gera um rela
 
 | Sprint | Entrega       | Status | Relatório |  
 |------: |---------------|:------:|:------------------------------------------:|  
-| 1      | 📅 08/10/2025 | 🚧     | [Ver Backlog](./documentacao/sprints/sprint_1.md) |  
-| 2      | 📅 04/11/2025 | `—`    | [Ver Backlog](./documentacao/sprints/sprint_2.md) |  
-| 3      | 📅 25/11/2025 | `—`    | [Ver Backlog](./documentacao/sprints/sprint_3.md) |  
+| 1      | 📅 04/05/2026 | 🚧     | [Ver Backlog](./documentacao/sprints/sprint_1.md) |  
+| 2      | 📅 --/--/---- | `—`    | [Ver Backlog](./documentacao/sprints/sprint_2.md) |  
+| 3      | 📅 --/--/---- | `—`    | [Ver Backlog](./documentacao/sprints/sprint_3.md) |  
 
 </div>  
 
@@ -69,7 +69,7 @@ As entregas seguem o cronograma definido com o cliente. Cada sprint gera um rela
 ---
 
 ## 🎨 Protótipo no Figma  
-👉 [Acessar o protótipo no Figma](https://)  
+👉 [Acessar o protótipo no Figma](https://www.figma.com/design/k78UK8JvppCPUMjVvTRO3D/ABP---Pagina-de-Secretaria?node-id=0-1&t=TNGH2dnpiJKbUtCK-0)  
 
 ---
 
