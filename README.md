@@ -7,10 +7,10 @@
 </p>  
 
 <p align="center">  
-  <a href="#descrição-do-projeto">Sobre o Projeto</a> |  
-  <a href="#entregas-de-sprints">Entrega de Sprints</a> |  
-  <a href="#recursos-do-produto">Recursos do Produto</a> |  
-  <a href="#protótipo-no-figma">Protótipo</a> |  
+  <a href="#-descrição-do-projeto">Sobre o Projeto</a> |  
+  <a href="#-entregas-de-sprints">Entrega de Sprints</a> |  
+  <a href="#-recursos-do-produto">Recursos do Produto</a> |  
+  <a href="#-protótipo-no-figma">Protótipo</a> |  
   <a href="#equipe">Nossa Equipe</a>  
 </p>  
 
