@@ -27,7 +27,7 @@ Nesta etapa, foram definidos o guia de estilos (cores, tipografia e componentes)
 
 ## 📅 Distribuição de Atividades - Sprint 1
 
-| Integrantes | 17/04 | **** | **** | **** | **** |
+| Integrantes | 17/04 | 27/04 | 28/04 | **** | **** |
 |--------------|--------|--------|--------|--------|--------|
 | **Breno Augusto Santos Jesus (SM)** | **** | **** | **** | **** | **** |
 | **Luka Gomes de Souza Chaves (PO)** | **** | **** | **** | **** | **** |
