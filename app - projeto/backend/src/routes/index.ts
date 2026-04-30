@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { upload, uploadDocumento } from '../controllers/UploadController.js';
+import { upload, uploadDocumento, listarDocumentos } from '../controllers/UploadController.js';
 
 const router = Router();
 
-// Rota para a secretaria fazer o upload (POST)
 router.post('/admin/upload', upload.single('pdf'), uploadDocumento);
+router.get('/documentos', listarDocumentos);
 
 export default router;
