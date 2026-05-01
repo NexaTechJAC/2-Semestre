@@ -6,14 +6,14 @@ datasource db {
   provider = "postgresql"
 }
 
-model documentos {
-  id             Int       @id @default(autoincrement())
-  titulo         String    @db.VarChar(255)
-  curso          String    @db.VarChar(50)
-  categoria      String?   @db.VarChar(100)
-  url_arquivo    String
-  ano_referencia Int?      @default(2026)
-  updated_at     DateTime? @default(now()) @db.Timestamp(6)
-
-  @@map("documentos")
+// Exemplo de como ficaria o modelo no seu Prisma
+model Documento {
+  id              Int      @id @default(autoincrement())
+  titulo          String
+  curso           String
+  categoria       String
+  url_arquivo     String?  // Opcional agora
+  conteudo_texto  String?  // Para as opções que são apenas texto
+  ano_referencia  Int
+  updated_at      DateTime @updatedAt
 }
