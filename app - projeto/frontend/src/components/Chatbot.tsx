@@ -1,230 +1,178 @@
-import { useState, useRef, useEffect } from 'react'
-import type { Menu, Mensagem } from '../types'
-// importa os dados mockados dos menus
-import { menus } from '../data/menus'
+import { useEffect, useRef, useState } from "react"
+import { RotateCcw, X } from "lucide-react"
 
-function Chatbot() {
-  // --- ESTADOS ---
-  // Estado novo para controlar se a janela do chat está aberta ou fechada
-  const [isOpen, setIsOpen] = useState<boolean>(false) 
+import chatbotUser from "../assets/img/chatbot_user.png"
+import { menus } from "../data/menus"
+import type { Menu, Mensagem } from "../types"
 
-  const [historico, setHistorico] = useState<Mensagem[]>([
-    { tipo: 'bot', texto: 'Bem-vindo ao autoatendimento da Secretaria Acadêmica da Fatec Jacareí!' },
-    { tipo: 'bot', texto: 'Para qual curso você deseja atendimento?' }
-  ])
-  const [opcoesAtuais, setOpcoesAtuais] = useState<Menu[]>(menus)
+type ChatbotProps = {
+  inline?: boolean
+}
 
-  const fimDoChatRef = useRef<HTMLDivElement>(null)
+type FloatingChatbotProps = {
+  open: boolean
+  onClose: () => void
+}
 
-  useEffect(() => {
-    // Só tenta rolar a tela se o chat estiver aberto!
-    if (isOpen && fimDoChatRef.current) {
-      fimDoChatRef.current.scrollIntoView({ behavior: 'smooth' })
-    }
-  }, [historico, isOpen])
+type ChatSurface = "inline" | "floating"
 
-  function handleEscolha(opcao: Menu) {
-    const novasMensagens: Mensagem[] = [
-      ...historico,
-      { tipo: 'usuario', texto: opcao.texto }
-    ]
+const initialMessages: Mensagem[] = [
+  { tipo: "bot", texto: "Bem-vindo ao autoatendimento da Secretaria Acadêmica da Fatec Jacareí!" },
+  { tipo: "bot", texto: "Para qual curso você deseja atendimento?" },
+]
 
-    if (opcao.aviso) {
-      novasMensagens.push({ tipo: 'bot', texto: opcao.aviso })
-    }
+export function Chatbot({ inline = false }: ChatbotProps) {
+  return <ChatWindow surface={inline ? "inline" : "floating"} />
+}
 
-    if (opcao.resposta) {
-      novasMensagens.push({ tipo: 'bot', texto: opcao.resposta })
-      novasMensagens.push({ tipo: 'bot', texto: 'Posso te ajudar com mais alguma coisa?' })
-      setOpcoesAtuais(menus)
-    } else if (opcao.filhos) {
-      novasMensagens.push({ tipo: 'bot', texto: 'Escolha uma opção:' })
-      setOpcoesAtuais(opcao.filhos)
-    }
-
-    setHistorico(novasMensagens)
-  }
-
-  function handleReiniciar() {
-    setHistorico([{ tipo: 'bot', texto: 'Bem-vindo ao autoatendimento da Secretaria Acadêmica da Fatec Jacareí! Para qual curso você deseja atendimento?' }])
-    setOpcoesAtuais(menus)
+export function FloatingChatbot({ open, onClose }: FloatingChatbotProps) {
+  if (!open) {
+    return null
   }
 
   return (
-    // Container PRINCIPAL (Fixo no canto inferior direito da tela)
-    <div style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: 9999, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', fontFamily: 'sans-serif' }}>
-      
-      {/* Estilos do Chat */}
-      <style>{`
-        .chat-scroll {
-          scrollbar-width: thin;
-          scrollbar-color: #c1c1c1 #f8f9fa;
-        }
-        .chat-scroll::-webkit-scrollbar {
-          width: 8px;
-        }
-        .chat-scroll::-webkit-scrollbar-track {
-          background: transparent;
-          border-radius: 8px;
-        }
-        .chat-scroll::-webkit-scrollbar-thumb {
-          background: #c1c1c1;
-          border-radius: 8px;
-        }
-        .chat-scroll::-webkit-scrollbar-thumb:hover {
-          background: #a8a8a8;
-        }
-        .balao {
-          position: relative;
-          padding: 8px 12px;
-          border-radius: 16px;
-          display: inline-block;
-          max-width: 80%;
-          white-space: pre-line;
-          text-align: left;
-          font-size: 2.2vh;
-          word-break: break-word;
-        }
-        .balao::before {
-          content: "";
-          position: absolute;
-          top: 0;
-          width: 0;
-          height: 0;
-          border-style: solid;
-        }
-        .balao-usuario {
-          background: #ff0000;
-          color: white;
-          border-top-right-radius: 0;
-        }
-        .balao-usuario::before {
-          right: -8px;
-          border-width: 0 0 12px 10px;
-          border-color: transparent transparent transparent #ff0000;
-        }
-        .balao-bot {
-          background: #e2cece;
-          color: black;
-          border-top-left-radius: 0;
-        }
-        .balao-bot::before {
-          left: -8px;
-          border-width: 0 10px 12px 0;
-          border-color: transparent #e2cece transparent transparent;
-        }
-        .avatar-container {
-          width: 32px;
-          margin-right: 8px;
-          flex-shrink: 0;
-          display: flex;
-          align-items: flex-start;
-          justify-content: center;
-        }
-        .avatar-icone {
-          font-size: 24px;
-          line-height: 1;
-        }
-      `}</style>
+    <div className="fixed bottom-5 right-5 z-50 w-[min(352px,calc(100vw-28px))]">
+      <ChatWindow onClose={onClose} surface="floating" />
+    </div>
+  )
+}
 
-      {/* JANELA DO CHAT - Só aparece se isOpen for true */}
-      {isOpen && (
-        <div style={{ 
-          width: '320px', 
-          backgroundColor: '#f8f9fa', 
-          borderRadius: '8px', 
-          boxShadow: '0 4px 12px rgba(0,0,0,0.15)', 
-          marginBottom: '16px', // Espaçamento entre o chat e o botão flutuante
-          overflow: 'hidden'
-        }}>
-          
-          {/* Cabeçalho do Chat (Para arrastar/fechar) */}
-          <div style={{ backgroundColor: '#ff0000', padding: '2px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: 'white' }}>
-            <span style={{ fontWeight: 'bold' }}>Atendimento Fatec</span>
-            <button 
-              onClick={() => setIsOpen(false)} 
-              style={{ background: 'none', border: 'none', color: 'white', fontSize: '16px', cursor: 'pointer', padding: 0 }}
-            >
-              ✖
-            </button>
-          </div>
+function ChatWindow({ onClose, surface }: { onClose?: () => void; surface: ChatSurface }) {
+  const [history, setHistory] = useState<Mensagem[]>(initialMessages)
+  const [currentOptions, setCurrentOptions] = useState<Menu[]>(menus)
+  const endOfChatRef = useRef<HTMLDivElement | null>(null)
+  const isFloating = surface === "floating"
 
-          {/* Área interna do Chat (Mensagens e Botões) */}
-          <div className="chat-scroll" style={{ padding: '16px', minHeight: '300px', maxHeight: '400px', overflowY: 'auto' }}>
-            {historico.map((msg, index) => {
-              const nextMsg = historico[index + 1];
-              const isBot = msg.tipo === 'bot';
-              const isUser = msg.tipo === 'usuario';
-              const isLastBotMsg = isBot && (!nextMsg || nextMsg.tipo !== 'bot');
+  useEffect(() => {
+    endOfChatRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" })
+  }, [history, currentOptions])
 
-              if (isBot) {
-                return (
-                  <div key={index} style={{ display: 'flex', alignItems: 'flex-start', marginBottom: '8px' }}>
-                    <div className="avatar-container">
-                      {isLastBotMsg && <span className="avatar-icone"><img src="../assets/img/chatbot_user.png" style={{ width: '100%', height: '100%' }} alt="Avatar do bot" /></span>}
-                    </div>
-                    <span className="balao balao-bot">{msg.texto}</span>
-                  </div>
-                )
-              }
+  function handleChoice(option: Menu) {
+    const nextHistory: Mensagem[] = [...history, { tipo: "usuario", texto: option.texto }]
 
-              if (isUser) {
-                return (
-                  <div key={index} style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '8px' }}>
-                    <span className="balao balao-usuario">{msg.texto}</span>
-                  </div>
-                )
-              }
-            
-              return null;
-            })}
-            
-            <div ref={fimDoChatRef} />
-            
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '16px' }}>
-              {opcoesAtuais.map((opcao) => (
-                <button
-                  key={opcao.id}
-                  onClick={() => handleEscolha(opcao)}
-                  style={{ fontSize: '2vh', padding: '1.2vh', cursor: 'pointer', borderRadius: '2vh', border: '1px solid #007bff', background: 'white', color: '#007bff' }}
-                >
-                  {opcao.texto}
-                </button>
-              ))}
-              <button
-                onClick={handleReiniciar}
-                // Repare aqui: tirei o nowrap e arrumei o padding pra caber na caixinha!
-                style={{ width: '100%', fontSize: '2vh', marginTop: '0.2vh', padding: '1.2vh', cursor: 'pointer', borderRadius: '2vh', border: 'none', background: '#dc3545', color: 'white' }}>
-                Reiniciar conversa
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+    if (option.aviso) {
+      nextHistory.push({ tipo: "bot", texto: option.aviso })
+    }
 
-      {/* BOTÃO FLUTUANTE (FAB) - Fica sempre visível */}
-      <button 
-        onClick={() => setIsOpen(!isOpen)}
-        style={{
-          width: '60px',
-          height: '60px',
-          borderRadius: '50%',
-          backgroundColor: '#ff0000',
-          color: 'white',
-          border: 'none',
-          boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
-          cursor: 'pointer',
-          fontSize: '28px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          transition: 'transform 0.2s'
-        }}
+    if (option.resposta) {
+      nextHistory.push({ tipo: "bot", texto: option.resposta })
+      nextHistory.push({ tipo: "bot", texto: "Posso te ajudar com mais alguma coisa?" })
+      setCurrentOptions(menus)
+    } else if (option.filhos) {
+      nextHistory.push({ tipo: "bot", texto: "Escolha uma opção:" })
+      setCurrentOptions(option.filhos)
+    }
+
+    setHistory(nextHistory)
+  }
+
+  function handleRestart() {
+    setHistory(initialMessages)
+    setCurrentOptions(menus)
+  }
+
+  return (
+    <section
+      aria-label="Atendimento Fatec"
+      className={
+        isFloating
+          ? "overflow-hidden rounded-b-lg rounded-t-md bg-[#f8f9fa] text-black shadow-2xl ring-1 ring-black/15"
+          : "flex h-full min-h-[390px] flex-col overflow-hidden rounded-lg bg-[#f8f9fa] text-black shadow-2xl ring-1 ring-black/10"
+      }
+    >
+      <ChatHeader onClose={onClose} surface={surface} />
+
+      <div
+        className={
+          isFloating
+            ? "chat-scroll h-[min(430px,calc(100vh-180px))] overflow-y-auto px-4 py-5"
+            : "chat-scroll flex-1 overflow-y-auto px-5 py-5"
+        }
       >
-        {/* Muda o ícone dependendo se está aberto ou fechado */}
-        {isOpen ? '✖' : '💬'} 
-      </button>
+        <div className="space-y-2">
+          {history.map((message, index) => (
+            <ChatMessage
+              key={`${message.tipo}-${index}-${message.texto}`}
+              isLastBotMessage={message.tipo === "bot" && history[index + 1]?.tipo !== "bot"}
+              message={message}
+            />
+          ))}
+        </div>
 
+        <div ref={endOfChatRef} />
+
+        <div className="mt-5 flex flex-col gap-2">
+          {currentOptions.map((option) => (
+            <button
+              className="min-h-8 rounded-full border border-[#007bff] bg-white px-4 py-2 text-center text-[12px] leading-tight text-[#007bff] transition hover:bg-[#007bff] hover:text-white focus:outline-none focus:ring-2 focus:ring-[#007bff]/40"
+              key={option.id}
+              onClick={() => handleChoice(option)}
+              type="button"
+            >
+              {option.texto}
+            </button>
+          ))}
+
+          <button
+            className="mt-1 flex min-h-9 items-center justify-center gap-2 rounded-full bg-[#dc3545] px-4 py-2 text-[12px] font-bold text-white transition hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500/40"
+            onClick={handleRestart}
+            type="button"
+          >
+            <RotateCcw className="h-3.5 w-3.5" />
+            Reiniciar conversa
+          </button>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function ChatHeader({ onClose, surface }: { onClose?: () => void; surface: ChatSurface }) {
+  const isFloating = surface === "floating"
+
+  return (
+    <header className="relative flex min-h-[42px] items-center justify-between bg-[#ff0000] px-4 py-2 text-white">
+      <h2 className="truncate text-[18px] font-black leading-none">Atendimento Fatec</h2>
+
+      {isFloating && (
+        <button
+          aria-label="Fechar atendimento"
+          className="grid h-8 w-8 shrink-0 place-items-center rounded-full transition hover:bg-white/15"
+          onClick={onClose}
+          type="button"
+        >
+          <X className="h-6 w-6" />
+        </button>
+      )}
+    </header>
+  )
+}
+
+function ChatMessage({ isLastBotMessage, message }: { isLastBotMessage: boolean; message: Mensagem }) {
+  const isBot = message.tipo === "bot"
+
+  if (isBot) {
+    return (
+      <div className="flex items-start gap-2">
+        <div className="grid h-8 w-8 shrink-0 place-items-center">
+          {isLastBotMessage && (
+            <span className="grid h-7 w-7 place-items-center overflow-hidden rounded-full bg-[#26343a]">
+              <img alt="Avatar do bot" className="h-full w-full object-cover" src={chatbotUser} />
+            </span>
+          )}
+        </div>
+        <div className="relative max-w-[82%] whitespace-pre-line break-words rounded-2xl rounded-tl-sm bg-[#e2cece] px-3 py-2 text-left text-[13px] leading-snug text-black before:absolute before:left-[-8px] before:top-0 before:h-0 before:w-0 before:border-y-[6px] before:border-r-[9px] before:border-y-transparent before:border-r-[#e2cece]">
+          {message.texto}
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="flex justify-end">
+      <div className="relative max-w-[82%] whitespace-pre-line break-words rounded-2xl rounded-tr-sm bg-[#ff0000] px-3 py-2 text-left text-[13px] leading-snug text-white before:absolute before:right-[-8px] before:top-0 before:h-0 before:w-0 before:border-y-[6px] before:border-l-[9px] before:border-y-transparent before:border-l-[#ff0000]">
+        {message.texto}
+      </div>
     </div>
   )
 }

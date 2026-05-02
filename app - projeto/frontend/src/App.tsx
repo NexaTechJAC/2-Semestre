@@ -1,18 +1,7 @@
-import Chatbot from './components/Chatbot'
+import Home from "./pages/Home"
 
 function App() {
-  return (
-    // Essa div fixa o chatbot no canto inferior direito e limita a largura dele
-    <div style={{ 
-      position: 'fixed', 
-      bottom: '20px', 
-      right: '20px', 
-      width: '350px',
-      zIndex: 1000 
-    }}>
-      <Chatbot />
-    </div>
-  )
+  return <Home />
 }
 
 export default App
