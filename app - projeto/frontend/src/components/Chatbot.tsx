@@ -40,12 +40,21 @@ export function FloatingChatbot({ open, onClose }: FloatingChatbotProps) {
 function ChatWindow({ onClose, surface }: { onClose?: () => void; surface: ChatSurface }) {
   const [history, setHistory] = useState<Mensagem[]>(initialMessages)
   const [currentOptions, setCurrentOptions] = useState<Menu[]>(menus)
+  const [aguardandoSatisfacao, setAguardandoSatisfacao] = useState(false)
+  const [aguardandoPergunta, setAguardandoPergunta] = useState(false)
   const endOfChatRef = useRef<HTMLDivElement | null>(null)
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null)
   const isFloating = surface === "floating"
 
   useEffect(() => {
-    endOfChatRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" })
+    endOfChatRef.current?.scrollIntoView({ behavior: "instant", block: "nearest" })
   }, [history, currentOptions])
+
+  useEffect(() => {
+  if (scrollContainerRef.current) {
+    scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight
+  }
+  }, [])
 
   function handleChoice(option: Menu) {
     const nextHistory: Mensagem[] = [...history, { tipo: "usuario", texto: option.texto }]
@@ -56,8 +65,9 @@ function ChatWindow({ onClose, surface }: { onClose?: () => void; surface: ChatS
 
     if (option.resposta) {
       nextHistory.push({ tipo: "bot", texto: option.resposta })
-      nextHistory.push({ tipo: "bot", texto: "Posso te ajudar com mais alguma coisa?" })
-      setCurrentOptions(menus)
+      nextHistory.push({ tipo: "bot", texto: "Essa resposta resolveu sua dúvida?" })
+      setCurrentOptions([])
+      setAguardandoSatisfacao(true)
     } else if (option.filhos) {
       nextHistory.push({ tipo: "bot", texto: "Escolha uma opção:" })
       setCurrentOptions(option.filhos)
@@ -69,6 +79,27 @@ function ChatWindow({ onClose, surface }: { onClose?: () => void; surface: ChatS
   function handleRestart() {
     setHistory(initialMessages)
     setCurrentOptions(menus)
+    setAguardandoSatisfacao(false)
+  }
+
+  function handSatisfacao(satisfeito: boolean) {
+    setAguardandoSatisfacao(false)
+
+    if (satisfeito) {
+      // Usuário ficou satisfeito, encerra a conversa
+      setHistory(prev => [...prev, 
+      { tipo: "usuario", texto: "👍 Sim, obrigado!" },
+      { tipo: "bot", texto: "Fico feliz em ter ajudado! Até a próxima 😊" }
+      ])
+      setCurrentOptions([])
+    } else {
+      // Usuário não ficou satisfeito, pede para enviar pergunta
+      setHistory(prev => [...prev,
+      { tipo: "usuario", texto: "👎 Não"},
+      { tipo: "bot", texto: "Tudo bem! Você pode enviar sua dúvida pelo formulário de contato na página inicial. A secretaria responderá em breve." }
+      ])
+      setCurrentOptions([])
+    }
   }
 
   return (
@@ -77,16 +108,17 @@ function ChatWindow({ onClose, surface }: { onClose?: () => void; surface: ChatS
       className={
         isFloating
           ? "overflow-hidden rounded-b-lg rounded-t-md bg-[#f8f9fa] text-black shadow-2xl ring-1 ring-black/15"
-          : "flex h-full min-h-[390px] flex-col overflow-hidden rounded-lg bg-[#f8f9fa] text-black shadow-2xl ring-1 ring-black/10"
+          : "flex h-full min-h-[390px] flex-col justify-end overflow-hidden rounded-lg bg-[#f8f9fa] text-black shadow-2xl ring-1 ring-black/10"
       }
     >
       <ChatHeader onClose={onClose} surface={surface} />
 
       <div
+        ref={scrollContainerRef}
         className={
           isFloating
-            ? "chat-scroll h-[min(430px,calc(100vh-180px))] overflow-y-auto px-4 py-5"
-            : "chat-scroll flex-1 overflow-y-auto px-5 py-5"
+            ? "chat-scroll h-[min(430px,calc(100vh-180px))] overflow-y-auto px-4 py-5 flex flex-col justify-end"
+            : "chat-scroll flex-1 overflow-y-auto px-5 py-5 flex flex-col justify-end"
         }
       >
         <div className="space-y-2">
@@ -99,12 +131,31 @@ function ChatWindow({ onClose, surface }: { onClose?: () => void; surface: ChatS
           ))}
         </div>
 
-        <div ref={endOfChatRef} />
-
         <div className="mt-5 flex flex-col gap-2">
+
+          {/* Botões de satisfação */}
+          {aguardandoSatisfacao && (
+          <div className="flex gap-2">
+            <button
+              className="flex-1 rounded-full border border-[green] bg-white px-4 py-2 text-[12px] text-[green] transition hover:bg-[green] hover:text-white"
+              onClick={() => handSatisfacao(true)}
+              type="button"
+            >
+              👍 Sim, obrigado!
+            </button>
+            <button
+              className="flex-1 rounded-full border border-[#dc3545] bg-white px-4 py-2 text-[12px] text-[#dc3545] transition hover:bg-[#dc3545] hover:text-white"
+              onClick={() => handSatisfacao(false)}
+              type="button"
+            >
+                      👎 Não!
+                    </button>
+                  </div>
+                )}
+
           {currentOptions.map((option) => (
             <button
-              className="min-h-8 rounded-full border border-[#007bff] bg-white px-4 py-2 text-center text-[12px] leading-tight text-[#007bff] transition hover:bg-[#007bff] hover:text-white focus:outline-none focus:ring-2 focus:ring-[#007bff]/40"
+              className="min-h-8 rounded-full border border-[black] bg-white px-4 py-2 text-center text-[13px] leading-tight text-[black] transition hover:bg-[black] hover:text-white focus:outline-none focus:ring-2 focus:ring-[black]/40"
               key={option.id}
               onClick={() => handleChoice(option)}
               type="button"
@@ -122,6 +173,8 @@ function ChatWindow({ onClose, surface }: { onClose?: () => void; surface: ChatS
             Reiniciar conversa
           </button>
         </div>
+
+        <div ref={endOfChatRef} />
       </div>
     </section>
   )

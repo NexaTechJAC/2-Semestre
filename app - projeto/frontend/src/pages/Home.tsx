@@ -1,20 +1,5 @@
 import { useState, type ComponentType, type ReactNode } from "react"
-import {
-  BookOpen,
-  CalendarDays,
-  ChevronRight,
-  ClipboardList,
-  Clock3,
-  FileClock,
-  FileText,
-  GraduationCap,
-  Mail,
-  MapPin,
-  MessageCircle,
-  Phone,
-  Send,
-  Users,
-} from "lucide-react"
+import { BookOpen, CalendarDays, ChevronRight, ClipboardList, Clock3, FileClock, FileText, GraduationCap, Mail, MapPin, MessageCircle, Phone, Send, Users } from "lucide-react"
 
 import { Chatbot, FloatingChatbot } from "../components/Chatbot"
 
