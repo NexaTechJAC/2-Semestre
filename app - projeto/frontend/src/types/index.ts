@@ -12,4 +12,3 @@ export type Mensagem = {
     tipo: 'bot' | 'usuario'  // inficada quem enviou a mensagem
     texto: string  // conteúdo da mensagem
 }
-

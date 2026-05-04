@@ -26,17 +26,20 @@ type Service = {
   description: string
   time: string
   popular?: boolean
+  actionType?: "pdf" | "link" | "navigate"
+  actionUrl?: string 
+  actionPath?: string | undefined
 }
 
 const navigation = ["Início", "Serviços", "Documentos", "Calendário", "Contato"]
 
 const services: Service[] = [
-  { icon: FileText, title: "Histórico Escolar", description: "Solicite seu histórico acadêmico completo", time: "2 dias úteis", popular: true },
-  { icon: ClipboardList, title: "Ficha de Matrícula", description: "Realize sua matrícula ou rematrícula", time: "Imediato", popular: true },
-  { icon: FileClock, title: "Declarações e Atestados", description: "Emita declarações de vínculo e frequência", time: "2 dias úteis", popular: true },
-  { icon: CalendarDays, title: "Calendário Acadêmico", description: "Confira datas importantes do semestre", time: "Consulta imediata", popular: true },
-  { icon: BookOpen, title: "Exames e Provas", description: "Acesse resultados e solicite revisões", time: "Variável" },
-  { icon: Users, title: "Atendimento Presencial", description: "Agende um horário na secretaria", time: "Agendamento", popular: true },
+  { icon: FileText, title: "Histórico Escolar", description: "Solicite seu histórico acadêmico completo", time: "2 dias úteis", popular: true, actionType: "navigate", actionPath: "/historico" },
+  { icon: ClipboardList, title: "Ficha de Matrícula", description: "Realize sua matrícula ou rematrícula", time: "Imediato", popular: true, actionType: "navigate", actionPath: "/matricula" },
+  { icon: FileClock, title: "Declarações e Atestados", description: "Emita declarações de vínculo e frequência", time: "2 dias úteis", popular: true, actionType: "navigate", actionPath: "/declaracoes" },
+  { icon: CalendarDays, title: "Calendário Acadêmico", description: "Confira datas importantes do semestre", time: "Consulta imediata", popular: true, actionType: "pdf", actionUrl: "/Documentos/2026- Calendario_Academico 2026.pdf" },
+  { icon: BookOpen, title: "Manual para Estágio Supervisionado ", description: "Acesse resultados e solicite revisões", time: "Variável", actionType: "pdf", actionUrl: "/Documentos/2026- Manual_Estagio_Supervisionado.pdf" },
+  { icon: Users, title: "Regulamento Geral dos Cursos", description: "Saiba mais", time: "Agendamento", popular: true, actionType: "pdf", actionUrl: "/Documentos/2026-Regulamento Geral dos Cursos.pdf" },
 ]
 
 const footerLinks = [
@@ -174,7 +177,7 @@ function FloatingHelp({ onClick }: { onClick: () => void }) {
   return (
     <button
       className="absolute right-6 top-10 flex items-center gap-2 rounded-full bg-red-600 px-4 py-3 text-[11px] font-bold text-white shadow-lg transition hover:bg-red-700"
-      onClick={onClick}
+      onClick={() => onClick()}
       type="button"
     >
       <MessageCircle className="h-4 w-4" /> Precisa de ajuda?
@@ -182,8 +185,55 @@ function FloatingHelp({ onClick }: { onClick: () => void }) {
   )
 }
 function ServiceCard({ service }: { service: Service }) {
+  const handleClick = async () => {
+    if (service.actionType === "pdf" && service.actionUrl) {
+      try {
+        // 1. Vai até a rota e busca o conteúdo REAL do arquivo
+        const response = await fetch(service.actionUrl)
+        
+        if (!response.ok) throw new Error("Erro ao buscar arquivo")
+        
+        // 2. Transforma a resposta em um Blob (dados brutos do arquivo)
+        const blob = await response.blob()
+        
+        // 3. Cria uma URL temporária na memória do navegador contendo o arquivo
+        const blobUrl = window.URL.createObjectURL(blob)
+        
+        // 4. Cria o link, coloca a URL do Blob e força o download
+        const link = document.createElement("a")
+        link.href = blobUrl
+        
+        // Arruma o nome do arquivo
+        let nomeDoArquivo = service.actionUrl.split('/').pop() || "documento.pdf"
+        if (!nomeDoArquivo.toLowerCase().endsWith(".pdf")) {
+          nomeDoArquivo += ".pdf"
+        }
+        
+        link.download = nomeDoArquivo 
+        document.body.appendChild(link)
+        link.click()
+        
+        // 5. Limpa o link e a memória do navegador
+        document.body.removeChild(link)
+        window.URL.revokeObjectURL(blobUrl)
+
+      } catch (error) {
+        console.error("Erro ao baixar o documento:", error)
+        alert("Ocorreu um erro ao tentar baixar o arquivo. Verifique se ele está disponível.")
+      }
+
+    } else if (service.actionType === "navigate" && service.actionPath) {
+      window.location.href = service.actionPath
+    } else if (service.actionType === "link" && service.actionUrl) {
+      window.open(service.actionUrl, "_blank")
+    }
+  }
+
   return (
-    <article className="relative flex min-h-[92px] items-start gap-3 rounded-lg border-2 border-black bg-white p-3 shadow-sm">
+    <article 
+      onClick={handleClick}
+      className="relative flex min-h-[92px] items-start gap-3 rounded-lg border-2 border-black bg-white p-3 shadow-sm cursor-pointer hover:shadow-lg transition"
+    >
       {service.popular && <span className="absolute right-2 top-2 rounded bg-zinc-100 px-2 py-0.5 text-[10px] font-medium text-zinc-500">Popular</span>}
       <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded bg-zinc-200 text-red-600">
         <service.icon className="h-7 w-7" />
