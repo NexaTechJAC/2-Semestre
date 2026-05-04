@@ -161,7 +161,7 @@ function SectionLabel({ children }: { children: ReactNode }) {
 function FloatingHelp({ onClick }: { onClick: () => void }) {
   return (
     <button
-      className="absolute right-6 top-10 flex items-center gap-2 rounded-full bg-red-600 px-4 py-3 text-[11px] font-bold text-white shadow-lg transition hover:bg-red-700"
+      className="fixed right-6 bottom-6 z-50 flex items-center gap-2 rounded-full bg-red-600 px-4 py-3 text-[11px] font-bold text-white shadow-lg transition hover:bg-red-700"
       onClick={() => onClick()}
       type="button"
     >
