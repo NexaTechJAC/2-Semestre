@@ -19,9 +19,9 @@ type Service = {
 const navigation = ["Início", "Serviços", "Documentos", "Calendário", "Contato"]
 
 const services: Service[] = [
-  { icon: FileText, title: "Histórico Escolar", description: "Solicite seu histórico acadêmico completo", time: "2 dias úteis", popular: true, actionType: "navigate", actionPath: "/historico" },
-  { icon: ClipboardList, title: "Ficha de Matrícula", description: "Realize sua matrícula ou rematrícula", time: "Imediato", popular: true, actionType: "navigate", actionPath: "/matricula" },
-  { icon: FileClock, title: "Declarações e Atestados", description: "Emita declarações de vínculo e frequência", time: "2 dias úteis", popular: true, actionType: "navigate", actionPath: "/declaracoes" },
+  { icon: FileText, title: "Histórico Escolar", description: "Solicite seu histórico acadêmico completo", time: "2 dias úteis", popular: true, actionType: "link", actionUrl: "https://siga.cps.sp.gov.br/sigaaluno/applogin.aspx" },
+  { icon: ClipboardList, title: "Ficha de Matrícula", description: "Realize sua matrícula ou rematrícula", time: "Imediato", popular: true, actionType: "link", actionUrl: "https://siga.cps.sp.gov.br/sigaaluno/applogin.aspx" },
+  { icon: FileClock, title: "Declarações e Atestados", description: "Emita declarações de vínculo e frequência", time: "2 dias úteis", popular: true, actionType: "link", actionUrl: "https://siga.cps.sp.gov.br/sigaaluno/applogin.aspx" },
   { icon: CalendarDays, title: "Calendário Acadêmico", description: "Confira datas importantes do semestre", time: "Consulta imediata", popular: true, actionType: "pdf", actionUrl: "/Documentos/2026- Calendario_Academico 2026.pdf" },
   { icon: BookOpen, title: "Manual para Estágio Supervisionado ", description: "Acesse resultados e solicite revisões", time: "Variável", actionType: "pdf", actionUrl: "/Documentos/2026- Manual_Estagio_Supervisionado.pdf" },
   { icon: Users, title: "Regulamento Geral dos Cursos", description: "Saiba mais", time: "Agendamento", popular: true, actionType: "pdf", actionUrl: "/Documentos/2026-Regulamento Geral dos Cursos.pdf" },
