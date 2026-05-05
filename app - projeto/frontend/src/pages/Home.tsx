@@ -1,5 +1,6 @@
 import { useState, type ComponentType, type ReactNode } from "react"
 import { BookOpen, CalendarDays, ChevronRight, ClipboardList, Clock3, FileClock, FileText, GraduationCap, Mail, MapPin, MessageCircle, Phone, Send, Users } from "lucide-react"
+import Estudantes from "../assets/img/estudantes.png"
 
 import { Chatbot, FloatingChatbot } from "../components/Chatbot"
 
@@ -19,9 +20,9 @@ type Service = {
 const navigation = ["Início", "Serviços", "Documentos", "Calendário", "Contato"]
 
 const services: Service[] = [
-  { icon: FileText, title: "Histórico Escolar", description: "Solicite seu histórico acadêmico completo", time: "2 dias úteis", popular: true, actionType: "navigate", actionPath: "/historico" },
-  { icon: ClipboardList, title: "Ficha de Matrícula", description: "Realize sua matrícula ou rematrícula", time: "Imediato", popular: true, actionType: "navigate", actionPath: "/matricula" },
-  { icon: FileClock, title: "Declarações e Atestados", description: "Emita declarações de vínculo e frequência", time: "2 dias úteis", popular: true, actionType: "navigate", actionPath: "/declaracoes" },
+  { icon: FileText, title: "Histórico Escolar", description: "Solicite seu histórico acadêmico completo", time: "2 dias úteis", popular: true, actionType: "link", actionUrl: "https://siga.cps.sp.gov.br/sigaaluno/applogin.aspx" },
+  { icon: ClipboardList, title: "Ficha de Matrícula", description: "Realize sua matrícula ou rematrícula", time: "Imediato", popular: true, actionType: "link", actionUrl: "https://siga.cps.sp.gov.br/sigaaluno/applogin.aspx" },
+  { icon: FileClock, title: "Declarações e Atestados", description: "Emita declarações de vínculo e frequência", time: "2 dias úteis", popular: true, actionType: "link", actionUrl: "https://siga.cps.sp.gov.br/sigaaluno/applogin.aspx" },
   { icon: CalendarDays, title: "Calendário Acadêmico", description: "Confira datas importantes do semestre", time: "Consulta imediata", popular: true, actionType: "pdf", actionUrl: "/Documentos/2026- Calendario_Academico 2026.pdf" },
   { icon: BookOpen, title: "Manual para Estágio Supervisionado ", description: "Acesse resultados e solicite revisões", time: "Variável", actionType: "pdf", actionUrl: "/Documentos/2026- Manual_Estagio_Supervisionado.pdf" },
   { icon: Users, title: "Regulamento Geral dos Cursos", description: "Saiba mais", time: "Agendamento", popular: true, actionType: "pdf", actionUrl: "/Documentos/2026-Regulamento Geral dos Cursos.pdf" },
@@ -121,7 +122,7 @@ function Brand({ compact = false }: { compact?: boolean }) {
 
 function HeroSection() {
   return (
-    <section className="bg-black px-9 pb-5 pt-3 text-white">
+    <section className="bg-black px-8 pb-5 pt-3 text-white">
       <div className="grid items-start gap-8 lg:grid-cols-[1fr_1.17fr]">
         <div className="pt-11">
           <h1 className="max-w-[520px] text-[52px] font-black leading-[0.98] tracking-tight md:text-[58px]">
@@ -131,14 +132,15 @@ function HeroSection() {
             Nossa assistente virtual está pronta para responder suas dúvidas sobre documentos, matrículas, prazos e todos os serviços da secretaria, a qualquer hora.
           </p>
         </div>
-        <div className="h-[490px]">
-          <Chatbot inline />
+        
+        {/* O translate-y-5 empurra a imagem exatamente para a divisa */}
+        <div className="h-[600px] w-full translate-y-36">
+           <img alt="Estudantes" className="h-full w-full object-cover" src={Estudantes} />
         </div>
       </div>
     </section>
   )
 }
-
 function ServicesSection({ onHelpClick }: { onHelpClick: () => void }) {
   return (
     <section className="relative bg-white pb-20 pt-0">
@@ -161,7 +163,7 @@ function SectionLabel({ children }: { children: ReactNode }) {
 function FloatingHelp({ onClick }: { onClick: () => void }) {
   return (
     <button
-      className="absolute right-6 top-10 flex items-center gap-2 rounded-full bg-red-600 px-4 py-3 text-[11px] font-bold text-white shadow-lg transition hover:bg-red-700"
+      className="fixed right-6 bottom-6 z-50 flex items-center gap-2 rounded-full bg-red-600 px-4 py-3 text-[11px] font-bold text-white shadow-lg transition hover:bg-red-700"
       onClick={() => onClick()}
       type="button"
     >

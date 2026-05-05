@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react"
-import { RotateCcw } from "lucide-react"
+import { RotateCcw, X } from "lucide-react"
 
+import chatbotUser from "../assets/img/Avatar_Fatec.png"
 import { menus } from "../data/menus"
 import type { Menu, Mensagem } from "../types"
 
@@ -10,7 +11,7 @@ type ChatbotProps = {
 
 type FloatingChatbotProps = {
   open: boolean
-  onClose: () => void
+  onClose?: () => void
 }
 
 type ChatSurface = "inline" | "floating"
@@ -24,26 +25,27 @@ export function Chatbot({ inline = false }: ChatbotProps) {
   return <ChatWindow surface={inline ? "inline" : "floating"} />
 }
 
-export function FloatingChatbot({ open }: FloatingChatbotProps) {
+export function FloatingChatbot({ open, onClose }: FloatingChatbotProps) {
   if (!open) {
     return null
   }
 
   return (
     <div className="fixed bottom-5 right-5 z-50 w-[min(352px,calc(100vw-28px))]">
-      <ChatWindow surface="floating" />
+      <ChatWindow surface="floating" onClose={onClose} />
     </div>
   )
 }
 
-function ChatWindow({ surface: _surface }: { surface: ChatSurface }) {
-  const [isOpen, setIsOpen] = useState(false)
+function ChatWindow({ surface: _surface, onClose }: { surface: ChatSurface; onClose?: () => void }) {
   const [history, setHistory] = useState<Mensagem[]>(initialMessages)
   const [currentOptions, setCurrentOptions] = useState<Menu[]>(menus)
+  const [aguardandoSatisfacao, setAguardandoSatisfacao] = useState(false)
   const endOfChatRef = useRef<HTMLDivElement | null>(null)
+  const isFloating = _surface === "floating"
 
   useEffect(() => {
-    endOfChatRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" })
+    endOfChatRef.current?.scrollIntoView({ behavior: "instant", block: "nearest" })
   }, [history, currentOptions])
 
   function handleChoice(option: Menu) {
@@ -55,8 +57,9 @@ function ChatWindow({ surface: _surface }: { surface: ChatSurface }) {
 
     if (option.resposta) {
       nextHistory.push({ tipo: "bot", texto: option.resposta })
-      nextHistory.push({ tipo: "bot", texto: "Posso te ajudar com mais alguma coisa?" })
-      setCurrentOptions(menus)
+      nextHistory.push({ tipo: "bot", texto: "Essa resposta resolveu sua dúvida?" })
+      setCurrentOptions([])
+      setAguardandoSatisfacao(true)
     } else if (option.filhos) {
       nextHistory.push({ tipo: "bot", texto: "Escolha uma opção:" })
       setCurrentOptions(option.filhos)
@@ -68,149 +71,153 @@ function ChatWindow({ surface: _surface }: { surface: ChatSurface }) {
   function handleRestart() {
     setHistory(initialMessages)
     setCurrentOptions(menus)
+    setAguardandoSatisfacao(false)
+  }
+
+  function handleSatisfacao(satisfeito: boolean) {
+    setAguardandoSatisfacao(false)
+
+    if (satisfeito) {
+      setHistory(prev => [
+        ...prev,
+        { tipo: "usuario", texto: "👍 Sim, obrigado!" },
+        { tipo: "bot", texto: "Fico feliz em ter ajudado! Até a próxima 😊" }
+      ])
+      setCurrentOptions([])
+    } else {
+      setHistory(prev => [
+        ...prev,
+        { tipo: "usuario", texto: "👎 Não" },
+        {
+          tipo: "bot",
+          texto: "Tudo bem! Você pode enviar sua dúvida pelo formulário de contato na página inicial. A secretaria responderá em breve."
+        }
+      ])
+      setCurrentOptions([])
+    }
   }
 
   return (
-    <div style={{position: 'fixed', bottom: '20px', right: '20px', zIndex: 9999, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', fontFamily: 'sans-serif' }}>
-      
-      <style>{`
-        .chat-scroll {
-          scrollbar-width: thin;
-          scrollbar-color: #c1c1c1 #f8f9fa;
-        }
-        .chat-scroll::-webkit-scrollbar {
-          width: 8px;
-        }
-        .chat-scroll::-webkit-scrollbar-track {
-          background: transparent;
-          border-radius: 8px;
-        }
-        .chat-scroll::-webkit-scrollbar-thumb {
-          background: #c1c1c1;
-          border-radius: 8px;
-        }
-        .chat-scroll::-webkit-scrollbar-thumb:hover {
-          background: #a8a8a8;
-        }
-        .balao {
-          position: relative;
-          padding: 8px 12px;
-          border-radius: 16px;
-          display: inline-block;
-          max-width: 80%;
-          white-space: pre-line;
-          text-align: left;
-          font-size: 2.2vh;
-          word-break: break-word;
-        }
-        .balao::before {
-          content: "";
-          position: absolute;
-          top: 0;
-          width: 0;
-          height: 0;
-          border-style: solid;
-        }
-        .balao-usuario {
-          background: #ff0000;
-          color: white;
-          border-top-right-radius: 0;
-        }
-        .balao-usuario::before {
-          right: -8px;
-          border-width: 0 0 12px 10px;
-          border-color: transparent transparent transparent #ff0000;
-        }
-        .balao-bot {
-          background: #e2cece;
-          color: black;
-          border-top-left-radius: 0;
-        }
-        .balao-bot::before {
-          left: -8px;
-          border-width: 0 10px 12px 0;
-          border-color: transparent #e2cece transparent transparent;
-        }
-      `}</style>
+    <section
+      aria-label="Atendimento Fatec"
+      className={
+        isFloating
+          ? "overflow-hidden rounded-b-lg rounded-t-md bg-[#f8f9fa] text-black shadow-2xl ring-1 ring-black/15"
+          : "flex h-full min-h-[390px] flex-col overflow-hidden rounded-lg bg-[#f8f9fa] text-black shadow-2xl ring-1 ring-black/10"
+      }
+    >
+      <ChatHeader onClose={onClose} surface={_surface} />
 
-      {isOpen && (
-        <div style={{ 
-          width: '320px', 
-          backgroundColor: '#f8f9fa', 
-          borderRadius: '8px', 
-          boxShadow: '0 4px 12px rgba(0,0,0,0.15)', 
-          marginBottom: '16px',
-          overflow: 'hidden',
-          display: 'flex',
-          flexDirection: 'column'
-        }}>
-          
-          <div style={{ backgroundColor: '#ff0000', padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: 'white' }}>
-            <span style={{ fontWeight: 'bold' }}>Atendimento Fatec</span>
-            <button 
-              onClick={() => setIsOpen(false)} 
-              style={{ background: 'none', border: 'none', color: 'white', fontSize: '16px', cursor: 'pointer', padding: 0 }}
-            >
-              ✖
-            </button>
-          </div>
-
-          <div style={{ maxHeight: '45vh', overflowY: 'auto', padding: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }} className="chat-scroll">
-            {history.map((msg, index) => {
-              const isUser = msg.tipo === "usuario"
-              return (
-                <div key={index} style={{ display: 'flex', justifyContent: isUser ? 'flex-end' : 'flex-start', marginBottom: '8px' }}>
-                  <span className={`balao ${isUser ? 'balao-usuario' : 'balao-bot'}`}>{msg.texto}</span>
-                </div>
-              )
-            })}
-            <div ref={endOfChatRef} />
-          </div>
-
-          <div style={{maxHeight: '25vh', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '8px', padding: '16px', borderTop: '1px solid #ddd' }}>
-            {currentOptions.map((opcao) => (
-              <button
-                key={opcao.id}
-                onClick={() => handleChoice(opcao)}
-                style={{ fontSize: '14px', padding: '8px 12px', cursor: 'pointer', borderRadius: '6px', border: '1px solid #ECDBDB', color: 'black', background: 'white', textAlign: 'left' }}
-              >
-                {opcao.texto}
-              </button>
-            ))}
-            <button
-              onClick={handleRestart}
-              style={{ width: '100%', fontSize: '14px', marginTop: '8px', padding: '8px 12px', cursor: 'pointer', borderRadius: '6px', border: 'none', background: '#dc3545', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
-            >
-              <RotateCcw size={16} />
-              Reiniciar conversa
-            </button>
-          </div>
-        </div>
-      )}
-
-      <button 
-        onClick={() => setIsOpen(!isOpen)}
-        style={{
-          width: '60px',
-          height: '60px',
-          borderRadius: '50%',
-          backgroundColor: '#ff0000',
-          color: 'white',
-          border: 'none',
-          boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
-          cursor: 'pointer',
-          fontSize: '28px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          transition: 'transform 0.2s'
-        }}
-        onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
-        onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+      <div
+        className={
+          isFloating
+            ? "chat-scroll h-[min(430px,calc(100vh-180px))] overflow-y-auto px-4 py-5"
+            : "chat-scroll flex-1 overflow-y-auto px-5 py-5"
+        }
       >
-        {isOpen ? '✖' : '💬'}
-      </button>
+        <div className="space-y-2">
+          {history.map((message, index) => (
+            <ChatMessage
+              key={`${message.tipo}-${index}-${message.texto}`}
+              isLastBotMessage={message.tipo === "bot" && history[index + 1]?.tipo !== "bot"}
+              message={message}
+            />
+          ))}
+        </div>
 
+        <div ref={endOfChatRef} />
+
+        <div className="mt-5 flex flex-col gap-2">
+          {aguardandoSatisfacao ? (
+            <>
+              <button
+                className="min-h-8 rounded-full border border-[#28a745] bg-white px-4 py-2 text-center text-[12px] leading-tight text-[#28a745] transition hover:bg-[#28a745] hover:text-white focus:outline-none focus:ring-2 focus:ring-[#28a745]/40"
+                onClick={() => handleSatisfacao(true)}
+                type="button"
+              >
+                Sim
+              </button>
+              <button
+                className="min-h-8 rounded-full border border-[#dc3545] bg-white px-4 py-2 text-center text-[12px] leading-tight text-[#dc3545] transition hover:bg-[#dc3545] hover:text-white focus:outline-none focus:ring-2 focus:ring-red-500/40"
+                onClick={() => handleSatisfacao(false)}
+                type="button"
+              >
+                Não
+              </button>
+            </>
+          ) : (
+            currentOptions.map((option) => (
+              <button
+                className="min-h-8 rounded-full border border-[#007bff] bg-white px-4 py-2 text-center text-[12px] leading-tight text-[#007bff] transition hover:bg-[#007bff] hover:text-white focus:outline-none focus:ring-2 focus:ring-[#007bff]/40"
+                key={option.id}
+                onClick={() => handleChoice(option)}
+                type="button"
+              >
+                {option.texto}
+              </button>
+            ))
+          )}
+
+          <button
+            className="mt-1 flex min-h-9 items-center justify-center gap-2 rounded-full bg-[#dc3545] px-4 py-2 text-[12px] font-bold text-white transition hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500/40"
+            onClick={handleRestart}
+            type="button"
+          >
+            <RotateCcw className="h-3.5 w-3.5" />
+            Reiniciar conversa
+          </button>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function ChatHeader({ onClose, surface }: { onClose?: () => void; surface: ChatSurface }) {
+  const isFloating = surface === "floating"
+
+  return (
+    <header className="relative flex min-h-[42px] items-center justify-between bg-[#ff0000] px-4 py-2 text-white">
+      <h2 className="truncate text-[18px] font-black leading-none">Atendimento Fatec</h2>
+
+      {isFloating && (
+        <button
+          aria-label="Fechar atendimento"
+          className="grid h-8 w-8 shrink-0 place-items-center rounded-full transition hover:bg-white/15"
+          onClick={onClose}
+          type="button"
+        >
+          <X className="h-6 w-6" />
+        </button>
+      )}
+    </header>
+  )
+}
+
+function ChatMessage({ isLastBotMessage, message }: { isLastBotMessage: boolean; message: Mensagem }) {
+  const isBot = message.tipo === "bot"
+
+  if (isBot) {
+    return (
+      <div className="flex items-start gap-2">
+        <div className="grid h-8 w-8 shrink-0 place-items-center">
+          {isLastBotMessage && (
+            <span className="grid h-8 w-8 place-items-center overflow-hidden rounded-full bg-[#26343a]" >
+              <img alt="Avatar do bot" className="h-full w-full object-cover" src={chatbotUser}/>
+            </span>
+          )}
+        </div>
+        <div className="relative max-w-[100%] whitespace-pre-line break-words rounded-2xl rounded-tl-sm bg-[#e2cece] px-3 py-2 text-left text-[13px] leading-snug text-black before:absolute before:left-[-8px] before:top-0 before:h-0 before:w-0 before:border-y-[6px] before:border-r-[9px] before:border-y-transparent before:border-r-[#e2cece]">
+          {message.texto}
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="flex justify-end">
+      <div className="relative max-w-[82%] whitespace-pre-line break-words rounded-2xl rounded-tr-sm bg-[#ff0000] px-3 py-2 text-left text-[13px] leading-snug text-white before:absolute before:right-[-8px] before:top-0 before:h-0 before:w-0 before:border-y-[6px] before:border-l-[9px] before:border-y-transparent before:border-l-[#ff0000]">
+        {message.texto}
+      </div>
     </div>
   )
 }
