@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { RotateCcw, X } from "lucide-react"
 
-import chatbotUser from "../assets/img/chatbot_user.png"
+import chatbotUser from "../assets/img/Avatar_Fatec.png"
 import { menus } from "../data/menus"
 import type { Menu, Mensagem } from "../types"
 
@@ -201,12 +201,12 @@ function ChatMessage({ isLastBotMessage, message }: { isLastBotMessage: boolean;
       <div className="flex items-start gap-2">
         <div className="grid h-8 w-8 shrink-0 place-items-center">
           {isLastBotMessage && (
-            <span className="grid h-7 w-7 place-items-center overflow-hidden rounded-full bg-[#26343a]">
-              <img alt="Avatar do bot" className="h-full w-full object-cover" src={chatbotUser} />
+            <span className="grid h-8 w-8 place-items-center overflow-hidden rounded-full bg-[#26343a]" >
+              <img alt="Avatar do bot" className="h-full w-full object-cover" src={chatbotUser}/>
             </span>
           )}
         </div>
-        <div className="relative max-w-[82%] whitespace-pre-line break-words rounded-2xl rounded-tl-sm bg-[#e2cece] px-3 py-2 text-left text-[13px] leading-snug text-black before:absolute before:left-[-8px] before:top-0 before:h-0 before:w-0 before:border-y-[6px] before:border-r-[9px] before:border-y-transparent before:border-r-[#e2cece]">
+        <div className="relative max-w-[100%] whitespace-pre-line break-words rounded-2xl rounded-tl-sm bg-[#e2cece] px-3 py-2 text-left text-[13px] leading-snug text-black before:absolute before:left-[-8px] before:top-0 before:h-0 before:w-0 before:border-y-[6px] before:border-r-[9px] before:border-y-transparent before:border-r-[#e2cece]">
           {message.texto}
         </div>
       </div>
