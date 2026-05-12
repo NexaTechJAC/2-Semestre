@@ -62,7 +62,7 @@ Nesta etapa, foram definidos o guia de estilos (cores, tipografia e componentes)
 ---
 
 ## Sprint Burndown
-<img src="./Burndown/" alt="Burndown Chart" width="700"/>
+<img src="../imagens/BurndownSprint1.png" alt="Burndown Chart" width="700"/>
 
 ---
 

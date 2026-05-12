@@ -135,20 +135,20 @@ function ChatWindow({ surface: _surface, onClose }: { surface: ChatSurface; onCl
                 onClick={() => handleSatisfacao(true)}
                 type="button"
               >
-                Sim
+                👍 Sim, obrigado!
               </button>
               <button
                 className="min-h-8 rounded-full border border-[#dc3545] bg-white px-4 py-2 text-center text-[12px] leading-tight text-[#dc3545] transition hover:bg-[#dc3545] hover:text-white focus:outline-none focus:ring-2 focus:ring-red-500/40"
                 onClick={() => handleSatisfacao(false)}
                 type="button"
               >
-                Não
+                👎 Não
               </button>
             </>
           ) : (
             currentOptions.map((option) => (
               <button
-                className="min-h-8 rounded-full border border-[#007bff] bg-white px-4 py-2 text-center text-[12px] leading-tight text-[#007bff] transition hover:bg-[#007bff] hover:text-white focus:outline-none focus:ring-2 focus:ring-[#007bff]/40"
+                className="min-h-8 rounded-full border border-[black] bg-white px-4 py-2 text-center text-[12px] leading-tight text-[black] transition hover:bg-[black] hover:text-white focus:outline-none focus:ring-2 focus:ring-[black]/40"
                 key={option.id}
                 onClick={() => handleChoice(option)}
                 type="button"
