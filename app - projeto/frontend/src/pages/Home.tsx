@@ -100,7 +100,7 @@ function Header() {
         <nav className="hidden items-center gap-7 text-[13px] font-bold md:flex" aria-label="Navegação principal">
           {navigation.map((item) => <a key={item} href="#" className="transition-colors hover:text-red-600">{item}</a>)}
         </nav>
-        <a href="/admin" className="rounded-full bg-red-600 px-8 py-2 text-[12px] font-bold text-white transition hover:bg-red-700">Acesso Secretaria</a>
+        <a href="/login" className="rounded-full bg-red-600 px-8 py-2 text-[12px] font-bold text-white transition hover:bg-red-700">Acesso Secretaria</a>
       </div>
     </header>
   )
