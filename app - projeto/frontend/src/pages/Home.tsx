@@ -1,96 +1,48 @@
-import { useState, type ComponentType, type ReactNode } from "react"
-import { BookOpen, CalendarDays, ChevronRight, ClipboardList, Clock3, FileClock, FileText, GraduationCap, Mail, MapPin, MessageCircle, Phone, Send, Users } from "lucide-react"
-import Estudantes from "../assets/img/estudantes.png"
+import { useEffect, useRef, useState } from "react"
+import { RotateCcw, X } from "lucide-react"
 
-import { Chatbot, FloatingChatbot } from "../components/Chatbot"
+import chatbotUser from "../assets/img/Avatar_Fatec.png"
+import { menus } from "../data/menus"
+import type { Menu, Mensagem } from "../types"
 
-type Icon = ComponentType<{ className?: string }>
-
-type Service = {
-  icon: Icon
-  title: string
-  description: string
-  time: string
-  popular?: boolean
-  actionType?: "pdf" | "link" | "navigate"
-  actionUrl?: string 
-  actionPath?: string | undefined
+type ChatbotProps = {
+  inline?: boolean
 }
 
-const navigation = ["Início", "Serviços", "Documentos", "Calendário", "Contato"]
+type FloatingChatbotProps = {
+  open: boolean
+  onClose?: () => void
+}
 
-const services: Service[] = [
-  { icon: FileText, title: "Histórico Escolar", description: "Solicite seu histórico acadêmico completo", time: "2 dias úteis", popular: true, actionType: "link", actionUrl: "https://siga.cps.sp.gov.br/sigaaluno/applogin.aspx" },
-  { icon: ClipboardList, title: "Ficha de Matrícula", description: "Realize sua matrícula ou rematrícula", time: "Imediato", popular: true, actionType: "link", actionUrl: "https://siga.cps.sp.gov.br/sigaaluno/applogin.aspx" },
-  { icon: FileClock, title: "Declarações e Atestados", description: "Emita declarações de vínculo e frequência", time: "2 dias úteis", popular: true, actionType: "link", actionUrl: "https://siga.cps.sp.gov.br/sigaaluno/applogin.aspx" },
-  { icon: CalendarDays, title: "Calendário Acadêmico", description: "Confira datas importantes do semestre", time: "Consulta imediata", popular: true, actionType: "pdf", actionUrl: "/Documentos/2026- Calendario_Academico 2026.pdf" },
-  { icon: BookOpen, title: "Manual para Estágio Supervisionado ", description: "Acesse resultados e solicite revisões", time: "Variável", actionType: "pdf", actionUrl: "/Documentos/2026- Manual_Estagio_Supervisionado.pdf" },
-  { icon: Users, title: "Regulamento Geral dos Cursos", description: "Saiba mais", time: "Agendamento", popular: true, actionType: "pdf", actionUrl: "/Documentos/2026-Regulamento Geral dos Cursos.pdf" },
+type ChatSurface = "inline" | "floating"
+
+const initialMessages: Mensagem[] = [
+  { tipo: "bot", texto: "Bem-vindo ao autoatendimento da Secretaria Acadêmica da Fatec Jacareí!" },
+  { tipo: "bot", texto: "Para qual curso você deseja atendimento?" },
 ]
 
-const footerLinks = [
-  { title: "Serviços", links: ["Histórico Escolar", "Matrícula", "Declarações", "Exames"] },
-  { title: "Institucional", links: ["Sobre Nós", "Calendário", "Contato", "FAQ"] },
-]
+export function Chatbot({ inline = false }: ChatbotProps) {
+  return <ChatWindow surface={inline ? "inline" : "floating"} />
+}
 
-export function Home() {
-  const [isHelpChatOpen, setIsHelpChatOpen] = useState(false)
+export function FloatingChatbot({ open, onClose }: FloatingChatbotProps) {
+  if (!open) {
+    return null
+  }
 
   return (
-    <div className="min-h-screen bg-[#1f1f1f] py-2 text-black">
-      <div className="mx-auto w-full max-w-[1230px] overflow-hidden bg-white shadow-2xl">
-        <InstitutionalHeader />
-        <ContactStrip />
-        <Header />
-        <HeroSection />
-        <ServicesSection onHelpClick={() => setIsHelpChatOpen(true)} />
-        <SectionDivider />
-        <ContactSection />
-        <Footer />
-      </div>
-      <FloatingChatbot open={isHelpChatOpen} onClose={() => setIsHelpChatOpen(false)} />
+    <div className="fixed bottom-5 right-5 z-50 w-[min(352px,calc(100vw-28px))]">
+      <ChatWindow surface="floating" onClose={onClose} />
     </div>
   )
 }
-function InstitutionalHeader() {
-  return (
-    <section className="relative flex h-[64px] items-center justify-between bg-white px-8">
-      <div className="absolute left-0 top-0 h-full w-[290px] rounded-br-[52px] bg-black" />
-      <div className="relative z-10 flex items-center gap-3 text-white">
-        <div className="h-10 w-10 rounded bg-white" />
-        <div className="leading-none">
-          <p className="text-[22px] font-black uppercase tracking-tight">São Paulo</p>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.16em]">Governo do Estado</p>
-          <p className="text-[8px] uppercase text-red-500">São Paulo são todos</p>
-        </div>
-      </div>
-      <div className="flex items-center gap-9 text-right">
-        <div>
-          <p className="text-[34px] font-bold leading-none text-slate-600">Fatec</p>
-          <p className="text-[8px] font-semibold text-slate-500">Faculdade de Tecnologia</p>
-          <p className="text-[8px] text-slate-500">Prof. Francisco de Moura</p>
-        </div>
-        <div>
-          <p className="text-[42px] font-black leading-none text-red-700">CPS</p>
-          <p className="text-[9px] font-semibold leading-none text-red-700">Centro Paula Souza</p>
-        </div>
-      </div>
-    </section>
-  )
-}
 
-function ContactStrip() {
-  return (
-    <section className="border-t-[5px] border-red-600 bg-black px-14 py-2 text-white">
-      <div className="flex flex-wrap items-center justify-between gap-4 text-[13px]">
-        <span className="flex items-center gap-2"><Phone className="h-5 w-5" /> (12) 3900-0505</span>
-        <span className="flex items-center gap-2"><Mail className="h-5 w-5" /> secretaria@edu.br</span>
-        <span className="flex items-center gap-2"><Clock3 className="h-5 w-5" /> Seg - Sex: 8h às 21h</span>
-        <span className="flex items-center gap-2"><MapPin className="h-5 w-5" /> Hall do Prédio</span>
-      </div>
-    </section>
-  )
-}
+function ChatWindow({ surface: _surface, onClose }: { surface: ChatSurface; onClose?: () => void }) {
+  const [history, setHistory] = useState<Mensagem[]>(initialMessages)
+  const [currentOptions, setCurrentOptions] = useState<Menu[]>(menus)
+  const [aguardandoSatisfacao, setAguardandoSatisfacao] = useState(false)
+  const endOfChatRef = useRef<HTMLDivElement | null>(null)
+  const isFloating = _surface === "floating"
 
 function Header() {
   return (
@@ -100,220 +52,184 @@ function Header() {
         <nav className="hidden items-center gap-7 text-[13px] font-bold md:flex" aria-label="Navegação principal">
           {navigation.map((item) => <a key={item} href="#" className="transition-colors hover:text-red-600">{item}</a>)}
         </nav>
-        <a href="/admin" className="rounded-full bg-red-600 px-8 py-2 text-[12px] font-bold text-white transition hover:bg-red-700">Acesso Secretaria</a>
+        <a href="/login" className="rounded-full bg-red-600 px-8 py-2 text-[12px] font-bold text-white transition hover:bg-red-700">Acesso Secretaria</a>
       </div>
     </header>
   )
 }
 
-function Brand({ compact = false }: { compact?: boolean }) {
-  return (
-    <a href="/" className="flex items-center gap-3" aria-label="Portal Acadêmico">
-      <span className={`${compact ? "h-9 w-9" : "h-12 w-12"} flex items-center justify-center rounded-full bg-red-600 text-white`}>
-        <GraduationCap className={compact ? "h-5 w-5" : "h-7 w-7"} />
-      </span>
-      <span className="leading-tight">
-        <span className={`${compact ? "text-sm text-white" : "text-[17px]"} block font-black`}>Portal Acadêmico</span>
-        <span className="block text-[10px] font-bold uppercase text-red-600">Secretaria Digital</span>
-      </span>
-    </a>
-  )
-}
+  function handleChoice(option: Menu) {
+    const nextHistory: Mensagem[] = [...history, { tipo: "usuario", texto: option.texto }]
 
-function HeroSection() {
-  return (
-    <section className="bg-black px-8 pb-5 pt-3 text-white">
-      <div className="grid items-start gap-8 lg:grid-cols-[1fr_1.17fr]">
-        <div className="pt-11">
-          <h1 className="max-w-[520px] text-[52px] font-black leading-[0.98] tracking-tight md:text-[58px]">
-            Olá! Como posso <span className="block text-red-600">te ajudar hoje?</span>
-          </h1>
-          <p className="mt-7 max-w-[455px] text-[18px] font-bold leading-tight">
-            Nossa assistente virtual está pronta para responder suas dúvidas sobre documentos, matrículas, prazos e todos os serviços da secretaria, a qualquer hora.
-          </p>
-        </div>
-        
-        {/* O translate-y-5 empurra a imagem exatamente para a divisa */}
-        <div className="h-[600px] w-full translate-y-36">
-           <img alt="Estudantes" className="h-full w-full object-cover" src={Estudantes} />
-        </div>
-      </div>
-    </section>
-  )
-}
-function ServicesSection({ onHelpClick }: { onHelpClick: () => void }) {
-  return (
-    <section className="relative bg-white pb-20 pt-0">
-      <SectionLabel>Serviços Disponíveis</SectionLabel>
-      <FloatingHelp onClick={onHelpClick} />
-      <div className="mx-auto grid max-w-[680px] gap-4 pt-12 sm:grid-cols-2">
-        {services.map((service) => <ServiceCard key={service.title} service={service} />)}
-      </div>
-      <button className="absolute bottom-8 right-[130px] flex items-center gap-2 rounded-full bg-[#f6f1f1] px-5 py-2 text-[11px] text-zinc-500">
-        Ver todos <ChevronRight className="h-4 w-4" />
-      </button>
-    </section>
-  )
-}
+    if (option.aviso) {
+      nextHistory.push({ tipo: "bot", texto: option.aviso })
+    }
 
-function SectionLabel({ children }: { children: ReactNode }) {
-  return <h2 className="inline-flex rounded-br-full bg-red-600 py-1 pl-5 pr-9 text-[22px] font-black leading-none text-white">{children}</h2>
-}
+    if (option.resposta) {
+      nextHistory.push({ tipo: "bot", texto: option.resposta })
+      nextHistory.push({ tipo: "bot", texto: "Essa resposta resolveu sua dúvida?" })
+      setCurrentOptions([])
+      setAguardandoSatisfacao(true)
+    } else if (option.filhos) {
+      nextHistory.push({ tipo: "bot", texto: "Escolha uma opção:" })
+      setCurrentOptions(option.filhos)
+    }
 
-function FloatingHelp({ onClick }: { onClick: () => void }) {
-  return (
-    <button
-      className="fixed right-6 bottom-6 z-50 flex items-center gap-2 rounded-full bg-red-600 px-4 py-3 text-[11px] font-bold text-white shadow-lg transition hover:bg-red-700"
-      onClick={() => onClick()}
-      type="button"
-    >
-      <MessageCircle className="h-4 w-4" /> Precisa de ajuda?
-    </button>
-  )
-}
-function ServiceCard({ service }: { service: Service }) {
-  const handleClick = async () => {
-    if (service.actionType === "pdf" && service.actionUrl) {
-      try {
-        // 1. Vai até a rota e busca o conteúdo REAL do arquivo
-        const response = await fetch(service.actionUrl)
-        
-        if (!response.ok) throw new Error("Erro ao buscar arquivo")
-        
-        // 2. Transforma a resposta em um Blob (dados brutos do arquivo)
-        const blob = await response.blob()
-        
-        // 3. Cria uma URL temporária na memória do navegador contendo o arquivo
-        const blobUrl = window.URL.createObjectURL(blob)
-        
-        // 4. Cria o link, coloca a URL do Blob e força o download
-        const link = document.createElement("a")
-        link.href = blobUrl
-        
-        // Arruma o nome do arquivo
-        let nomeDoArquivo = service.actionUrl.split('/').pop() || "documento.pdf"
-        if (!nomeDoArquivo.toLowerCase().endsWith(".pdf")) {
-          nomeDoArquivo += ".pdf"
+    setHistory(nextHistory)
+  }
+
+  function handleRestart() {
+    setHistory(initialMessages)
+    setCurrentOptions(menus)
+    setAguardandoSatisfacao(false)
+  }
+
+  function handleSatisfacao(satisfeito: boolean) {
+    setAguardandoSatisfacao(false)
+
+    if (satisfeito) {
+      setHistory(prev => [
+        ...prev,
+        { tipo: "usuario", texto: "👍 Sim, obrigado!" },
+        { tipo: "bot", texto: "Fico feliz em ter ajudado! Até a próxima 😊" }
+      ])
+      setCurrentOptions([])
+    } else {
+      setHistory(prev => [
+        ...prev,
+        { tipo: "usuario", texto: "👎 Não" },
+        {
+          tipo: "bot",
+          texto: "Tudo bem! Você pode enviar sua dúvida pelo formulário de contato na página inicial. A secretaria responderá em breve."
         }
-        
-        link.download = nomeDoArquivo 
-        document.body.appendChild(link)
-        link.click()
-        
-        // 5. Limpa o link e a memória do navegador
-        document.body.removeChild(link)
-        window.URL.revokeObjectURL(blobUrl)
-
-      } catch (error) {
-        console.error("Erro ao baixar o documento:", error)
-        alert("Ocorreu um erro ao tentar baixar o arquivo. Verifique se ele está disponível.")
-      }
-
-    } else if (service.actionType === "navigate" && service.actionPath) {
-      window.location.href = service.actionPath
-    } else if (service.actionType === "link" && service.actionUrl) {
-      window.open(service.actionUrl, "_blank")
+      ])
+      setCurrentOptions([])
     }
   }
 
   return (
-    <article 
-      onClick={handleClick}
-      className="relative flex min-h-[92px] items-start gap-3 rounded-lg border-2 border-black bg-white p-3 shadow-sm cursor-pointer hover:shadow-lg transition"
+    <section
+      aria-label="Atendimento Fatec"
+      className={
+        isFloating
+          ? "overflow-hidden rounded-b-lg rounded-t-md bg-[#f8f9fa] text-black shadow-2xl ring-1 ring-black/15"
+          : "flex h-full min-h-[390px] flex-col overflow-hidden rounded-lg bg-[#f8f9fa] text-black shadow-2xl ring-1 ring-black/10"
+      }
     >
-      {service.popular && <span className="absolute right-2 top-2 rounded bg-zinc-100 px-2 py-0.5 text-[10px] font-medium text-zinc-500">Popular</span>}
-      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded bg-zinc-200 text-red-600">
-        <service.icon className="h-7 w-7" />
-      </div>
-      <div className="pr-12">
-        <h3 className="text-[13px] font-black leading-tight">{service.title}</h3>
-        <p className="mt-1 text-[11px] leading-tight text-zinc-700">{service.description}</p>
-        <div className="mt-3 flex items-center gap-1 text-[10px] text-zinc-600">
-          <Clock3 className="h-3 w-3 text-red-600" /> <span>{service.time}</span>
+      <ChatHeader onClose={onClose} surface={_surface} />
+
+      <div
+        className={
+          isFloating
+            ? "chat-scroll h-[min(430px,calc(100vh-180px))] overflow-y-auto px-4 py-5"
+            : "chat-scroll flex-1 overflow-y-auto px-5 py-5"
+        }
+      >
+        <div className="space-y-2">
+          {history.map((message, index) => (
+            <ChatMessage
+              key={`${message.tipo}-${index}-${message.texto}`}
+              isLastBotMessage={message.tipo === "bot" && history[index + 1]?.tipo !== "bot"}
+              message={message}
+            />
+          ))}
         </div>
-      </div>
-    </article>
-  )
-}
 
-function SectionDivider() {
-  return (
-    <div className="relative h-9 bg-white">
-      <div className="absolute left-0 right-0 top-1/2 h-2 -translate-y-1/2 bg-black" />
-      <div className="absolute -left-4 top-1/2 h-14 w-14 -translate-y-1/2 rounded-full bg-black" />
-      <div className="absolute -right-4 top-1/2 h-14 w-14 -translate-y-1/2 rounded-full bg-black" />
-    </div>
-  )
-}
+        <div ref={endOfChatRef} />
 
-function ContactSection() {
-  return (
-    <section className="bg-white px-8 pb-5 pt-5">
-      <div className="mx-auto max-w-[1060px] rounded-xl border border-zinc-400 bg-white p-5">
-        <div className="grid gap-8 md:grid-cols-[1fr_0.86fr]">
-          <div className="px-2 py-4">
-            <h2 className="text-[35px] font-black leading-none">Envie sua Dúvida</h2>
-            <p className="mt-6 max-w-[520px] text-[13px] leading-snug">
-              Preencha o formulário ao lado e nossa equipe retornará o mais breve possível. Você também pode nos contatar pelos canais abaixo.
-            </p>
-            <div className="mt-9 space-y-6 text-[13px]">
-              <p className="flex items-center gap-3"><Phone className="h-5 w-5 text-red-500" /> (11) 0000-0000</p>
-              <p className="flex items-center gap-3"><Mail className="h-5 w-5 text-red-500" /> secretaria@instituicao.edu.br</p>
-              <p className="flex items-center gap-3"><MapPin className="h-5 w-5 text-red-500" /> Hall do Prédio</p>
-            </div>
-          </div>
-          <form className="rounded-xl bg-[#f7f5f5] p-6">
-            <LabelInput label="Nome Completo" placeholder="Digite seu nome..." />
-            <LabelInput label="E-mail" placeholder="seu.email@exemplo.com" type="email" />
-            <label className="mt-5 block text-[13px] font-black">
-              Sua Dúvida
-              <textarea className="mt-2 h-[112px] w-full resize-none rounded-lg border border-zinc-500 bg-white px-3 py-3 text-[12px] font-normal outline-none focus:border-red-600" placeholder="Descreva sua dúvida ou solicitação detalhadamente..." />
-            </label>
-            <button className="mt-4 flex h-12 w-full items-center justify-center gap-3 rounded-full bg-red-600 text-[18px] font-black text-white transition hover:bg-red-700" type="button">
-              <Send className="h-5 w-5" /> Enviar Mensagem
-            </button>
-          </form>
+        <div className="mt-5 flex flex-col gap-2">
+          {aguardandoSatisfacao ? (
+            <>
+              <button
+                className="min-h-8 rounded-full border border-[#28a745] bg-white px-4 py-2 text-center text-[12px] leading-tight text-[#28a745] transition hover:bg-[#28a745] hover:text-white focus:outline-none focus:ring-2 focus:ring-[#28a745]/40"
+                onClick={() => handleSatisfacao(true)}
+                type="button"
+              >
+                👍 Sim, obrigado!
+              </button>
+              <button
+                className="min-h-8 rounded-full border border-[#dc3545] bg-white px-4 py-2 text-center text-[12px] leading-tight text-[#dc3545] transition hover:bg-[#dc3545] hover:text-white focus:outline-none focus:ring-2 focus:ring-red-500/40"
+                onClick={() => handleSatisfacao(false)}
+                type="button"
+              >
+                👎 Não
+              </button>
+            </>
+          ) : (
+            currentOptions.map((option) => (
+              <button
+                className="min-h-8 rounded-full border border-[black] bg-white px-4 py-2 text-center text-[12px] leading-tight text-[black] transition hover:bg-[black] hover:text-white focus:outline-none focus:ring-2 focus:ring-[black]/40"
+                key={option.id}
+                onClick={() => handleChoice(option)}
+                type="button"
+              >
+                {option.texto}
+              </button>
+            ))
+          )}
+
+          <button
+            className="mt-1 flex min-h-9 items-center justify-center gap-2 rounded-full bg-[#dc3545] px-4 py-2 text-[12px] font-bold text-white transition hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500/40"
+            onClick={handleRestart}
+            type="button"
+          >
+            <RotateCcw className="h-3.5 w-3.5" />
+            Reiniciar conversa
+          </button>
         </div>
       </div>
     </section>
   )
 }
 
-function LabelInput({ label, placeholder, type = "text" }: { label: string; placeholder: string; type?: string }) {
+function ChatHeader({ onClose, surface }: { onClose?: () => void; surface: ChatSurface }) {
+  const isFloating = surface === "floating"
+
   return (
-    <label className="mb-5 block text-[13px] font-black">
-      {label}
-      <input className="mt-2 h-10 w-full rounded-md border border-zinc-500 bg-white px-3 text-[12px] font-normal outline-none focus:border-red-600" placeholder={placeholder} type={type} />
-    </label>
+    <header className="relative flex min-h-[42px] items-center justify-between bg-[#ff0000] px-4 py-2 text-white">
+      <h2 className="truncate text-[18px] font-black leading-none">Atendimento Fatec</h2>
+
+      {isFloating && (
+        <button
+          aria-label="Fechar atendimento"
+          className="grid h-8 w-8 shrink-0 place-items-center rounded-full transition hover:bg-white/15"
+          onClick={onClose}
+          type="button"
+        >
+          <X className="h-6 w-6" />
+        </button>
+      )}
+    </header>
   )
 }
 
-function Footer() {
-  return (
-    <footer className="bg-black px-8 py-6 text-white">
-      <div className="mx-auto grid max-w-[1140px] gap-8 border-b border-white/20 pb-8 md:grid-cols-4">
-        <div>
-          <Brand compact />
-          <p className="mt-4 max-w-[190px] text-[11px] leading-snug text-white/55">Facilitando a vida acadêmica de milhares de estudantes.</p>
+function ChatMessage({ isLastBotMessage, message }: { isLastBotMessage: boolean; message: Mensagem }) {
+  const isBot = message.tipo === "bot"
+
+  if (isBot) {
+    return (
+      <div className="flex items-start gap-2">
+        <div className="grid h-8 w-8 shrink-0 place-items-center">
+          {isLastBotMessage && (
+            <span className="grid h-8 w-8 place-items-center overflow-hidden rounded-full bg-[#26343a]" >
+              <img alt="Avatar do bot" className="h-full w-full object-cover" src={chatbotUser}/>
+            </span>
+          )}
         </div>
-        {footerLinks.map((group) => (
-          <div key={group.title}>
-            <h3 className="text-[13px] font-black">{group.title}</h3>
-            <ul className="mt-5 space-y-2 text-[10px] text-white/55">{group.links.map((link) => <li key={link}>{link}</li>)}</ul>
-          </div>
-        ))}
-        <div>
-          <h3 className="text-[13px] font-black">Contato</h3>
-          <ul className="mt-5 space-y-2 text-[10px] text-white/55">
-            <li>(12) 3900-0505</li>
-            <li>secretaria@edu.br</li>
-            <li>Seg - Sex: 8h às 21h</li>
-          </ul>
+        <div className="relative max-w-[100%] whitespace-pre-line break-words rounded-2xl rounded-tl-sm bg-[#e2cece] px-3 py-2 text-left text-[13px] leading-snug text-black before:absolute before:left-[-8px] before:top-0 before:h-0 before:w-0 before:border-y-[6px] before:border-r-[9px] before:border-y-transparent before:border-r-[#e2cece]">
+          {message.texto}
         </div>
       </div>
-      <p className="pt-6 text-center text-[10px] text-white/45">© 2026 Portal Acadêmico - Secretaria Digital. Todos os direitos reservados.</p>
-    </footer>
+    )
+  }
+
+  return (
+    <div className="flex justify-end">
+      <div className="relative max-w-[82%] whitespace-pre-line break-words rounded-2xl rounded-tr-sm bg-[#ff0000] px-3 py-2 text-left text-[13px] leading-snug text-white before:absolute before:right-[-8px] before:top-0 before:h-0 before:w-0 before:border-y-[6px] before:border-l-[9px] before:border-y-transparent before:border-l-[#ff0000]">
+        {message.texto}
+      </div>
+    </div>
   )
 }
 
-export default Home
+export default Chatbot
