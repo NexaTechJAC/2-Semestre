@@ -44,9 +44,19 @@ function ChatWindow({ surface: _surface, onClose }: { surface: ChatSurface; onCl
   const endOfChatRef = useRef<HTMLDivElement | null>(null)
   const isFloating = _surface === "floating"
 
-  useEffect(() => {
-    endOfChatRef.current?.scrollIntoView({ behavior: "instant", block: "nearest" })
-  }, [history, currentOptions])
+function Header() {
+  return (
+    <header className="bg-white px-8 py-4">
+      <div className="flex items-center justify-between gap-6">
+        <Brand />
+        <nav className="hidden items-center gap-7 text-[13px] font-bold md:flex" aria-label="Navegação principal">
+          {navigation.map((item) => <a key={item} href="#" className="transition-colors hover:text-red-600">{item}</a>)}
+        </nav>
+        <a href="/login" className="rounded-full bg-red-600 px-8 py-2 text-[12px] font-bold text-white transition hover:bg-red-700">Acesso Secretaria</a>
+      </div>
+    </header>
+  )
+}
 
   function handleChoice(option: Menu) {
     const nextHistory: Mensagem[] = [...history, { tipo: "usuario", texto: option.texto }]
