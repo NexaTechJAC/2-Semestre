@@ -1,32 +1,22 @@
 import { Router } from 'express';
-import { 
-  upload, 
-  uploadDocumento, 
-  listarDocumentos, 
-  deletarDocumento,
-  listarCursosDisponiveis, // Nova importação
-  listarCategoriasPorCurso  // Nova importação
-} from '../controllers/UploadController.js';
-// Se você criar as funções de navegação no controller, importe-as aqui:
-// import { listarCursos, listarCategoriasPorCurso } from '../controllers/DocumentoController.js';
+import { upload, uploadDocumento, listarDocumentos, deletarDocumento, listarCursosDisponiveis, listarCategoriasPorCurso } from '../controllers/UploadController.js';
+import { criarSessao } from '../controllers/SessionController.js';
+import { buscarNosRaiz, navegarPorSlug } from '../controllers/NavigationController.js';
+import { abrirDuvida } from '../controllers/InquiryController.js';
 
 const router = Router();
 
-// --- Suas rotas atuais ---
+// Uploads
 router.post('/admin/upload', upload.single('pdf'), uploadDocumento);
 router.get('/documentos', listarDocumentos);
 router.delete('/admin/documentos/:id', deletarDocumento);
-
-// --- Novas rotas para a lógica de "Pastas" (Navegação do Chat) ---
-
-// Rota para o Nível 1: Listar cursos disponíveis (ex: DSM, GERAL)
-router.get('/documentos', listarDocumentos);
 router.get('/navegacao/cursos', listarCursosDisponiveis);
 router.get('/navegacao/categorias/:curso', listarCategoriasPorCurso);
 
-// Rota para o Nível 2: Listar categorias dentro de um curso (ex: Horários, Calendários)
-router.get('/navegacao/categorias/:curso', async (req, res) => {
-  // Filtra as categorias baseadas no curso que o aluno clicou
-});
+// Chatbot
+router.post('/sessao', criarSessao);
+router.get('/nodes', buscarNosRaiz);
+router.post('/nodes/:slug', navegarPorSlug);
+router.post('/duvidas', abrirDuvida);
 
 export default router;

@@ -5,15 +5,3 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
-
-// Exemplo de como ficaria o modelo no seu Prisma
-model Documento {
-  id              Int      @id @default(autoincrement())
-  titulo          String
-  curso           String
-  categoria       String
-  url_arquivo     String?  // Opcional agora
-  conteudo_texto  String?  // Para as opções que são apenas texto
-  ano_referencia  Int
-  updated_at      DateTime @updatedAt
-}

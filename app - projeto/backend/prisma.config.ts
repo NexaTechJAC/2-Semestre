@@ -1,7 +1,9 @@
 import { defineConfig } from 'prisma/config';
 
 export default defineConfig({
-  datasource: {
-    url: "postgresql://postgres:1234@localhost:5433/fatec_chatbot?schema=public",
+  datasources: {
+    db: {
+      url: process.env.DATABASE_URL!,
+    },
   },
 });

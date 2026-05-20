@@ -3,7 +3,6 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import prisma from '../lib/prisma.js';
-import { MENSAGENS_FIXAS } from '../constants/mensagens.js';
 
 // Configuração do Multer para receber o arquivo em memória
 const storage = multer.memoryStorage();
@@ -13,71 +12,6 @@ export const upload = multer({ storage });
  * Gerencia a navegação inteligente do Chatbot.
  * Prioriza mensagens fixas e depois busca arquivos no curso específico ou em GERAL.
  */
-export const navegarChat = async (req: Request, res: Response) => {
-  try {
-    const { curso, categoria, subcategoria } = req.query;
-
-    if (!curso || !categoria) {
-      return res.status(400).json({ error: 'Parâmetros curso e categoria são obrigatórios.' });
-    }
-
-    // 1. Tenta encontrar no objeto de mensagens fixas (DSM, GEO, MARH ou NAO_ALUNO)
-    const nivelCurso = (MENSAGENS_FIXAS as any)[curso as string];
-    const escolha = nivelCurso?.[categoria as string];
-
-    if (escolha) {
-      // Caso seja um menu com sub-opções (Ex: Dispensa ou Estágio)
-      if (typeof escolha === 'object' && !subcategoria) {
-        return res.json({
-          tipo: 'menu',
-          mensagem: escolha.texto_informativo,
-          opcoes: Object.keys(escolha.sub_opcoes)
-        });
-      }
-
-      // Caso o aluno já tenha clicado em uma sub-opção específica
-      if (subcategoria && escolha.sub_opcoes?.[subcategoria as string]) {
-        return res.json({
-          tipo: 'texto',
-          conteudo: escolha.sub_opcoes[subcategoria as string]
-        });
-      }
-
-      // Caso seja uma mensagem de texto simples
-      if (typeof escolha === 'string') {
-        return res.json({
-          tipo: 'texto',
-          conteudo: escolha
-        });
-      }
-    }
-
-    // 2. Busca de Arquivos (PDF): Procura no curso específico OU na pasta GERAL
-    const documento = await prisma.documentos.findFirst({
-      where: {
-        OR: [
-          { curso: String(curso), categoria: String(categoria) },
-          { curso: 'GERAL', categoria: String(categoria) }
-        ]
-      },
-      orderBy: { updated_at: 'desc' }
-    });
-
-    if (documento) {
-      return res.json({
-        tipo: 'arquivo',
-        titulo: documento.titulo,
-        url: documento.url_arquivo
-      });
-    }
-
-    return res.status(404).json({ error: 'Informação não encontrada para os critérios informados.' });
-
-  } catch (error) {
-    console.error("Erro na navegação do chat:", error);
-    return res.status(500).json({ error: 'Erro interno ao processar navegação.' });
-  }
-};
 
 export const uploadDocumento = async (req: Request, res: Response) => {
   if (!req.file) {
