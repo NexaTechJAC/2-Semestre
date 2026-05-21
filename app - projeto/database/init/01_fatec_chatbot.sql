@@ -47,7 +47,7 @@ CREATE TABLE documentos (
     id               SERIAL       PRIMARY KEY,
     topico_id        INTEGER      NOT NULL REFERENCES topicos(id) ON DELETE CASCADE,
     nome_exibicao    TEXT         NOT NULL,
-    caminho_arquivo  TEXT         NOT NULL UNIQUE,
+    caminho_arquivo  TEXT         NOT NULL,
     ativo            BOOLEAN      NOT NULL DEFAULT TRUE
 );
 
