@@ -1,28 +1,29 @@
-import express from 'express';
-import cors from 'cors';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import router from './routes/index.js'; // <-- ADICIONE ESTA LINHA
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import router from "./routes/index.js";
+import { iniciarScheduler } from "./infra/scheduler.js";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT ?? 3000;
 
+// Middlewares globais
 app.use(cors());
 app.use(express.json());
 
-// Torna a pasta de uploads pública
-app.use('/uploads', express.static(path.join(process.cwd(), 'src', 'uploads')));
+// Servir arquivos estáticos da pasta uploads
+app.use("/uploads", express.static("src/uploads"));
 
-// Conecta as rotas do arquivo index.ts ao servidor
-app.use(router); // <-- ADICIONE ESTA LINHA
+// Rotas
+app.use(router);
 
-app.get('/', (req, res) => {
-  res.send('Servidor do Chatbot Fatec Jacareí em execução!');
-});
+// Inicia os jobs agendados
+iniciarScheduler();
 
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
+  console.log(`Servidor rodando na porta ${PORT}`);
 });
+
+export default app;

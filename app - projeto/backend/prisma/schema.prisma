@@ -1,19 +1,110 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
   provider = "postgresql"
 }
 
-// Exemplo de como ficaria o modelo no seu Prisma
+model Curso {
+  id    Int     @id @default(autoincrement())
+  sigla String  @unique @db.VarChar(10)
+  nome  String
+  ativo Boolean @default(true)
+
+  topicos Topico[]
+  logs    LogNavegacao[]
+
+  @@map("cursos")
+}
+
+model Topico {
+  id       Int    @id @default(autoincrement())
+  curso_id Int
+  chave    String @db.VarChar(50)
+  tipo     String @db.VarChar(20)
+
+  curso      Curso          @relation(fields: [curso_id], references: [id], onDelete: Cascade)
+  resposta   Resposta?
+  sub_opcoes SubOpcao[]
+  documentos Documento[]
+  logs       LogNavegacao[]
+
+  @@unique([curso_id, chave])
+  @@map("topicos")
+}
+
+model Resposta {
+  id                Int     @id @default(autoincrement())
+  topico_id         Int     @unique
+  texto_informativo String?
+  conteudo          String?
+
+  topico Topico @relation(fields: [topico_id], references: [id], onDelete: Cascade)
+
+  @@map("respostas")
+}
+
+model SubOpcao {
+  id        Int    @id @default(autoincrement())
+  topico_id Int
+  titulo    String
+  conteudo  String
+
+  topico Topico @relation(fields: [topico_id], references: [id], onDelete: Cascade)
+
+  @@map("sub_opcoes")
+}
+
 model Documento {
-  id              Int      @id @default(autoincrement())
-  titulo          String
-  curso           String
-  categoria       String
-  url_arquivo     String?  // Opcional agora
-  conteudo_texto  String?  // Para as opções que são apenas texto
-  ano_referencia  Int
-  updated_at      DateTime @updatedAt
+  id              Int     @id @default(autoincrement())
+  topico_id       Int
+  nome_exibicao   String
+  caminho_arquivo String  
+  ativo           Boolean @default(true)
+
+  topico Topico @relation(fields: [topico_id], references: [id], onDelete: Cascade)
+
+  @@map("documentos")
+}
+
+model Usuario {
+  id         Int      @id @default(autoincrement())
+  nome       String
+  email      String   @unique
+  senha_hash String
+  perfil     String   @db.VarChar(20)
+  ativo      Boolean  @default(true)
+  criado_em  DateTime @default(now())
+
+  @@map("usuarios")
+}
+
+model PerguntaUsuario {
+  id            Int       @id @default(autoincrement())
+  nome_aluno    String
+  email_aluno   String
+  curso_sigla   String?   @db.VarChar(10)
+  texto         String
+  status        String    @default("pendente") @db.VarChar(20)
+  criado_em     DateTime  @default(now())
+  enviada_em    DateTime?
+  respondida_em DateTime?
+
+  @@map("perguntas_usuarios")
+}
+
+model LogNavegacao {
+  id          Int      @id @default(autoincrement())
+  curso_id    Int?
+  topico_id   Int?
+  acao        String
+  satisfacao  String?  @db.VarChar(10)
+  acessado_em DateTime @default(now())
+
+  curso  Curso?  @relation(fields: [curso_id], references: [id])
+  topico Topico? @relation(fields: [topico_id], references: [id])
+
+  @@map("logs_navegacao")
 }
