@@ -7,11 +7,15 @@ import type { Menu, Mensagem } from "../types"
 
 import avatarAssistente from "../assets/img/Avatar_Fatec.png"
 
+interface ChatbotProps {
+  inline?: boolean
+}
+
 const initialMessages: Mensagem[] = [
   { tipo: "bot", texto: "Olá! Sou o assistente virtual da Secretaria Acadêmica.\nComo posso ajudá-lo?" },
 ]
 
-export default function FullScreenChatbot() {
+export default function Chatbot({ inline = false }: ChatbotProps) {
   const [history, setHistory] = useState<Mensagem[]>(initialMessages)
   const [currentOptions, setCurrentOptions] = useState<Menu[]>(menus)
   const [aguardandoSatisfacao, setAguardandoSatisfacao] = useState(false)
@@ -20,6 +24,10 @@ export default function FullScreenChatbot() {
   useEffect(() => {
     endOfChatRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" })
   }, [history, currentOptions])
+
+  const containerClassName = inline
+    ? "relative flex flex-col overflow-hidden rounded-[2rem] border border-slate-200 bg-[#5a4b4c] text-black shadow-lg"
+    : "fixed inset-0 z-50 flex flex-col bg-[#5a4b4c] text-black"
 
   function handleChoice(option: Menu) {
     const nextHistory: Mensagem[] = [...history, { tipo: "usuario", texto: option.texto }]
