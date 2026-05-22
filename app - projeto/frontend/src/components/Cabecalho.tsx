@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { Phone, Mail, Clock, MapPin, Menu, X } from "lucide-react"
+import { useNavigate } from "react-router-dom"
 
 import logoSP from "../assets/img/Governo-de-São-Paulo.jpg"
 import logoFatec from "../assets/img/FatecJac.png"
@@ -7,6 +8,7 @@ import logoFatec from "../assets/img/FatecJac.png"
 export default function Cabecalho() {
   // Estado para controlar se o menu mobile está aberto ou fechado
   const [menuAberto, setMenuAberto] = useState(false)
+  const navigate = useNavigate();
 
   return (
     <header className="w-full flex flex-col font-sans shadow-md">
@@ -73,6 +75,7 @@ export default function Cabecalho() {
         <div className="flex-shrink-0 mt-4 lg:mt-0 w-full lg:w-auto">
           <button 
             type="button"
+            onClick={() => navigate("/login")}
             className="w-full lg:w-auto bg-[#ff0000] hover:bg-red-700 text-white font-bold py-2.5 px-8 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-red-500/50"
           >
             Acesso Secretaria
