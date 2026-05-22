@@ -85,21 +85,22 @@ export default function Chatbot({ inline = false }: ChatbotProps) {
       {/* Cabeçalho */}
       <Cabecalho />
 {/* Cabeçalho do Chatbot */}
-      <header className="relative z-10 flex min-h-[88px] shrink-0 items-center justify-between bg-gradient-to-r from-[#ff0000] to-[#6b0000] px-4 py-3 text-white shadow-md sm:px-8">
+      <header className="relative z-10 flex max-h-[108px] min-h-[88px] shrink-0 items-center justify-between bg-gradient-to-r from-[#ff0000] to-[#6b0000] px-4 py-3 text-white shadow-md sm:px-8">
         
         {/* Lado Esquerdo: Avatar e Informações */}
-        <div className="flex items-center gap-4">
+        <div className="flex h-full items-center gap-4">
           
           {/* Container do Avatar com a bolinha verde de status */}
-          <div className="relative">
+          <div className="relative h-16 w-16 shrink-0 rounded-full bg-white p-1 shadow-sm">
             <img 
               src={avatarAssistente} 
               alt="Avatar Assistente Acadêmica" 
-              className="h-16 w-16 rounded-full object-cover border-2 border-white/20 shadow-sm"
+              className="h-[165%] w-[165%] object-cover absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"
             />
             {/* Bolinha Verde "Online" */}
             <span className="absolute bottom-0.5 right-0 block h-4 w-4 rounded-full bg-[#00ff00] border-2 border-[#cc0000]"></span>
           </div>
+          
 
           {/* Textos da Assistente */}
           <div className="flex flex-col">

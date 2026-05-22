@@ -65,7 +65,7 @@ export default function SidebarADM() {
         <nav className="flex-1 space-y-1 px-4 py-6">
           <div className="group flex cursor-pointer items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold transition-all hover:bg-red-600">
             <Layout size={18} className="text-zinc-500 group-hover:text-white" />
-            Ver Portais
+            Ver Dashboard
           </div>
           <div className="group flex cursor-pointer items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold transition-all hover:bg-red-600">
             <Settings size={18} className="text-zinc-500 group-hover:text-white" />
