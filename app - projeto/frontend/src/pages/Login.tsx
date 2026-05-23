@@ -11,9 +11,7 @@ export default function Login() {
 
   const navigate = useNavigate();
 
-  async function handleSubmit(
-    event: React.SyntheticEvent<HTMLFormElement>
-  ) {
+  async function handleSubmit( event: React.SyntheticEvent<HTMLFormElement>) {
     event.preventDefault();
 
     setMensagem("");
@@ -41,9 +39,16 @@ export default function Login() {
         return;
       }
 
-      setMensagem(
-        `Login realizado com sucesso. Bem-vindo, ${dados.user.name}!`
-      );
+      localStorage.setItem("token", dados.token);
+      localStorage.setItem("usuario", JSON.stringify(dados.usuario));
+
+      setMensagem(`Login realizado com sucesso. Bem-vindo, ${dados.usuario.nome}!`);
+
+      if (dados.usuario.perfil === "administrador") {
+      navigate("/admin");
+      } else {
+      navigate("/secretaria");
+      }
     } catch {
       setMensagem("Não foi possível conectar ao servidor.");
     } finally {
