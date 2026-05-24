@@ -5,6 +5,7 @@ import {
   listarCursosEstruturadoCompleto,
 } from "../repositories/chatbotRepository.js";
 import { registrarLog } from "../repositories/logRepository.js";
+import prisma from "../database/prisma.js";
 
 export async function getCursos() {
   return listarCursos();
@@ -27,9 +28,17 @@ export async function getResposta(sigla: string, chave: string) {
     throw new Error(`Tópico '${chave}' não encontrado para o curso '${sigla}'.`);
   }
 
+  // Busca o curso_id a partir da sigla
+  const curso = await prisma.curso.findFirst({
+    where: { sigla },
+    select: { id: true },
+  });
+
+  // Registra o acesso nos logs com curso_id
   await registrarLog({
-    acao: topico.tipo === "pdf" ? "baixou_pdf" : "visualizou_resposta",
+    acao: topico.tipo === "pdf" ? "baixou_pdf" : topico.tipo === "menu" ? "acessou_menu" : "visualizou_resposta",
     topico_id: topico.id,
+    curso_id: curso?.id,
   });
 
   return topico;
