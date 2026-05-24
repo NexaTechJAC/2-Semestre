@@ -61,8 +61,15 @@ export default function Chatbot() {
     try {
       const data = await fetchResposta(siglaAtual, topico.chave)
 
-      if (data.tipo === "simples" && data.resposta) {
-        next.push({ tipo: "bot", texto: data.resposta.conteudo })
+      // Sub-opcoes têm prioridade — exibe como menu independente do campo tipo
+      if (data.sub_opcoes && data.sub_opcoes.length > 0) {
+        const aviso = data.resposta?.conteudo || data.resposta?.texto_informativo || "Escolha uma opção:"
+        next.push({ tipo: "bot", texto: aviso })
+        setEtapa({ tipo: "sub_opcoes", opcoes: data.sub_opcoes })
+
+      } else if (data.tipo === "simples" && data.resposta) {
+        const textoResposta = data.resposta.conteudo || data.resposta.texto_informativo || "Sem conteúdo cadastrado."
+        next.push({ tipo: "bot", texto: textoResposta })
         next.push({ tipo: "bot", texto: "Essa resposta resolveu sua dúvida?" })
         setEtapa({ tipo: "satisfacao" })
         setAguardandoSatisfacao(true)
@@ -80,7 +87,7 @@ export default function Chatbot() {
         setAguardandoSatisfacao(true)
 
       } else if (data.tipo === "menu" && data.sub_opcoes.length > 0) {
-        const aviso = data.sub_opcoes[0]?.texto_informativo ?? "Escolha uma opção:"
+        const aviso = data.resposta?.texto_informativo || data.resposta?.conteudo || "Escolha uma opção:"
         next.push({ tipo: "bot", texto: aviso })
         setEtapa({ tipo: "sub_opcoes", opcoes: data.sub_opcoes })
 

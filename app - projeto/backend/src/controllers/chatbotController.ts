@@ -4,6 +4,7 @@ import {
   getTopicosPorCurso,
   getResposta,
   registrarSatisfacao,
+  getCursosEstruturadoCompleto,
 } from "../services/chatbotService.js";
 
 export async function listarCursos(req: Request, res: Response) {
@@ -56,6 +57,17 @@ export async function avaliarResposta(req: Request, res: Response) {
   try {
     await registrarSatisfacao(topico_id, curso_id, satisfacao);
     res.json({ message: "Avaliação registrada." });
+  } catch (err: unknown) {
+    const mensagem = err instanceof Error ? err.message : "Erro interno.";
+    res.status(500).json({ error: mensagem });
+  }
+}
+
+// ✅ NOVA ROTA — estrutura completa para o painel admin
+export async function listarCursosEstruturadoCompleto(req: Request, res: Response) {
+  try {
+    const data = await getCursosEstruturadoCompleto();
+    res.json(data);
   } catch (err: unknown) {
     const mensagem = err instanceof Error ? err.message : "Erro interno.";
     res.status(500).json({ error: mensagem });
