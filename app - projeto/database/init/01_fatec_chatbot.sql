@@ -602,27 +602,27 @@ Todos os cursos são oferecidos no período noturno, das 18h45 às 23h05, e poss
 -- Calendário Acadêmico: compartilhado, vinculado ao tópico DATAS de cada curso
 INSERT INTO documentos (topico_id, nome_exibicao, caminho_arquivo) VALUES
     ((SELECT t.id FROM topicos t JOIN cursos c ON t.curso_id = c.id WHERE c.sigla = 'DSM'       AND t.chave = 'DATAS'),
-     'Calendário Acadêmico 2026', '/uploads/GERAL/Calendário Acadêmico 2026.pdf'),
+     'Calendário Acadêmico 2026', '/uploads/GERAL/Calendario Academico 2026.pdf'),
 
     ((SELECT t.id FROM topicos t JOIN cursos c ON t.curso_id = c.id WHERE c.sigla = 'GEO'       AND t.chave = 'DATAS'),
-     'Calendário Acadêmico 2026', '/uploads/GERAL/Calendário Acadêmico 2026.pdf'),
+     'Calendário Acadêmico 2026', '/uploads/GERAL/Calendario Academico 2026.pdf'),
 
     ((SELECT t.id FROM topicos t JOIN cursos c ON t.curso_id = c.id WHERE c.sigla = 'MARH'      AND t.chave = 'DATAS'),
-     'Calendário Acadêmico 2026', '/uploads/GERAL/Calendário Acadêmico 2026.pdf'),
+     'Calendário Acadêmico 2026', '/uploads/GERAL/Calendario Academico 2026.pdf'),
 
     ((SELECT t.id FROM topicos t JOIN cursos c ON t.curso_id = c.id WHERE c.sigla = 'NAO_ALUNO' AND t.chave = 'DATAS'),
-     'Calendário Acadêmico 2026', '/uploads/GERAL/Calendário Acadêmico 2026.pdf');
+     'Calendário Acadêmico 2026', '/uploads/GERAL/Calendario Academico 2026.pdf');
 
 -- Horários: cada curso tem o seu PDF próprio
 INSERT INTO documentos (topico_id, nome_exibicao, caminho_arquivo) VALUES
     ((SELECT t.id FROM topicos t JOIN cursos c ON t.curso_id = c.id WHERE c.sigla = 'DSM'  AND t.chave = 'HORARIO'),
-     'DSM - Horário 2026-1', '/uploads/DSM/DSM - Horário 2026-1.pdf'),
+     'DSM - Horário 2026-1', '/uploads/DSM/DSM - Horario 2026-1.pdf'),
 
     ((SELECT t.id FROM topicos t JOIN cursos c ON t.curso_id = c.id WHERE c.sigla = 'GEO'  AND t.chave = 'HORARIO'),
-     'Geo - Horário 2026-1', '/uploads/GEO/Geo - Horário 2026-1.pdf'),
+     'Geo - Horário 2026-1', '/uploads/GEO/Geo - Horario 2026-1.pdf'),
 
     ((SELECT t.id FROM topicos t JOIN cursos c ON t.curso_id = c.id WHERE c.sigla = 'MARH' AND t.chave = 'HORARIO'),
-     'MARH - Horário 2026-1', '/uploads/MARH/MARH - Horário 2026-1.pdf');
+     'MARH - Horário 2026-1', '/uploads/MARH/MARH - Horario 2026-1.pdf');
 
 -- PPCs: vinculados ao tópico EXTENSAO de cada curso (referência curricular)
 INSERT INTO documentos (topico_id, nome_exibicao, caminho_arquivo) VALUES
@@ -638,13 +638,13 @@ INSERT INTO documentos (topico_id, nome_exibicao, caminho_arquivo) VALUES
 -- Documentos gerais: vinculados ao tópico ESTAGIO (manual) e DISPENSA (regulamento)
 INSERT INTO documentos (topico_id, nome_exibicao, caminho_arquivo) VALUES
     ((SELECT t.id FROM topicos t JOIN cursos c ON t.curso_id = c.id WHERE c.sigla = 'DSM'  AND t.chave = 'ESTAGIO'),
-     'Manual de Estágio Supervisionado', '/uploads/GERAL/Manual de orientações de Estágio Supervisionado.pdf'),
+     'Manual de Estágio Supervisionado', '/uploads/GERAL/Manual de orientacoes de Estagio Supervisionado.pdf'),
 
     ((SELECT t.id FROM topicos t JOIN cursos c ON t.curso_id = c.id WHERE c.sigla = 'GEO'  AND t.chave = 'ESTAGIO'),
-     'Manual de Estágio Supervisionado', '/uploads/GERAL/Manual de orientações de Estágio Supervisionado.pdf'),
+     'Manual de Estágio Supervisionado', '/uploads/GERAL/Manual de orientacoes de Estagio Supervisionado.pdf'),
 
     ((SELECT t.id FROM topicos t JOIN cursos c ON t.curso_id = c.id WHERE c.sigla = 'MARH' AND t.chave = 'ESTAGIO'),
-     'Manual de Estágio Supervisionado', '/uploads/GERAL/Manual de orientações de Estágio Supervisionado.pdf'),
+     'Manual de Estágio Supervisionado', '/uploads/GERAL/Manual de orientacoes de Estagio Supervisionado.pdf'),
 
     ((SELECT t.id FROM topicos t JOIN cursos c ON t.curso_id = c.id WHERE c.sigla = 'DSM'  AND t.chave = 'DISPENSA'),
      'Regulamento Geral dos Cursos', '/uploads/GERAL/Regulamento Geral dos Cursos.pdf'),
