@@ -5,7 +5,6 @@ import { RotateCcw, GraduationCap } from "lucide-react"
 import { fetchCursos, fetchTopicos, fetchResposta, formatarChave } from "../data/api"
 import type { Mensagem, Curso, Topico, SubOpcao, Etapa } from "../types"
 
-// Importando o Formulário de Email que recriamos
 import FormularioEmail from "./FormularioEmail"
 
 import avatarAssistente from "../assets/img/Avatar_Fatec.png"
@@ -66,12 +65,12 @@ export default function Chatbot() {
       const data = await fetchResposta(siglaAtual, topico.chave)
 
       if (data.sub_opcoes && data.sub_opcoes.length > 0) {
-        const aviso = data.resposta?.conteudo || data.resposta?.texto_informativo || "Escolha uma opção:"
+        const aviso = data.resposta?.conteudo || "Escolha uma opção:"
         next.push({ tipo: "bot", texto: aviso })
         setEtapa({ tipo: "sub_opcoes", opcoes: data.sub_opcoes })
 
       } else if (data.tipo === "simples" && data.resposta) {
-        const textoResposta = data.resposta.conteudo || data.resposta.texto_informativo || "Sem conteúdo cadastrado."
+        const textoResposta = data.resposta.conteudo || "Sem conteúdo cadastrado."
         next.push({ tipo: "bot", texto: textoResposta })
         next.push({ tipo: "bot", texto: "Essa resposta resolveu sua dúvida?" })
         setEtapa({ tipo: "satisfacao" })
@@ -80,9 +79,10 @@ export default function Chatbot() {
       } else if (data.tipo === "pdf" && data.documentos.length > 0) {
         next.push({ tipo: "bot", texto: "Documentos disponíveis para download:" })
         data.documentos.forEach(doc => {
+          const urlPdf = `${API}${doc.caminho_arquivo.split('/').map(encodeURIComponent).join('/')}`
           next.push({
             tipo: "bot",
-            texto: `📄 ${doc.nome_exibicao}\n${API}/uploads${doc.caminho_arquivo}`
+            texto: `📄 ${doc.nome_exibicao}\n${urlPdf}`
           })
         })
         next.push({ tipo: "bot", texto: "Essa resposta resolveu sua dúvida?" })
@@ -90,7 +90,7 @@ export default function Chatbot() {
         setAguardandoSatisfacao(true)
 
       } else if (data.tipo === "menu" && data.sub_opcoes.length > 0) {
-        const aviso = data.resposta?.texto_informativo || data.resposta?.conteudo || "Escolha uma opção:"
+        const aviso = data.resposta?.conteudo || "Escolha uma opção:"
         next.push({ tipo: "bot", texto: aviso })
         setEtapa({ tipo: "sub_opcoes", opcoes: data.sub_opcoes })
 
@@ -135,7 +135,6 @@ export default function Chatbot() {
         { tipo: "usuario", texto: "👎 Não resolveu" },
         { tipo: "bot", texto: "Lamento que a resposta não tenha sido suficiente. Preencha o formulário abaixo para enviar a sua dúvida (e documentos, se precisar) para a equipe da Secretaria:" },
       ])
-      // Ativa o form de contato
       setMostrarFormContato(true)
     }
   }
@@ -259,10 +258,9 @@ export default function Chatbot() {
             <div className="mt-2 flex flex-col gap-4">
               {renderOpcoes()}
 
-              {/* Renderização do Componente de Formulário */}
               {mostrarFormContato && (
                 <div className="flex justify-start pt-2">
-                  <FormularioEmail 
+                  <FormularioEmail
                     onSucesso={() => {
                       setMostrarFormContato(false)
                       setHistory(prev => [
@@ -360,12 +358,33 @@ function BotaoOpcao({ texto, onClick }: { texto: string; onClick: () => void }) 
   )
 }
 
+function renderTextoComLinks(texto: string) {
+  const urlRegex = /(https?:\/\/[^\s\n]+)/g
+  const partes = texto.split(urlRegex)
+
+  return partes.map((parte, i) =>
+    urlRegex.test(parte) ? (
+      <a
+        key={i}
+        href={parte}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="underline text-blue-600 hover:text-blue-800 break-all"
+      >
+        {parte}
+      </a>
+    ) : (
+      <span key={i}>{parte}</span>
+    )
+  )
+}
+
 function ChatMessage({ message }: { message: Mensagem }) {
   if (message.tipo === "bot") {
     return (
       <div className="flex justify-start">
         <div className="max-w-[90%] whitespace-pre-line break-words rounded-2xl rounded-tl-sm bg-white border border-gray-200/80 px-6 py-4 text-left text-[16px] font-medium leading-relaxed text-gray-800 shadow-sm sm:max-w-[80%]">
-          {message.texto}
+          {renderTextoComLinks(message.texto)}
         </div>
       </div>
     )
