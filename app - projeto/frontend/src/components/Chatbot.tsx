@@ -5,12 +5,15 @@ import { RotateCcw, GraduationCap } from "lucide-react"
 import { fetchCursos, fetchTopicos, fetchResposta, formatarChave } from "../data/api"
 import type { Mensagem, Curso, Topico, SubOpcao, Etapa } from "../types"
 
+// Importando o Formulário de Email que recriamos
+import FormularioEmail from "./FormularioEmail"
+
 import avatarAssistente from "../assets/img/Avatar_Fatec.png"
 
 const API = import.meta.env.VITE_API_URL ?? "http://localhost:3000"
 
 const initialMessages: Mensagem[] = [
-  { tipo: "bot", texto: "Olá! Sou o assistente virtual da Secretaria Acadêmica.\nComo posso ajudá-lo?" },
+  { tipo: "bot", texto: "Olá! Sou o assistente virtual da Secretaria Acadêmica.\nComo posso ajudá-lo hoje?" },
 ]
 
 export default function Chatbot() {
@@ -21,11 +24,12 @@ export default function Chatbot() {
   const [loading, setLoading] = useState(false)
   const [siglaAtual, setSiglaAtual] = useState("")
   const [aguardandoSatisfacao, setAguardandoSatisfacao] = useState(false)
+  const [mostrarFormContato, setMostrarFormContato] = useState(false)
   const endOfChatRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     endOfChatRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" })
-  }, [history, etapa])
+  }, [history, etapa, mostrarFormContato])
 
   useEffect(() => {
     fetchCursos()
@@ -129,8 +133,10 @@ export default function Chatbot() {
       setHistory(prev => [
         ...prev,
         { tipo: "usuario", texto: "👎 Não resolveu" },
-        { tipo: "bot", texto: "Tudo bem! Você pode enviar sua dúvida pelo formulário de contato na página inicial. A secretaria responderá em breve." },
+        { tipo: "bot", texto: "Lamento que a resposta não tenha sido suficiente. Preencha o formulário abaixo para enviar a sua dúvida (e documentos, se precisar) para a equipe da Secretaria:" },
       ])
+      // Ativa o form de contato
+      setMostrarFormContato(true)
     }
   }
 
@@ -140,13 +146,14 @@ export default function Chatbot() {
     setSiglaAtual("")
     setTopicos([])
     setAguardandoSatisfacao(false)
+    setMostrarFormContato(false)
   }
 
   function renderOpcoes() {
     if (loading) {
       return (
         <div className="flex flex-wrap gap-3 pt-2">
-          <span className="text-gray-500 font-medium text-[15px] animate-pulse">Carregando...</span>
+          <span className="text-gray-500 text-[15px] animate-pulse">Carregando...</span>
         </div>
       )
     }
@@ -185,14 +192,14 @@ export default function Chatbot() {
       return (
         <div className="flex flex-wrap gap-3 pt-2">
           <button
-            className="rounded-xl bg-emerald-600 px-6 py-2.5 text-[15px] font-bold text-white shadow-sm transition hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+            className="rounded-xl border-2 border-emerald-600 bg-emerald-600 px-6 py-2.5 text-[15px] font-bold text-white transition hover:bg-emerald-700 hover:border-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
             onClick={() => handleSatisfacao(true)}
             type="button"
           >
             👍 Sim, resolveu
           </button>
           <button
-            className="rounded-xl bg-red-600 px-6 py-2.5 text-[15px] font-bold text-white shadow-sm transition hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500/40"
+            className="rounded-xl border-2 border-[#a31212] bg-[#a31212] px-6 py-2.5 text-[15px] font-bold text-white transition hover:bg-[#850e0e] hover:border-[#850e0e] focus:outline-none focus:ring-2 focus:ring-red-500/40"
             onClick={() => handleSatisfacao(false)}
             type="button"
           >
@@ -210,7 +217,6 @@ export default function Chatbot() {
 
       <Cabecalho />
 
-      {/* Seu cabeçalho original com a foto da assistente totalmente intocado */}
       <header className="relative z-10 flex max-h-[108px] min-h-[88px] shrink-0 items-center justify-between bg-gradient-to-r from-[#ff0000] to-[#6b0000] px-4 py-3 text-white shadow-md sm:px-8">
         <div className="flex h-full items-center gap-4">
           <div className="relative h-16 w-16 shrink-0 rounded-full bg-white p-1 shadow-sm">
@@ -238,12 +244,11 @@ export default function Chatbot() {
         </div>
       </header>
 
-      {/* Conteúdo principal com distribuição inteligente de espaço */}
-      <div className="flex-1 overflow-y-auto px-4 py-8 sm:px-8">
-        <div className="mx-auto flex w-full max-w-6xl items-start gap-8 pb-12">
-          
-          {/* Coluna Principal: O fluxo de mensagens do Chatbot */}
-          <div className="flex-1 flex flex-col space-y-6">
+      <div className="flex-1 overflow-y-auto px-4 py-10 sm:px-8">
+        <div className="mx-auto flex w-full max-w-7xl items-start justify-between gap-12 lg:gap-20 pb-12">
+
+          <div className="flex-1 flex flex-col space-y-10 w-full max-w-4xl">
+
             {history.map((message, index) => (
               <ChatMessage
                 key={`${message.tipo}-${index}-${message.texto}`}
@@ -254,7 +259,29 @@ export default function Chatbot() {
             <div className="mt-2 flex flex-col gap-4">
               {renderOpcoes()}
 
-              {etapa.tipo === "fim" && (
+              {/* Renderização do Componente de Formulário */}
+              {mostrarFormContato && (
+                <div className="flex justify-start pt-2">
+                  <FormularioEmail 
+                    onSucesso={() => {
+                      setMostrarFormContato(false)
+                      setHistory(prev => [
+                        ...prev,
+                        { tipo: "bot", texto: "✅ A sua mensagem e anexos foram enviados com sucesso! A secretaria entrará em contato pelo e-mail informado." }
+                      ])
+                    }}
+                    onCancelar={() => {
+                      setMostrarFormContato(false)
+                      setHistory(prev => [
+                        ...prev,
+                        { tipo: "bot", texto: "Envio cancelado." }
+                      ])
+                    }}
+                  />
+                </div>
+              )}
+
+              {etapa.tipo === "fim" && !mostrarFormContato && (
                 <div className="mt-8 flex justify-center pt-8">
                   <button
                     className="flex items-center gap-2 rounded-xl bg-gray-200 px-6 py-3 text-[15px] font-bold text-gray-700 transition hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500/20"
@@ -271,10 +298,7 @@ export default function Chatbot() {
             <div ref={endOfChatRef} className="h-4" />
           </div>
 
-          {/* Painel de Apoio Acadêmico: Visível apenas em computadores para matar o "espação" vazio */}
-          <aside className="hidden lg:flex w-80 shrink-0 flex-col space-y-4 sticky top-4">
-            
-            {/* Card de Horários */}
+          <aside className="hidden lg:flex w-[320px] shrink-0 flex-col space-y-5 sticky top-8">
             <div className="rounded-2xl border border-gray-200/80 bg-white p-5 shadow-sm">
               <h3 className="text-[15px] font-bold text-gray-800 border-b border-gray-100 pb-2 mb-3 flex items-center gap-2">
                 🕒 Atendimento Secretaria
@@ -285,12 +309,11 @@ export default function Chatbot() {
               </p>
             </div>
 
-            {/* Card de Links Úteis da Instituição */}
             <div className="rounded-2xl border border-gray-200/80 bg-white p-5 shadow-sm">
               <h3 className="text-[15px] font-bold text-gray-800 border-b border-gray-100 pb-2 mb-3 flex items-center gap-2">
                 🌐 Links Úteis
               </h3>
-              <ul className="text-[14px] space-y-2.5 font-medium text-red-800">
+              <ul className="text-[14px] space-y-2.5 font-medium text-[#a31212]">
                 <li>
                   <a href="https://siga.cps.sp.gov.br/sigaaluno/applogin.aspx" target="_blank" rel="noreferrer" className="hover:underline flex items-center gap-1">
                     • Sistema SIGA (Aluno)
@@ -309,16 +332,14 @@ export default function Chatbot() {
               </ul>
             </div>
 
-            {/* Card de Dicas de Navegação */}
             <div className="rounded-2xl bg-red-50/60 border border-red-100 p-5">
-              <h4 className="text-[13.5px] font-bold text-red-800 mb-1">
+              <h4 className="text-[13.5px] font-bold text-[#a31212] mb-1">
                 💡 Dica de Navegação
               </h4>
               <p className="text-[13px] text-gray-600 leading-relaxed">
                 Utilize os botões sugeridos na conversa para obter respostas imediatas sobre prazos, matrículas e documentos.
               </p>
             </div>
-
           </aside>
 
         </div>
@@ -330,7 +351,7 @@ export default function Chatbot() {
 function BotaoOpcao({ texto, onClick }: { texto: string; onClick: () => void }) {
   return (
     <button
-      className="rounded-xl bg-[#a31212] px-5 py-3 text-[15px] font-medium text-white shadow-sm transition-all hover:-translate-y-0.5 hover:bg-[#850e0e] focus:outline-none focus:ring-2 focus:ring-red-500/40"
+      className="rounded-xl bg-[#a31212] px-5 py-3 text-[15px] font-medium text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-[#850e0e] focus:outline-none focus:ring-2 focus:ring-red-500/40"
       onClick={onClick}
       type="button"
     >
