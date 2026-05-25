@@ -39,15 +39,18 @@ export default function Login() {
         return;
       }
 
-      localStorage.setItem("token", dados.token);
+      // Salvar token e informações do usuário
+      localStorage.setItem("authToken", dados.token);
+      localStorage.setItem("userRole", dados.perfil || dados.usuario?.perfil);
       localStorage.setItem("usuario", JSON.stringify(dados.usuario));
 
-      setMensagem(`Login realizado com sucesso. Bem-vindo, ${dados.usuario.nome}!`);
+      setMensagem(`Login realizado com sucesso. Bem-vindo, ${dados.usuario?.nome || dados.name}!`);
 
-      if (dados.usuario.perfil === "administrador") {
-      navigate("/admin");
+      // Redirecionar baseado no perfil
+      if (dados.perfil === "administrador" || dados.usuario?.perfil === "administrador") {
+        navigate("/admin");
       } else {
-      navigate("/secretaria");
+        navigate("/");
       }
     } catch {
       setMensagem("Não foi possível conectar ao servidor.");
