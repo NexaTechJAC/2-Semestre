@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
-import { Menu, X, BookOpen, Users, Layout, Settings } from "lucide-react";
+import { Menu, X, BookOpen, Users, Layout, Settings, History } from "lucide-react";
+
 
 interface SidebarProps {
   isOpen: boolean;
@@ -114,6 +115,7 @@ interface SidebarProps {
           <nav className="space-y-2 px-4 py-6 relative z-10">
             {renderMenuItem('cursos', 'Cursos', Layout)}
             {renderMenuItem('membros', 'Membros', Users)}
+            {renderMenuItem('logs', 'Logs', History)}
           </nav>
 
           <div className="px-6 relative z-10"><hr className="border-zinc-800" /></div>

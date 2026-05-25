@@ -2,6 +2,7 @@ import { useState } from "react";
 import SidebarADM from "../components/SidebarADM";
 import NavbarADMIN from "../components/NavbarADM";
 import PergResp from "../components/PergResp";
+import LogsNavegacao from "../components/LogsNavegacao";
 
 export default function Admin() {
   // Estado da Sidebar (aberta/fechada)
@@ -39,6 +40,7 @@ export default function Admin() {
               {activeMenu === 'membros' && <p>Aqui vai a lista de Alunos/Professores...</p>}
               {activeMenu === 'dashboard' && <p>Aqui vão os gráficos...</p>}
               {activeMenu === 'configuracoes' && <p>Aqui vai a tela de opções...</p>}
+              {activeMenu === 'logs' && <LogsNavegacao />}
             </div>
 
           </div>

@@ -111,9 +111,9 @@ INSERT INTO cursos (sigla, nome) VALUES
 
 -- Usuários (senha_hash é um placeholder — substituir pelo hash bcrypt real no backend)
 INSERT INTO usuarios (nome, email, senha_hash, perfil) VALUES
-    ('Administrador',    'admin@fatec.sp.gov.br',          '$2b$10$mBEoxV9cCGiWYhHMcARj0eeWEy/wsiOFmURHLpQ5jBwjIaFwVjjUa',     'administrador'),
-    ('Ana Paula Ferreira','ana.ferreira@fatec.sp.gov.br',  '$2b$10$hTHSIAHOBSNtbJnYXIIRJuLRIwZR38XILD8L0F4FZw/VQt9d5Apqu',       'secretaria'),
-    ('Carlos Mendes',    'carlos.mendes@fatec.sp.gov.br',  '$2b$10$hTHSIAHOBSNtbJnYXIIRJuLRIwZR38XILD8L0F4FZw/VQt9d5Apqu',    'secretaria');
+    ('Administrador',    'admin@fatec.sp.gov.br',          '$2b$10$placeholder_hash_admin',     'administrador'),
+    ('Ana Paula Ferreira','ana.ferreira@fatec.sp.gov.br',  '$2b$10$placeholder_hash_ana',       'secretaria'),
+    ('Carlos Mendes',    'carlos.mendes@fatec.sp.gov.br',  '$2b$10$placeholder_hash_carlos',    'secretaria');
 
 
 -- TÓPICOS – DSM
