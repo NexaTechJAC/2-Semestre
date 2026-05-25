@@ -24,7 +24,9 @@ export default function Chatbot() {
   const [siglaAtual, setSiglaAtual] = useState("")
   const [aguardandoSatisfacao, setAguardandoSatisfacao] = useState(false)
   const [mostrarFormContato, setMostrarFormContato] = useState(false)
+  const [topicoAtualNome, setTopicoAtualNome] = useState("")
   const endOfChatRef = useRef<HTMLDivElement | null>(null)
+  const [trilhaAtual, setTrilhaAtual] = useState("")
 
   useEffect(() => {
     endOfChatRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" })
@@ -59,7 +61,10 @@ export default function Chatbot() {
 
   async function handleTopico(topico: Topico) {
     setLoading(true)
+    setTopicoAtualNome(formatarChave(topico.chave))
     const next: Mensagem[] = [...history, { tipo: "usuario", texto: formatarChave(topico.chave) }]
+
+    setTrilhaAtual(`${siglaAtual} > ${formatarChave(topico.chave)}`)
 
     try {
       const data = await fetchResposta(siglaAtual, topico.chave)
@@ -109,17 +114,32 @@ export default function Chatbot() {
   }
 
   function handleSubOpcao(opcao: SubOpcao) {
-    setHistory(prev => [
-      ...prev,
-      { tipo: "usuario", texto: opcao.titulo },
-      { tipo: "bot", texto: opcao.conteudo },
-      { tipo: "bot", texto: "Essa resposta resolveu sua dúvida?" },
-    ])
-    setEtapa({ tipo: "satisfacao" })
-    setAguardandoSatisfacao(true)
-  }
+  setTrilhaAtual(`${siglaAtual} > ${topicoAtualNome} > ${opcao.titulo}`)
+
+  setHistory(prev => [
+    ...prev,
+    { tipo: "usuario", texto: opcao.titulo },
+    { tipo: "bot", texto: opcao.conteudo },
+    { tipo: "bot", texto: "Essa resposta resolveu sua dúvida?" },
+  ])
+  setEtapa({ tipo: "satisfacao" })
+  setAguardandoSatisfacao(true)
+}
 
   function handleSatisfacao(satisfeito: boolean) {
+
+    if (trilhaAtual.trim()) {
+    const logsLocais = JSON.parse(localStorage.getItem("logsTrilhaUsuario") ?? "[]")
+    logsLocais.unshift({
+    id: Date.now(),
+    aluno: "Visitante",
+    trilha: trilhaAtual,
+    satisfacao: satisfeito ? "👍" : "👎",
+    dataHora: new Date().toISOString(),
+     })
+    localStorage.setItem("logsTrilhaUsuario", JSON.stringify(logsLocais.slice(0, 200)))
+    }
+
     setAguardandoSatisfacao(false)
     setEtapa({ tipo: "fim" })
 
@@ -146,6 +166,8 @@ export default function Chatbot() {
     setTopicos([])
     setAguardandoSatisfacao(false)
     setMostrarFormContato(false)
+    setTopicoAtualNome("")
+    setTrilhaAtual("")
   }
 
   function renderOpcoes() {

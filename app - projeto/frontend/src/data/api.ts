@@ -48,3 +48,26 @@ const chavesLegiveis: Record<string, string> = {
 export function formatarChave(chave: string): string {
   return chavesLegiveis[chave] ?? chave
 }
+
+export type LogNavegacao = {
+  id: number;
+  acao: string;
+  satisfacao?: "gostei" | "nao_gostei" | null;
+  acessado_em: string;
+  curso?: { sigla: string } | null;
+  topico?: { chave: string } | null;
+};
+
+export async function fetchLogsNavegacao(): Promise<LogNavegacao[]> {
+  const token = localStorage.getItem("authToken");
+
+  const res = await fetch(`${API}/api/admin/logs`, {
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+  });
+
+  if (!res.ok) throw new Error("Erro ao buscar logs de navegação.");
+  return res.json();
+}
