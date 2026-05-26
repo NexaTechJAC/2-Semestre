@@ -6,7 +6,6 @@ export interface TokenPayload {
   perfil: "administrador" | "secretaria";
 }
 
-// Extende o tipo Request do Express para incluir o usuário autenticado
 declare global {
   namespace Express {
     interface Request {
@@ -25,12 +24,14 @@ export function autenticarToken(req: Request, res: Response, next: NextFunction)
 
   const token = authHeader.split(" ")[1];
 
-  try {
-    const payload = jwt.verify(
-      token,
-      process.env.JWT_SECRET ?? "secret"
-    ) as TokenPayload;
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    res.status(500).json({ error: "Erro de configuração do servidor." });
+    return;
+  }
 
+  try {
+    const payload = jwt.verify(token, secret) as TokenPayload;
     req.usuario = payload;
     next();
   } catch {

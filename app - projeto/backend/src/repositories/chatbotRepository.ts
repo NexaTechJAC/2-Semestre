@@ -38,7 +38,6 @@ const iconesPorSigla: Record<string, string> = {
   DSM: "MonitorPlay",
   GEO: "Globe",
   MARH: "Notebook",
-  // Adicione outros cursos aqui conforme necessário
 };
 
 export async function listarCursosEstruturadoCompleto() {
@@ -63,6 +62,7 @@ export async function listarCursosEstruturadoCompleto() {
     categories: curso.topicos.map((topico) => ({
       id: String(topico.id),
       title: topico.chave,
+      tipo: topico.tipo,
       conteudo: topico.resposta?.conteudo || topico.resposta?.texto_informativo || "",
       subItems: topico.sub_opcoes.map((sub) => ({
         id: String(sub.id),
@@ -71,4 +71,65 @@ export async function listarCursosEstruturadoCompleto() {
       })),
     })),
   }));
+}
+
+export async function atualizarTopicoRepo(id: number, chave: string) {
+  return prisma.topico.update({
+    where: { id },
+    data: { chave },
+  });
+}
+
+export async function upsertRespostaRepo(topico_id: number, resposta: string) {
+  return prisma.resposta.upsert({
+    where: { topico_id },
+    update: { conteudo: resposta, texto_informativo: resposta },
+    create: { topico_id, conteudo: resposta, texto_informativo: resposta },
+  });
+}
+
+export async function deletarLogsDoTopico(topico_id: number) {
+  return prisma.logNavegacao.deleteMany({ where: { topico_id } });
+}
+
+export async function deletarTopicoRepo(id: number) {
+  return prisma.topico.delete({ where: { id } });
+}
+
+export async function criarTopicoRepo(dados: {
+  curso_id: number;
+  chave: string;
+  tipo: string;
+}) {
+  return prisma.topico.create({ data: dados });
+}
+
+export async function criarRespostaRepo(topico_id: number, conteudo: string) {
+  return prisma.resposta.create({
+    data: { topico_id, conteudo, texto_informativo: conteudo },
+  });
+}
+
+export async function atualizarSubOpcaoRepo(id: number, titulo: string, conteudo: string) {
+  return prisma.subOpcao.update({
+    where: { id },
+    data: { titulo, conteudo },
+  });
+}
+
+export async function deletarSubOpcaoRepo(id: number) {
+  return prisma.subOpcao.delete({ where: { id } });
+}
+
+export async function criarSubOpcaoRepo(topico_id: number, titulo: string, conteudo: string) {
+  return prisma.subOpcao.create({
+    data: { topico_id, titulo, conteudo },
+  });
+}
+
+export async function promoverTopicoParaMenu(topico_id: number) {
+  return prisma.topico.update({
+    where: { id: topico_id },
+    data: { tipo: "menu" },
+  });
 }

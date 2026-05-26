@@ -1,7 +1,17 @@
 import { Request, Response } from "express";
-import prisma from "../database/prisma.js";
+import {
+  atualizarTopicoRepo,
+  upsertRespostaRepo,
+  deletarLogsDoTopico,
+  deletarTopicoRepo,
+  criarTopicoRepo,
+  criarRespostaRepo,
+  atualizarSubOpcaoRepo,
+  deletarSubOpcaoRepo,
+  criarSubOpcaoRepo,
+  promoverTopicoParaMenu,
+} from "../repositories/chatbotRepository.js";
 
-// PUT /api/admin/topicos/:id
 export async function atualizarTopico(req: Request, res: Response) {
   const id = Number(req.params.id);
   const { chave, resposta } = req.body;
@@ -12,18 +22,10 @@ export async function atualizarTopico(req: Request, res: Response) {
   }
 
   try {
-    const topico = await prisma.topico.update({
-      where: { id },
-      data: { chave },
-    });
+    const topico = await atualizarTopicoRepo(id, chave);
 
-    // Salva em AMBOS os campos para garantir compatibilidade com o chatbot
     if (resposta !== undefined) {
-      await prisma.resposta.upsert({
-        where: { topico_id: id },
-        update: { conteudo: resposta, texto_informativo: resposta },
-        create: { topico_id: id, conteudo: resposta, texto_informativo: resposta },
-      });
+      await upsertRespostaRepo(id, resposta);
     }
 
     res.json({ message: "Tópico atualizado com sucesso.", topico });
@@ -33,14 +35,12 @@ export async function atualizarTopico(req: Request, res: Response) {
   }
 }
 
-// DELETE /api/admin/topicos/:id
 export async function deletarTopico(req: Request, res: Response) {
   const id = Number(req.params.id);
 
   try {
-    // Remove logs vinculados antes (sem CASCADE no Prisma para logs_navegacao)
-    await prisma.logNavegacao.deleteMany({ where: { topico_id: id } });
-    await prisma.topico.delete({ where: { id } });
+    await deletarLogsDoTopico(id);
+    await deletarTopicoRepo(id);
     res.json({ message: "Tópico deletado com sucesso." });
   } catch (err: unknown) {
     const mensagem = err instanceof Error ? err.message : "Erro interno.";
@@ -48,7 +48,6 @@ export async function deletarTopico(req: Request, res: Response) {
   }
 }
 
-// POST /api/admin/topicos
 export async function criarTopico(req: Request, res: Response) {
   const { curso_id, chave, tipo, resposta } = req.body;
 
@@ -63,18 +62,14 @@ export async function criarTopico(req: Request, res: Response) {
   }
 
   try {
-    const topico = await prisma.topico.create({
-      data: { curso_id: Number(curso_id), chave, tipo },
+    const topico = await criarTopicoRepo({
+      curso_id: Number(curso_id),
+      chave,
+      tipo,
     });
 
     if (resposta && resposta.trim()) {
-      await prisma.resposta.create({
-        data: {
-          topico_id: topico.id,
-          conteudo: resposta.trim(),
-          texto_informativo: resposta.trim(),
-        },
-      });
+      await criarRespostaRepo(topico.id, resposta.trim());
     }
 
     res.status(201).json({ message: "Tópico criado com sucesso.", topico });
@@ -84,7 +79,6 @@ export async function criarTopico(req: Request, res: Response) {
   }
 }
 
-// PUT /api/admin/sub-opcoes/:id
 export async function atualizarSubOpcao(req: Request, res: Response) {
   const id = Number(req.params.id);
   const { titulo, conteudo } = req.body;
@@ -95,10 +89,7 @@ export async function atualizarSubOpcao(req: Request, res: Response) {
   }
 
   try {
-    const sub = await prisma.subOpcao.update({
-      where: { id },
-      data: { titulo, conteudo },
-    });
+    const sub = await atualizarSubOpcaoRepo(id, titulo, conteudo);
     res.json({ message: "Sub-opção atualizada com sucesso.", sub });
   } catch (err: unknown) {
     const mensagem = err instanceof Error ? err.message : "Erro interno.";
@@ -106,12 +97,11 @@ export async function atualizarSubOpcao(req: Request, res: Response) {
   }
 }
 
-// DELETE /api/admin/sub-opcoes/:id
 export async function deletarSubOpcao(req: Request, res: Response) {
   const id = Number(req.params.id);
 
   try {
-    await prisma.subOpcao.delete({ where: { id } });
+    await deletarSubOpcaoRepo(id);
     res.json({ message: "Sub-opção deletada com sucesso." });
   } catch (err: unknown) {
     const mensagem = err instanceof Error ? err.message : "Erro interno.";
@@ -119,8 +109,6 @@ export async function deletarSubOpcao(req: Request, res: Response) {
   }
 }
 
-// POST /api/admin/sub-opcoes
-// Quando uma sub-opção é criada, o tópico pai vira tipo 'menu' automaticamente
 export async function criarSubOpcao(req: Request, res: Response) {
   const { topico_id, titulo, conteudo } = req.body;
 
@@ -130,16 +118,8 @@ export async function criarSubOpcao(req: Request, res: Response) {
   }
 
   try {
-    const sub = await prisma.subOpcao.create({
-      data: { topico_id: Number(topico_id), titulo, conteudo },
-    });
-
-    // Promove o tópico pai para 'menu' automaticamente
-    await prisma.topico.update({
-      where: { id: Number(topico_id) },
-      data: { tipo: "menu" },
-    });
-
+    const sub = await criarSubOpcaoRepo(Number(topico_id), titulo, conteudo);
+    await promoverTopicoParaMenu(Number(topico_id));
     res.status(201).json({ message: "Sub-opção criada com sucesso.", sub });
   } catch (err: unknown) {
     const mensagem = err instanceof Error ? err.message : "Erro interno.";

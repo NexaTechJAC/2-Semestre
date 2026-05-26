@@ -10,7 +10,10 @@ const app = express();
 const PORT = process.env.PORT ?? 3000;
 
 // Middlewares globais
-app.use(cors());
+app.use(cors({
+  origin: process.env.CORS_ORIGIN ?? "http://localhost:5173",
+  credentials: true,
+}));
 app.use(express.json());
 
 // Servir arquivos estáticos da pasta uploads

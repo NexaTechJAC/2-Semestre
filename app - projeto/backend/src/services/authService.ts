@@ -15,9 +15,14 @@ export async function autenticar(email: string, password: string) {
     throw new Error("Credenciais inválidas.");
   }
 
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    throw new Error("JWT_SECRET não configurado no servidor.");
+  }
+
   const token = jwt.sign(
     { id: usuario.id, perfil: usuario.perfil },
-    process.env.JWT_SECRET ?? "secret",
+    secret,
     { expiresIn: "8h" }
   );
 

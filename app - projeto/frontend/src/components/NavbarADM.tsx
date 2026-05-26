@@ -14,6 +14,7 @@ export default function NavbarADMIN({ tituloAtual = "Dashboard" }: NavbarADMINPr
     const handleLogout = () => {
     localStorage.removeItem("authToken");
     localStorage.removeItem("userRole");
+    localStorage.removeItem("usuario");
     navigate("/");
   };
     return (

@@ -26,7 +26,7 @@ const iconMap: { [key: string]: React.ElementType } = {
   Notebook, Globe, MapPin, MonitorPlay,
 };
 
-const API = 'http://localhost:3000';
+const API = import.meta.env.VITE_API_URL ?? 'http://localhost:3000';
 
 async function apiFetch(url: string, options?: RequestInit) {
   const token = localStorage.getItem('authToken');
