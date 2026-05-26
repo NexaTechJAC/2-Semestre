@@ -9,8 +9,6 @@ import FormularioEmail from "./FormularioEmail"
 
 import avatarAssistente from "../assets/img/Avatar_Fatec.png"
 
-const API = import.meta.env.VITE_API_URL ?? "http://localhost:3000"
-
 const initialMessages: Mensagem[] = [
   { tipo: "bot", texto: "Olá! Sou o assistente virtual da Secretaria Acadêmica.\nComo posso ajudá-lo hoje?" },
 ]
@@ -82,13 +80,10 @@ export default function Chatbot() {
         setAguardandoSatisfacao(true)
 
       } else if (data.tipo === "pdf" && data.documentos.length > 0) {
-        next.push({ tipo: "bot", texto: "Documentos disponíveis para download:" })
-        data.documentos.forEach(doc => {
-          const urlPdf = `${API}${doc.caminho_arquivo.split('/').map(encodeURIComponent).join('/')}`
-          next.push({
-            tipo: "bot",
-            texto: `📄 ${doc.nome_exibicao}\n${urlPdf}`
-          })
+        next.push({
+          tipo: "bot",
+          texto: "Documentos disponíveis para download:",
+          documentos: data.documentos,
         })
         next.push({ tipo: "bot", texto: "Essa resposta resolveu sua dúvida?" })
         setEtapa({ tipo: "satisfacao" })
@@ -380,33 +375,27 @@ function BotaoOpcao({ texto, onClick }: { texto: string; onClick: () => void }) 
   )
 }
 
-function renderTextoComLinks(texto: string) {
-  const urlRegex = /(https?:\/\/[^\s\n]+)/g
-  const partes = texto.split(urlRegex)
-
-  return partes.map((parte, i) =>
-    urlRegex.test(parte) ? (
-      <a
-        key={i}
-        href={parte}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="underline text-blue-600 hover:text-blue-800 break-all"
-      >
-        {parte}
-      </a>
-    ) : (
-      <span key={i}>{parte}</span>
-    )
-  )
-}
-
 function ChatMessage({ message }: { message: Mensagem }) {
   if (message.tipo === "bot") {
     return (
       <div className="flex justify-start">
         <div className="max-w-[90%] whitespace-pre-line break-words rounded-2xl rounded-tl-sm bg-white border border-gray-200/80 px-6 py-4 text-left text-[16px] font-medium leading-relaxed text-gray-800 shadow-sm sm:max-w-[80%]">
-          {renderTextoComLinks(message.texto)}
+          {message.texto}
+          {message.documentos && message.documentos.length > 0 && (
+            <div className="mt-3 flex flex-col gap-2">
+              {message.documentos.map(doc => (
+                <a
+                  key={doc.id}
+                  href={`${doc.caminho_arquivo.split('/').map(encodeURIComponent).join('/')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 rounded-lg border border-[#a31212]/30 bg-red-50 px-4 py-2.5 text-[14px] font-medium text-[#a31212] transition hover:bg-red-100"
+                >
+                  📄 {doc.nome_exibicao}
+                </a>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     )

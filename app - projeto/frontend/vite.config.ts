@@ -7,8 +7,18 @@ export default defineConfig({
     host: '0.0.0.0',
     port: 5173,
     watch: {
-      usePolling: true,      
+      usePolling: true,
       interval: 100,
+    },
+    proxy: {
+      '/uploads': {
+        target: 'http://backend:3000',
+        changeOrigin: true,
+      },
+      '/api': {
+        target: 'http://backend:3000',
+        changeOrigin: true,
+      },
     },
   },
 })
