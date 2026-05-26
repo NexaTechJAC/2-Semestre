@@ -1,225 +1,411 @@
+import Cabecalho from "./Cabecalho"
 import { useEffect, useRef, useState } from "react"
-import { RotateCcw, X } from "lucide-react"
+import { RotateCcw, GraduationCap } from "lucide-react"
 
-import chatbotUser from "../assets/img/Avatar_Fatec.png"
-import { menus } from "../data/menus"
-import type { Menu, Mensagem } from "../types"
+import { fetchCursos, fetchTopicos, fetchResposta, formatarChave } from "../data/api"
+import type { Mensagem, Curso, Topico, SubOpcao, Etapa } from "../types"
 
-type ChatbotProps = {
-  inline?: boolean
-}
+import FormularioEmail from "./FormularioEmail"
 
-type FloatingChatbotProps = {
-  open: boolean
-  onClose?: () => void
-}
-
-type ChatSurface = "inline" | "floating"
+import avatarAssistente from "../assets/img/Avatar_Fatec.png"
 
 const initialMessages: Mensagem[] = [
-  { tipo: "bot", texto: "Bem-vindo ao autoatendimento da Secretaria Acadêmica da Fatec Jacareí!" },
-  { tipo: "bot", texto: "Para qual curso você deseja atendimento?" },
+  { tipo: "bot", texto: "Olá! Sou o assistente virtual da Secretaria Acadêmica.\nComo posso ajudá-lo hoje?" },
 ]
 
-export function Chatbot({ inline = false }: ChatbotProps) {
-  return <ChatWindow surface={inline ? "inline" : "floating"} />
-}
-
-export function FloatingChatbot({ open, onClose }: FloatingChatbotProps) {
-  if (!open) {
-    return null
-  }
-
-  return (
-    <div className="fixed bottom-5 right-5 z-50 w-[min(352px,calc(100vw-28px))]">
-      <ChatWindow surface="floating" onClose={onClose} />
-    </div>
-  )
-}
-
-function ChatWindow({ surface: _surface, onClose }: { surface: ChatSurface; onClose?: () => void }) {
+export default function Chatbot() {
   const [history, setHistory] = useState<Mensagem[]>(initialMessages)
-  const [currentOptions, setCurrentOptions] = useState<Menu[]>(menus)
+  const [etapa, setEtapa] = useState<Etapa>({ tipo: "cursos" })
+  const [cursos, setCursos] = useState<Curso[]>([])
+  const [topicos, setTopicos] = useState<Topico[]>([])
+  const [loading, setLoading] = useState(false)
+  const [siglaAtual, setSiglaAtual] = useState("")
   const [aguardandoSatisfacao, setAguardandoSatisfacao] = useState(false)
+  const [mostrarFormContato, setMostrarFormContato] = useState(false)
+  const [topicoAtualNome, setTopicoAtualNome] = useState("")
   const endOfChatRef = useRef<HTMLDivElement | null>(null)
-  const isFloating = _surface === "floating"
+  const [trilhaAtual, setTrilhaAtual] = useState("")
 
   useEffect(() => {
-    endOfChatRef.current?.scrollIntoView({ behavior: "instant", block: "nearest" })
-  }, [history, currentOptions])
+    endOfChatRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" })
+  }, [history, etapa, mostrarFormContato])
 
-  function handleChoice(option: Menu) {
-    const nextHistory: Mensagem[] = [...history, { tipo: "usuario", texto: option.texto }]
+  useEffect(() => {
+    fetchCursos()
+      .then(setCursos)
+      .catch(() => {
+        setHistory(prev => [...prev, { tipo: "bot", texto: "Erro ao conectar com o servidor. Tente novamente mais tarde." }])
+      })
+  }, [])
 
-    if (option.aviso) {
-      nextHistory.push({ tipo: "bot", texto: option.aviso })
+  async function handleCurso(curso: Curso) {
+    setSiglaAtual(curso.sigla)
+    setLoading(true)
+    const next: Mensagem[] = [...history, { tipo: "usuario", texto: curso.nome }]
+
+    try {
+      const data = await fetchTopicos(curso.sigla)
+      setTopicos(data)
+      next.push({ tipo: "bot", texto: "Sobre o que você precisa de informação?" })
+      setEtapa({ tipo: "topicos", sigla: curso.sigla })
+    } catch {
+      next.push({ tipo: "bot", texto: "Erro ao buscar tópicos. Tente novamente." })
+      setEtapa({ tipo: "cursos" })
     }
 
-    if (option.resposta) {
-      nextHistory.push({ tipo: "bot", texto: option.resposta })
-      nextHistory.push({ tipo: "bot", texto: "Essa resposta resolveu sua dúvida?" })
-      setCurrentOptions([])
-      setAguardandoSatisfacao(true)
-    } else if (option.filhos) {
-      nextHistory.push({ tipo: "bot", texto: "Escolha uma opção:" })
-      setCurrentOptions(option.filhos)
+    setHistory(next)
+    setLoading(false)
+  }
+
+  async function handleTopico(topico: Topico) {
+    setLoading(true)
+    setTopicoAtualNome(formatarChave(topico.chave))
+    const next: Mensagem[] = [...history, { tipo: "usuario", texto: formatarChave(topico.chave) }]
+
+    setTrilhaAtual(`${siglaAtual} > ${formatarChave(topico.chave)}`)
+
+    try {
+      const data = await fetchResposta(siglaAtual, topico.chave)
+
+      if (data.sub_opcoes && data.sub_opcoes.length > 0) {
+        const aviso = data.resposta?.conteudo || "Escolha uma opção:"
+        next.push({ tipo: "bot", texto: aviso })
+        setEtapa({ tipo: "sub_opcoes", opcoes: data.sub_opcoes })
+
+      } else if (data.tipo === "simples" && data.resposta) {
+        const textoResposta = data.resposta.conteudo || "Sem conteúdo cadastrado."
+        next.push({ tipo: "bot", texto: textoResposta })
+        next.push({ tipo: "bot", texto: "Essa resposta resolveu sua dúvida?" })
+        setEtapa({ tipo: "satisfacao" })
+        setAguardandoSatisfacao(true)
+
+      } else if (data.tipo === "pdf" && data.documentos.length > 0) {
+        next.push({
+          tipo: "bot",
+          texto: "Documentos disponíveis para download:",
+          documentos: data.documentos,
+        })
+        next.push({ tipo: "bot", texto: "Essa resposta resolveu sua dúvida?" })
+        setEtapa({ tipo: "satisfacao" })
+        setAguardandoSatisfacao(true)
+
+      } else if (data.tipo === "menu" && data.sub_opcoes.length > 0) {
+        const aviso = data.resposta?.conteudo || "Escolha uma opção:"
+        next.push({ tipo: "bot", texto: aviso })
+        setEtapa({ tipo: "sub_opcoes", opcoes: data.sub_opcoes })
+
+      } else {
+        next.push({ tipo: "bot", texto: "Informação não encontrada para esse tópico." })
+        setEtapa({ tipo: "satisfacao" })
+        setAguardandoSatisfacao(true)
+      }
+    } catch {
+      next.push({ tipo: "bot", texto: "Erro ao buscar resposta. Tente novamente." })
+      setEtapa({ tipo: "topicos", sigla: siglaAtual })
     }
 
-    setHistory(nextHistory)
+    setHistory(next)
+    setLoading(false)
   }
 
-  function handleRestart() {
-    setHistory(initialMessages)
-    setCurrentOptions(menus)
-    setAguardandoSatisfacao(false)
-  }
+  function handleSubOpcao(opcao: SubOpcao) {
+  setTrilhaAtual(`${siglaAtual} > ${topicoAtualNome} > ${opcao.titulo}`)
+
+  setHistory(prev => [
+    ...prev,
+    { tipo: "usuario", texto: opcao.titulo },
+    { tipo: "bot", texto: opcao.conteudo },
+    { tipo: "bot", texto: "Essa resposta resolveu sua dúvida?" },
+  ])
+  setEtapa({ tipo: "satisfacao" })
+  setAguardandoSatisfacao(true)
+}
 
   function handleSatisfacao(satisfeito: boolean) {
+
+    if (trilhaAtual.trim()) {
+    const logsLocais = JSON.parse(localStorage.getItem("logsTrilhaUsuario") ?? "[]")
+    logsLocais.unshift({
+    id: Date.now(),
+    aluno: "Visitante",
+    trilha: trilhaAtual,
+    satisfacao: satisfeito ? "👍" : "👎",
+    dataHora: new Date().toISOString(),
+     })
+    localStorage.setItem("logsTrilhaUsuario", JSON.stringify(logsLocais.slice(0, 200)))
+    }
+
     setAguardandoSatisfacao(false)
+    setEtapa({ tipo: "fim" })
 
     if (satisfeito) {
       setHistory(prev => [
         ...prev,
-        { tipo: "usuario", texto: "👍 Sim, obrigado!" },
-        { tipo: "bot", texto: "Fico feliz em ter ajudado! Até a próxima 😊" }
+        { tipo: "usuario", texto: "👍 Sim, resolveu!" },
+        { tipo: "bot", texto: "Fico feliz em ter ajudado! Se precisar de mais alguma coisa, é só reiniciar a conversa. Até a próxima 😊" },
       ])
-      setCurrentOptions([])
     } else {
       setHistory(prev => [
         ...prev,
-        { tipo: "usuario", texto: "👎 Não" },
-        {
-          tipo: "bot",
-          texto: "Tudo bem! Você pode enviar sua dúvida pelo formulário de contato na página inicial. A secretaria responderá em breve."
-        }
+        { tipo: "usuario", texto: "👎 Não resolveu" },
+        { tipo: "bot", texto: "Lamento que a resposta não tenha sido suficiente. Preencha o formulário abaixo para enviar a sua dúvida (e documentos, se precisar) para a equipe da Secretaria:" },
       ])
-      setCurrentOptions([])
+      setMostrarFormContato(true)
     }
   }
 
-  return (
-    <section
-      aria-label="Atendimento Fatec"
-      className={
-        isFloating
-          ? "overflow-hidden rounded-b-lg rounded-t-md bg-[#f8f9fa] text-black shadow-2xl ring-1 ring-black/15"
-          : "flex h-full min-h-[390px] flex-col overflow-hidden rounded-lg bg-[#f8f9fa] text-black shadow-2xl ring-1 ring-black/10"
-      }
-    >
-      <ChatHeader onClose={onClose} surface={_surface} />
+  function handleRestart() {
+    setHistory(initialMessages)
+    setEtapa({ tipo: "cursos" })
+    setSiglaAtual("")
+    setTopicos([])
+    setAguardandoSatisfacao(false)
+    setMostrarFormContato(false)
+    setTopicoAtualNome("")
+    setTrilhaAtual("")
+  }
 
-      <div
-        className={
-          isFloating
-            ? "chat-scroll h-[min(430px,calc(100vh-180px))] overflow-y-auto px-4 py-5"
-            : "chat-scroll flex-1 overflow-y-auto px-5 py-5"
-        }
-      >
-        <div className="space-y-2">
-          {history.map((message, index) => (
-            <ChatMessage
-              key={`${message.tipo}-${index}-${message.texto}`}
-              isLastBotMessage={message.tipo === "bot" && history[index + 1]?.tipo !== "bot"}
-              message={message}
-            />
+  function renderOpcoes() {
+    if (loading) {
+      return (
+        <div className="flex flex-wrap gap-3 pt-2">
+          <span className="text-gray-500 text-[15px] animate-pulse">Carregando...</span>
+        </div>
+      )
+    }
+
+    if (etapa.tipo === "cursos") {
+      return (
+        <div className="flex flex-wrap gap-3 pt-2">
+          {cursos.map(curso => (
+            <BotaoOpcao key={curso.id} texto={curso.nome} onClick={() => handleCurso(curso)} />
           ))}
         </div>
+      )
+    }
 
-        <div ref={endOfChatRef} />
+    if (etapa.tipo === "topicos") {
+      return (
+        <div className="flex flex-wrap gap-3 pt-2">
+          {topicos.map(topico => (
+            <BotaoOpcao key={topico.id} texto={formatarChave(topico.chave)} onClick={() => handleTopico(topico)} />
+          ))}
+        </div>
+      )
+    }
 
-        <div className="mt-5 flex flex-col gap-2">
-          {aguardandoSatisfacao ? (
-            <>
-              <button
-                className="min-h-8 rounded-full border border-[#28a745] bg-white px-4 py-2 text-center text-[12px] leading-tight text-[#28a745] transition hover:bg-[#28a745] hover:text-white focus:outline-none focus:ring-2 focus:ring-[#28a745]/40"
-                onClick={() => handleSatisfacao(true)}
-                type="button"
-              >
-                👍 Sim, obrigado!
-              </button>
-              <button
-                className="min-h-8 rounded-full border border-[#dc3545] bg-white px-4 py-2 text-center text-[12px] leading-tight text-[#dc3545] transition hover:bg-[#dc3545] hover:text-white focus:outline-none focus:ring-2 focus:ring-red-500/40"
-                onClick={() => handleSatisfacao(false)}
-                type="button"
-              >
-                👎 Não
-              </button>
-            </>
-          ) : (
-            currentOptions.map((option) => (
-              <button
-                className="min-h-8 rounded-full border border-[black] bg-white px-4 py-2 text-center text-[12px] leading-tight text-[black] transition hover:bg-[black] hover:text-white focus:outline-none focus:ring-2 focus:ring-[black]/40"
-                key={option.id}
-                onClick={() => handleChoice(option)}
-                type="button"
-              >
-                {option.texto}
-              </button>
-            ))
-          )}
+    if (etapa.tipo === "sub_opcoes") {
+      return (
+        <div className="flex flex-wrap gap-3 pt-2">
+          {etapa.opcoes.map(opcao => (
+            <BotaoOpcao key={opcao.id} texto={opcao.titulo} onClick={() => handleSubOpcao(opcao)} />
+          ))}
+        </div>
+      )
+    }
 
+    if (aguardandoSatisfacao) {
+      return (
+        <div className="flex flex-wrap gap-3 pt-2">
           <button
-            className="mt-1 flex min-h-9 items-center justify-center gap-2 rounded-full bg-[#dc3545] px-4 py-2 text-[12px] font-bold text-white transition hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500/40"
-            onClick={handleRestart}
+            className="rounded-xl border-2 border-emerald-600 bg-emerald-600 px-6 py-2.5 text-[15px] font-bold text-white transition hover:bg-emerald-700 hover:border-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+            onClick={() => handleSatisfacao(true)}
             type="button"
           >
-            <RotateCcw className="h-3.5 w-3.5" />
-            Reiniciar conversa
+            👍 Sim, resolveu
+          </button>
+          <button
+            className="rounded-xl border-2 border-[#a31212] bg-[#a31212] px-6 py-2.5 text-[15px] font-bold text-white transition hover:bg-[#850e0e] hover:border-[#850e0e] focus:outline-none focus:ring-2 focus:ring-red-500/40"
+            onClick={() => handleSatisfacao(false)}
+            type="button"
+          >
+            👎 Não resolveu
           </button>
         </div>
-      </div>
-    </section>
-  )
-}
+      )
+    }
 
-function ChatHeader({ onClose, surface }: { onClose?: () => void; surface: ChatSurface }) {
-  const isFloating = surface === "floating"
+    return null
+  }
 
   return (
-    <header className="relative flex min-h-[42px] items-center justify-between bg-[#ff0000] px-4 py-2 text-white">
-      <h2 className="truncate text-[18px] font-black leading-none">Atendimento Fatec</h2>
+    <main className="fixed inset-0 z-50 flex flex-col bg-[#f4f6f9] text-gray-900">
 
-      {isFloating && (
-        <button
-          aria-label="Fechar atendimento"
-          className="grid h-8 w-8 shrink-0 place-items-center rounded-full transition hover:bg-white/15"
-          onClick={onClose}
-          type="button"
-        >
-          <X className="h-6 w-6" />
-        </button>
-      )}
-    </header>
+      <Cabecalho />
+
+      <header className="relative z-10 flex max-h-[108px] min-h-[88px] shrink-0 items-center justify-between bg-gradient-to-r from-[#ff0000] to-[#6b0000] px-4 py-3 text-white shadow-md sm:px-8">
+        <div className="flex h-full items-center gap-4">
+          <div className="relative h-16 w-16 shrink-0 rounded-full bg-white p-1 shadow-sm">
+            <img
+              src={avatarAssistente}
+              alt="Avatar Assistente Acadêmica"
+              className="h-[165%] w-[165%] object-cover absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"
+            />
+            <span className="absolute bottom-0.5 right-0 block h-4 w-4 rounded-full bg-[#00ff00] border-2 border-[#cc0000]"></span>
+          </div>
+          <div className="flex flex-col">
+            <h1 className="text-[20px] font-bold leading-tight">Assistente Acadêmica</h1>
+            <span className="text-[14px] text-white/90">Online agora</span>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-4">
+          <div className="hidden flex-col items-end sm:flex">
+            <span className="text-[13px] font-bold leading-tight">Portal Acadêmico</span>
+            <span className="text-[9px] uppercase tracking-wider text-white/80">Secretaria Digital</span>
+          </div>
+          <div className="hidden sm:flex h-12 w-14 items-center justify-center rounded-xl bg-[#ff0000] shadow-sm border border-red-500/50">
+            <GraduationCap className="h-8 w-8 text-white" />
+          </div>
+        </div>
+      </header>
+
+      <div className="flex-1 overflow-y-auto px-4 py-10 sm:px-8">
+        <div className="mx-auto flex w-full max-w-7xl items-start justify-between gap-12 lg:gap-20 pb-12">
+
+          <div className="flex-1 flex flex-col space-y-10 w-full max-w-4xl">
+
+            {history.map((message, index) => (
+              <ChatMessage
+                key={`${message.tipo}-${index}-${message.texto}`}
+                message={message}
+              />
+            ))}
+
+            <div className="mt-2 flex flex-col gap-4">
+              {renderOpcoes()}
+
+              {mostrarFormContato && (
+                <div className="flex justify-start pt-2">
+                  <FormularioEmail
+                    onSucesso={() => {
+                      setMostrarFormContato(false)
+                      setHistory(prev => [
+                        ...prev,
+                        { tipo: "bot", texto: "✅ A sua mensagem e anexos foram enviados com sucesso! A secretaria entrará em contato pelo e-mail informado." }
+                      ])
+                    }}
+                    onCancelar={() => {
+                      setMostrarFormContato(false)
+                      setHistory(prev => [
+                        ...prev,
+                        { tipo: "bot", texto: "Envio cancelado." }
+                      ])
+                    }}
+                  />
+                </div>
+              )}
+
+              {etapa.tipo === "fim" && !mostrarFormContato && (
+                <div className="mt-8 flex justify-center pt-8">
+                  <button
+                    className="flex items-center gap-2 rounded-xl bg-gray-200 px-6 py-3 text-[15px] font-bold text-gray-700 transition hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500/20"
+                    onClick={handleRestart}
+                    type="button"
+                  >
+                    <RotateCcw className="h-4 w-4" />
+                    Iniciar novo atendimento
+                  </button>
+                </div>
+              )}
+            </div>
+
+            <div ref={endOfChatRef} className="h-4" />
+          </div>
+
+          <aside className="hidden lg:flex w-[320px] shrink-0 flex-col space-y-5 sticky top-8">
+            <div className="rounded-2xl border border-gray-200/80 bg-white p-5 shadow-sm">
+              <h3 className="text-[15px] font-bold text-gray-800 border-b border-gray-100 pb-2 mb-3 flex items-center gap-2">
+                🕒 Atendimento Secretaria
+              </h3>
+              <p className="text-[14px] text-gray-600 leading-relaxed">
+                Segunda a Sexta-feira<br />
+                <span className="font-semibold text-gray-900">Das 08h às 21h</span>
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-gray-200/80 bg-white p-5 shadow-sm">
+              <h3 className="text-[15px] font-bold text-gray-800 border-b border-gray-100 pb-2 mb-3 flex items-center gap-2">
+                🌐 Links Úteis
+              </h3>
+              <ul className="text-[14px] space-y-2.5 font-medium text-[#a31212]">
+                <li>
+                  <a href="https://siga.cps.sp.gov.br/sigaaluno/applogin.aspx" target="_blank" rel="noreferrer" className="hover:underline flex items-center gap-1">
+                    • Sistema SIGA (Aluno)
+                  </a>
+                </li>
+                <li>
+                  <a href="https://www.vestibularfatec.com.br" target="_blank" rel="noreferrer" className="hover:underline flex items-center gap-1">
+                    • Vestibular FATEC
+                  </a>
+                </li>
+                <li>
+                  <a href="https://www.cps.sp.gov.br/" target="_blank" rel="noreferrer" className="hover:underline flex items-center gap-1">
+                    • Conheça o Site da FATEC
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div className="rounded-2xl bg-red-50/60 border border-red-100 p-5">
+              <h4 className="text-[13.5px] font-bold text-[#a31212] mb-1">
+                💡 Dica de Navegação
+              </h4>
+              <p className="text-[13px] text-gray-600 leading-relaxed">
+                Utilize os botões sugeridos na conversa para obter respostas imediatas sobre prazos, matrículas e documentos.
+              </p>
+            </div>
+          </aside>
+
+        </div>
+      </div>
+    </main>
   )
 }
 
-function ChatMessage({ isLastBotMessage, message }: { isLastBotMessage: boolean; message: Mensagem }) {
-  const isBot = message.tipo === "bot"
+function BotaoOpcao({ texto, onClick }: { texto: string; onClick: () => void }) {
+  return (
+    <button
+      className="rounded-xl bg-[#a31212] px-5 py-3 text-[15px] font-medium text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-[#850e0e] focus:outline-none focus:ring-2 focus:ring-red-500/40"
+      onClick={onClick}
+      type="button"
+    >
+      {texto}
+    </button>
+  )
+}
 
-  if (isBot) {
+function ChatMessage({ message }: { message: Mensagem }) {
+  if (message.tipo === "bot") {
     return (
-      <div className="flex items-start gap-2">
-        <div className="grid h-8 w-8 shrink-0 place-items-center">
-          {isLastBotMessage && (
-            <span className="grid h-8 w-8 place-items-center overflow-hidden rounded-full bg-[#26343a]" >
-              <img alt="Avatar do bot" className="h-full w-full object-cover" src={chatbotUser}/>
-            </span>
-          )}
-        </div>
-        <div className="relative max-w-[100%] whitespace-pre-line break-words rounded-2xl rounded-tl-sm bg-[#e2cece] px-3 py-2 text-left text-[13px] leading-snug text-black before:absolute before:left-[-8px] before:top-0 before:h-0 before:w-0 before:border-y-[6px] before:border-r-[9px] before:border-y-transparent before:border-r-[#e2cece]">
+      <div className="flex justify-start">
+        <div className="max-w-[90%] whitespace-pre-line break-words rounded-2xl rounded-tl-sm bg-white border border-gray-200/80 px-6 py-4 text-left text-[16px] font-medium leading-relaxed text-gray-800 shadow-sm sm:max-w-[80%]">
           {message.texto}
+          {message.documentos && message.documentos.length > 0 && (
+            <div className="mt-3 flex flex-col gap-2">
+              {message.documentos.map(doc => (
+                <a
+                  key={doc.id}
+                  href={`${doc.caminho_arquivo.split('/').map(encodeURIComponent).join('/')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 rounded-lg border border-[#a31212]/30 bg-red-50 px-4 py-2.5 text-[14px] font-medium text-[#a31212] transition hover:bg-red-100"
+                >
+                  📄 {doc.nome_exibicao}
+                </a>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     )
   }
 
   return (
-    <div className="flex justify-end">
-      <div className="relative max-w-[82%] whitespace-pre-line break-words rounded-2xl rounded-tr-sm bg-[#ff0000] px-3 py-2 text-left text-[13px] leading-snug text-white before:absolute before:right-[-8px] before:top-0 before:h-0 before:w-0 before:border-y-[6px] before:border-l-[9px] before:border-y-transparent before:border-l-[#ff0000]">
+    <div className="flex justify-end pt-2">
+      <div className="max-w-[90%] whitespace-pre-line break-words rounded-2xl rounded-tr-sm bg-[#a31212] px-6 py-4 text-left text-[16px] font-medium leading-relaxed text-white shadow-sm sm:max-w-[80%]">
         {message.texto}
       </div>
     </div>
   )
 }
-
-export default Chatbot

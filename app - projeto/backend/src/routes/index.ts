@@ -1,26 +1,16 @@
-import { Router } from 'express';
-import { 
-  upload, 
-  uploadDocumento, 
-  listarDocumentos, 
-  deletarDocumento,
-  listarCursosDisponiveis,
-  listarCategoriasPorCurso
-} from '../controllers/UploadController.js';
-import authRouter from './auth.js';
+import { Router } from "express";
+import authRouter from "./auth.js";
+import chatbotRouter from "./chatbot.routes.js";
+import perguntaRouter from "./pergunta.routes.js";
+import secretariaRouter from "./secretaria.routes.js";
+import adminRouter from "./admin.routes.js";
 
 const router = Router();
 
-// --- Autenticação ---
-router.use('/api/auth', authRouter);
-
-// --- Documentos ---
-router.post('/admin/upload', upload.single('pdf'), uploadDocumento);
-router.get('/documentos', listarDocumentos);
-router.delete('/admin/documentos/:id', deletarDocumento);
-
-// --- Navegação do Chat ---
-router.get('/navegacao/cursos', listarCursosDisponiveis);
-router.get('/navegacao/categorias/:curso', listarCategoriasPorCurso);
+router.use("/api/auth",       authRouter);       // público: login
+router.use("/api/chatbot",    chatbotRouter);    // público: navegação do chat
+router.use("/api/perguntas",  perguntaRouter);   // público: envio de dúvidas
+router.use("/api/secretaria", secretariaRouter); // protegido: secretaria + admin
+router.use("/api/admin",      adminRouter);      // protegido: apenas admin
 
 export default router;

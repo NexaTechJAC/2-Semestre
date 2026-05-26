@@ -1,28 +1,11 @@
-import express from 'express';
-import cors from 'cors';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import router from './routes/index.js'; // <-- ADICIONE ESTA LINHA
+import "./database/prisma.js";
+import app from "./app.js";
+import dotenv from "dotenv";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+dotenv.config();
 
-const app = express();
 const PORT = process.env.PORT ?? 3000;
 
-app.use(cors());
-app.use(express.json());
-
-// Torna a pasta de uploads pública
-app.use('/uploads', express.static(path.join(process.cwd(), 'src', 'uploads')));
-
-// Conecta as rotas do arquivo index.ts ao servidor
-app.use(router); // <-- ADICIONE ESTA LINHA
-
-app.get('/', (req, res) => {
-  res.send('Servidor do Chatbot Fatec Jacareí em execução!');
-});
-
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
+  console.log(`Servidor rodando na porta ${PORT}`);
 });
