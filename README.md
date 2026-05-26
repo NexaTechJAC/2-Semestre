@@ -71,43 +71,49 @@ O desafio consiste na criação de uma **Aplicação Web de Autoatendimento da S
 ---
 # 🌱 Backlog
 
-| Rank | BackLog | US | Prioridade | Estimativa | Status | Data de Entrega | Sprint |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| #01 | FrontEnd: Tela ChatBot | "Como aluno, quero navegar por menus e perguntas guiadas, para encontrar informações de forma simples e rápida." | Alta | | | | 1 |
-| #02 | BackEnd: ChatBot | "Como aluno, quero navegar por menus e perguntas guiadas, para encontrar informações de forma simples e rápida." | Alta | | | | 1 |
-| #03 | BackEnd: Configurar Banco de Dados Geral | "Como aluno, quero navegar por menus e perguntas guiadas, para encontrar informações de forma simples e rápida." | Alta | | | | 2 |
-| #04 | FrontEnd: Tela Repositório ADM | "Como administrador, quero organizar perguntas e documentos em um repositório, para garantir respostas padronizadas e confiáveis" | Média | | | | 2 |
-| #05 | BackEnd: Tela Repositório ADM | "Como administrador, quero organizar perguntas e documentos em um repositório, para garantir respostas padronizadas e confiáveis" | Média | | | | 2 |
-| #06 | FrontEnd: Tela Gerenciamento Geral ADM | "Como administrador, quero gerenciar perfis de acesso, para controlar permissões e responsabilidades" | Média | | | | 3 |
-| #07 | Back: Tela Gerenciamento Geral ADM | "Como administrador, quero gerenciar perfis de acesso, para controlar permissões e responsabilidades" | Média | | | | 3 |
-| #08 | BackEnd: Tela Gerenciamento Geral Documental ADM | "Como administrador, quero gerenciar menus e documentos, para manter o sistema atualizado" | Alta | | | | 3 |
-| #09 | FrtonEnd: Tela Gerenciamento Geral Documental ADM | "Como administrador, quero gerenciar menus e documentos, para manter o sistema atualizado" | Alta | | | | 3 |
-| #10 | FrontEnd: Envio de Email Após ChatBot Não Responder | "Como aluno, quero enviar minha dúvida à secretaria, para receber resposta oficial" | Média | | | | 3 |
-| #11 | BackEnd: Envio de Email Após ChatBot Não Responder | "Como aluno, quero enviar minha dúvida à secretaria, para receber resposta oficial" | Média | | | | 3 |
-| #12 | FrontEnd: Tela Secretaria CheckEmail | "Como secretária, quero gerenciar perguntas recebidas, para acompanhar e responder solicitações" | Baixa | | | | 3 |
-| #13 | BackEnd: Tela Secretaria CheckEmail | "Como secretária, quero gerenciar perguntas recebidas, para acompanhar e responder solicitações" | Baixa | | | | 3 |
-| #14 | BackEnd: Avaliar as respostas ChatBot | "Como aluno, quero avaliar o atendimento, para melhorar a qualidade do serviço." | Média | | | | 3 |
-| #15 | FrontEnd: Avaliar as respostas ChatBot | "Como aluno, quero avaliar o atendimento, para melhorar a qualidade do serviço." | Média | | | | 3 |
-| #16 | FrontEnd: Tela de Dashboards | "Como aluno, quero avaliar o atendimento, para melhorar a qualidade do serviço." | Alta | | | | 3 |
-| #17 | BackEnd: Tela de Dashboards | "Como aluno, quero avaliar o atendimento, para melhorar a qualidade do serviço." | Alta | | | | 3 |
-| #18 | FrontEnd: Gerenciamento de Logs | "Como administrador, quero acessar os logs, para monitorar o uso do sistema" | Baixa | | | | 2 |
-| #19 | BackEnd: Gerenciamento de Logs | "Como administrador, quero acessar os logs, para monitorar o uso do sistema" | Baixa | | | | 2 |
-| #20 | FrontEnd: Tela de Login | "Como secretária, quero acessar o sistema com login e senha, para garantir segurança." | Baixa | | | | 2 |
-| #21 | BackEnd: Tela de Login | "Como secretária, quero acessar o sistema com login e senha, para garantir segurança." | Baixa | | | | 2 |
-| #22 | BackEnd: Garantir Segurança de Acesso das Rotas | "Como administrador, quero que apenas perfis autorizados acessem rotas administrativas, para proteger dados." | Alta | | | | 2 |
-| #23 | BackEnd: Autenticação JWT com Validação | "Como sistema, quero validar tokens antes de liberar acesso, para garantir segurança." | Alta | | | | 2 |
-| #24 | BackEnd: Executar via Docker com PostgreSQL, Backend e Frontend. | "Como administrador, quero rodar o sistema em containers, para facilitar implantação" | Alta | | | | 2 |
-| #25 | FrontEnd: Tela de Cadastro User | "Como secretária, quero acessar o sistema com login e senha, para garantir segurança." | Baixa | | | | 3 |
-| #26 | BackEnd: Tela de Cadastro User | "Como secretária, quero acessar o sistema com login e senha, para garantir segurança." | Baixa | | | | 3 |
-| #27 | Figma: Tela Chatbot | "Como aluno, quero navegar por menus e perguntas guiadas, para encontrar informações de forma simples e rápida." | Alta | | | | 1 |
-| #28 | Figma: Tela ADM - Home | "Como secretária, quero acessar o sistema com login e senha, para garantir segurança." | Alta | | | | 1 |
-| #29 | Figma: Tela ADM - Dashboards | "Como aluno, quero avaliar o atendimento, para melhorar a qualidade do serviço." | Alta | | | | 1 |
-| #30 | Figma: Tela ADM - Logs | "Como administrador, quero acessar os logs, para monitorar o uso do sistema." | Alta | | | | 1 |
-| #31 | Figma: Tela de Login | "Como secretária, quero acessar o sistema com login e senha, para garantir segurança." | Alta | | | | 1 |
-| #32 | Figma: Tela de Cadastro User | "Como secretária, quero acessar o sistema com login e senha, para garantir segurança." | Alta | | | | 1 |
-| #33 | Figma: Tela ADM - Documentos | "Como administrador, quero organizar perguntas e documentos em um repositório, para garantir respostas padronizadas e confiáveis" | Alta | | | | 1 |
-| #34 | Figma: Tela Secretaria | "Como secretária, quero gerenciar perguntas recebidas, para acompanhar e responder solicitações." | Alta | | | | 1 |
+| Rank | BackLog | User Story (US) | Prioridade | Status | Data de Entrega | Sprint | Estimativa |
+|:----:|---------|-----------------|:----------:|:------:|:---------------:|:------:|:----------:|
+| #01 | FrontEnd: Tela ChatBot | Como aluno, quero navegar por menus e perguntas guiadas, para encontrar informações de forma simples e rápida. | Alta | ✅ | 22/05/2026 | 2 | 5 |
+| #02 | BackEnd: Tela ChatBot | Como aluno, quero navegar por menus e perguntas guiadas, para encontrar informações de forma simples e rápida. | Alta | ✅ | 24/05/2026 | 2 | 8 |
+| #03 | BackEnd: Configurar Banco de Dados Geral | Como aluno, quero navegar por menus e perguntas guiadas, para encontrar informações de forma simples e rápida. | Alta | ✅ | 20/05/2026 | 2 | 8 |
+| #04 | FrontEnd: Tela Gerenciamento Perguntas e Respostas | Como administrador, quero organizar perguntas e documentos em um repositório, para garantir respostas padronizadas e confiáveis. | Média | ✅ | 18/05/2026 | 2 | 5 |
+| #05 | BackEnd: Tela Perguntas e Respostas | Como administrador, quero organizar perguntas e documentos em um repositório, para garantir respostas padronizadas e confiáveis. | Média | ✅ | 22/05/2026 | 2 | 8 |
+| #06 | FrontEnd: AsideBar ADM | Sidebar funcionando conforme alinhado entre o grupo. | Média | ✅ | 22/05/2026 | 2 | 3 |
+| #07 | (removido) | - | - | - | - | - | - |
+| #08 | (removido) | - | - | - | - | - | - |
+| #09 | (removido) | - | - | - | - | - | - |
+| #10 | FrontEnd: Envio de Email Após ChatBot Não Responder | Como aluno, quero enviar minha dúvida à secretaria, para receber resposta oficial. | Média | ✅ | 24/05/2026 | 3 | 1 |
+| #11 | BackEnd: Envio de Email Após ChatBot Não Responder | Como aluno, quero enviar minha dúvida à secretaria, para receber resposta oficial. | Média | 📋 | - | 3 | 5 |
+| #12 | FrontEnd: Tela Secretaria CheckEmail | Como secretária, quero gerenciar perguntas recebidas, para acompanhar e responder solicitações. | Baixa | 📋 | - | 3 | 8 |
+| #13 | BackEnd: Tela Secretaria CheckEmail | Como secretária, quero gerenciar perguntas recebidas, para acompanhar e responder solicitações. | Baixa | 📋 | - | 3 | 13 |
+| #14 | BackEnd: Avaliar as respostas ChatBot | Como aluno, quero avaliar o atendimento, para melhorar a qualidade do serviço. | Média | 📋 | - | 3 | 3 |
+| #15 | FrontEnd: Avaliar as respostas ChatBot | Como aluno, quero avaliar o atendimento, para melhorar a qualidade do serviço. | Média | 📋 | - | 3 | 1 |
+| #16 | FrontEnd: Tela de Dashboards | Como aluno, quero avaliar o atendimento, para melhorar a qualidade do serviço. | Alta | 📋 | - | 3 | 8 |
+| #17 | BackEnd: Tela de Dashboards | Como aluno, quero avaliar o atendimento, para melhorar a qualidade do serviço. | Alta | 📋 | - | 3 | 13 |
+| #18 | FrontEnd: Gerenciamento de Logs | Como administrador, quero acessar os logs, para monitorar o uso do sistema. | Baixa | ✅ | 25/05/2026 | 2 | 3 |
+| #19 | BackEnd: Gerenciamento de Logs | Como administrador, quero acessar os logs, para monitorar o uso do sistema. | Baixa | ✅ | 24/05/2026 | 2 | 8 |
+| #20 | FrontEnd: Tela de Login | Como secretária, quero acessar o sistema com login e senha, para garantir segurança. | Baixa | ✅ | 22/05/2026 | 2 | 5 |
+| #21 | BackEnd: Tela de Login | Como secretária, quero acessar o sistema com login e senha, para garantir segurança. | Baixa | ✅ | 23/05/2026 | 2 | 5 |
+| #22 | BackEnd: Garantir Segurança de Acesso das Rotas | Como administrador, quero que apenas perfis autorizados acessem rotas administrativas, para proteger dados. | Alta | ✅ | 23/05/2026 | 2 | 8 |
+| #23 | BackEnd: Autenticação JWT com Validação | Como sistema, quero validar tokens antes de liberar acesso, para garantir segurança. | Alta | ✅ | 23/05/2026 | 2 | 13 |
+| #24 | BackEnd: Executar via Docker com PostgreSQL, Backend e Frontend. | Como administrador, quero rodar o sistema em containers, para facilitar implantação. | Alta | ✅ | 18/05/2026 | 2 | 8 |
+| #25 | FrontEnd: Tela de Cadastro User | Como secretária, quero acessar o sistema com login e senha, para garantir segurança. | Baixa | 📋 | - | 3 | 3 |
+| #26 | BackEnd: Tela de Cadastro User | Como secretária, quero acessar o sistema com login e senha, para garantir segurança. | Baixa | 📋 | - | 3 | 5 |
+| #27 | Figma: Tela ADM - Gerenciamento de Membros | Como administrador, quero gerenciar perfis de acesso, para controlar permissões e responsabilidades. | Alta | ✅ | 22/05/2026 | 2 | 1 |
+| #28 | Figma: Tela ADM - Logs | Como administrador, quero acessar os logs, para monitorar o uso do sistema. | Alta | ✅ | 24/05/2026 | 2 | 1 |
+| #29 | Figma: Tela Secretária – Check E-mail | Como secretária, quero gerenciar perguntas recebidas, para acompanhar e responder solicitações. | Alta | ✅ | 22/05/2026 | 2 | 1 |
+| #30 | Figma: Tela ADM - Perguntas e Respostas | Como administrador, quero organizar perguntas e documentos em um repositório, para garantir respostas padronizadas e confiáveis. | Alta | ✅ | 25/05/2026 | 2 | 1 |
+| #31 | Figma: Tela ADM – Dashboards | Como aluno, quero avaliar o atendimento, para melhorar a qualidade do serviço. | Alta | 🚧 | - | 3 | 1 |
 
+---
+
+## 📊 Legenda
+
+| Status | Significado |
+|--------|-------------|
+| ✅ | Concluído |
+| 🚧 | Em andamento |
+| 📋 | Não iniciado |
 ---
 
 ## 👥 Nossa Equipe Pedagógica
