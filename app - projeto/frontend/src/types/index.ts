@@ -9,8 +9,9 @@ export type Menu = {
 
 // Define o formato de cada mensagem exibida no histórico do chat
 export type Mensagem = {
-  tipo: 'bot' | 'usuario' // indica quem enviou a mensagem
-  texto: string           // conteúdo da mensagem
+  tipo: 'bot' | 'usuario'     // indica quem enviou a mensagem
+  texto: string               // conteúdo da mensagem
+  documentos?: Documento[]    // documentos para download (opcional, só em mensagens bot)
 }
 
 // ─── Tipos da API ─────────────────────────────────────────────────────────────
