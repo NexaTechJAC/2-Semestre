@@ -36,5 +36,5 @@ https://github.com/
 
 ---
 ## Sprint Burndown
-<img src="./Burndown/" alt="Burndown Chart" width="700"/>
+<img src="../imagens/Burndown2ºSem.png" alt="Burndown Chart" width="700"/>
 
