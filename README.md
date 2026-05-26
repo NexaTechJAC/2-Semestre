@@ -41,7 +41,7 @@ O desafio consiste na criação de uma **Aplicação Web de Autoatendimento da S
 - **Definition of Done (DoD):** [Acesse aqui](./documentacao/Definition-of-Done-NexaTech.md)  
   Critérios que garantem qualidade e conclusão das tarefas.  
 
-- **Diagramas UML:** [Acesse aqui](./documentacao/UML/)  
+- **Diagramas UML:** [Acesse aqui](./documentacao/UML/Diagramas_UML.md)  
   Casos de uso, classes, sequência e componentes, representando o fluxo do chatbot e gestão de conteúdo.  
 
 ---
