@@ -60,6 +60,7 @@ CREATE TABLE usuarios (
     senha_hash  TEXT        NOT NULL,  -- Armazenado com bcrypt (nunca texto puro)
     perfil      VARCHAR(20) NOT NULL CHECK (perfil IN ('administrador', 'secretaria')),
     ativo       BOOLEAN     NOT NULL DEFAULT TRUE,
+    troca_senha_obrigatoria BOOLEAN NOT NULL DEFAULT FALSE,
     criado_em   TIMESTAMP   NOT NULL DEFAULT NOW()
 );
 
