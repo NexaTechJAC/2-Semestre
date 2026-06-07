@@ -4,7 +4,7 @@ import SidebarSecretaria from "../components/SidebarSecretaria";
 import NavbarADMIN from "../components/NavbarADM";
 import PergResp from "../components/PergResp";
 import LogsNavegacao from "../components/LogsNavegacao";
-import Membros from "../components/Membros";
+import MembrosSecretaria from "../components/MembrosSecretaria";
 import Perguntas from "../components/Perguntas";
 import Dashboard from "../components/Dashboard";
 
@@ -26,15 +26,16 @@ export default function Admin() {
     setActiveMenu(perfilFinal === "administrador" ? "cursos" : "perguntas");
   }, []);
 
+  const isMembrosPage = activeMenu === "membros";
+  const mostrarPesquisaNavbar = activeMenu !== "cursos" && activeMenu !== "logs";
+
   function renderConteudo() {
-    // Telas compartilhadas entre admin e secretaria
     if (activeMenu === "perguntas") return <Perguntas />;
     if (activeMenu === "dashboard") return <Dashboard />;
 
-    // Telas exclusivas do administrador
     if (perfil === "administrador") {
       if (activeMenu === "cursos") return <PergResp />;
-      if (activeMenu === "membros") return <Membros />;
+      if (activeMenu === "membros") return <MembrosSecretaria />;
       if (activeMenu === "logs") return <LogsNavegacao />;
       if (activeMenu === "configuracoes") return <Configuracoes />;
     }
@@ -66,10 +67,12 @@ export default function Admin() {
       )}
 
       <div className={`transition-all duration-300 ease-in-out flex flex-col min-h-screen w-full ${isSidebarOpen ? "md:ml-64" : "ml-0"}`}>
-        <NavbarADMIN tituloAtual={activeMenu} />
+        {!isMembrosPage && (
+          <NavbarADMIN tituloAtual={activeMenu} mostrarPesquisa={mostrarPesquisaNavbar} />
+        )}
 
-        <div className="p-6 flex-1">
-          <div className="rounded-lg bg-white p-6 shadow">
+        <div className={`${isMembrosPage ? "p-0" : "p-6"} flex-1`}>
+          <div className={isMembrosPage ? "" : "rounded-lg bg-white p-6 shadow"}>
             {renderConteudo()}
           </div>
         </div>
@@ -78,7 +81,6 @@ export default function Admin() {
   );
 }
 
-// Tela de configurações — placeholder organizado
 function Configuracoes() {
   return (
     <div className="space-y-4">

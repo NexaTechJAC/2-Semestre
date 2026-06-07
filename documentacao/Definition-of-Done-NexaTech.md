@@ -3,7 +3,6 @@
 Este documento estabelece os critérios obrigatórios para que uma funcionalidade seja considerada concluída e pronta para entrega.
 
 ---
-
 | Critério | Descrição |
 |----------|-----------|
 | 1. Código desenvolvido | O código necessário para atender a US foi escrito e está disponível no repositório. |

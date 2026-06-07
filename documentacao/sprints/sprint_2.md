@@ -9,7 +9,8 @@ Durante essa sprint foi desenvolvido toda a parte de gestão e avaliação de eq
 
 ## Backlog da Sprint - 🎯
 
-| Rank | BackLog | User Story (US) | Prioridade | Status | Data de Entrega | Estimativa |
+
+|| Rank | BackLog | User Story (US) | Prioridade | Status | Data de Entrega | Estimativa |
 |:----:|---------|-----------------|:----------:|:------:|:---------------:|:----------:|
 | #01 | FrontEnd: Tela ChatBot | Como aluno, quero navegar por menus e perguntas guiadas, para encontrar informações de forma simples e rápida. | Alta | ✅ | 22/05/2026 | 5 |
 | #02 | BackEnd: Tela ChatBot | Como aluno, quero navegar por menus e perguntas guiadas, para encontrar informações de forma simples e rápida. | Alta | ✅ | 24/05/2026 | 8 |
@@ -28,8 +29,13 @@ Durante essa sprint foi desenvolvido toda a parte de gestão e avaliação de eq
 | #28 | Figma: Tela ADM - Logs | Como administrador, quero acessar os logs, para monitorar o uso do sistema. | Alta | ✅ | 24/05/2026 | 1 |
 | #29 | Figma: Tela Secretária – Check E-mail | Como secretária, quero gerenciar perguntas recebidas, para acompanhar e responder solicitações. | Alta | ✅ | 22/05/2026 | 1 |
 | #30 | Figma: Tela ADM - Perguntas e Respostas | Como administrador, quero organizar perguntas e documentos em um repositório, para garantir respostas padronizadas e confiáveis. | Alta | ✅ | 25/05/2026 | 1 |
+<<<<<<< HEAD
 
 ---
+=======
+---
+
+>>>>>>> 764fc4ecbffb900007757507377a08b72f407cec
 ## Vídeo do Sistema Desenvolvido na Sprint - 🎥
 
 https://github.com/

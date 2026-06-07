@@ -1,6 +1,10 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { encontrarPorEmail } from "../repositories/usuarioRepository.js";
+import {
+  encontrarPorEmail,
+  buscarUsuarioParaAutenticacao,
+  atualizarSenhaUsuario,
+} from "../repositories/usuarioRepository.js";
 
 export async function autenticar(email: string, password: string) {
   const usuario = await encontrarPorEmail(email);
@@ -30,6 +34,7 @@ export async function autenticar(email: string, password: string) {
 
   return {
     token,
+    mustChangePassword: usuario.troca_senha_obrigatoria,
     usuario: {
       id: usuario.id,
       nome: usuario.nome,
@@ -41,4 +46,24 @@ export async function autenticar(email: string, password: string) {
 
 export async function criarHashSenha(senha: string): Promise<string> {
   return bcrypt.hash(senha, 10);
+}
+
+export async function trocarSenhaPrimeiroAcesso(
+  userId: number,
+  senhaAtual: string,
+  novaSenha: string
+) {
+  const usuario = await buscarUsuarioParaAutenticacao(userId);
+
+  if (!usuario || !usuario.ativo) {
+    throw new Error("Usuario nao encontrado ou inativo.");
+  }
+
+  const senhaCorreta = await bcrypt.compare(senhaAtual, usuario.senha_hash);
+  if (!senhaCorreta) {
+    throw new Error("Senha atual invalida.");
+  }
+
+  const novaSenhaHash = await criarHashSenha(novaSenha);
+  await atualizarSenhaUsuario(userId, novaSenhaHash, false);
 }

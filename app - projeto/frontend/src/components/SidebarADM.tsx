@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
-import { Menu, X, BookOpen, Users, Layout, Settings, History, MessageSquare, BarChart2 } from "lucide-react";
+import { Menu, X, BookOpen, Users, Layout, Settings, History, MessageSquare, BarChart2, LogOut } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import type { LucideIcon } from "lucide-react";
-
 
 interface SidebarProps {
   isOpen: boolean;
@@ -10,73 +10,81 @@ interface SidebarProps {
   setActiveMenu: (v: string) => void;
 }
 
-  export default function SidebarADM({ 
-    isOpen, 
-    setIsOpen, 
-    activeMenu, // 2. Receba eles aqui
-    setActiveMenu 
-  }: SidebarProps) {
-  
-  // 1. Estado para guardar a posição (topo) e a altura do bloco vermelho
+export default function SidebarADM({
+  isOpen,
+  setIsOpen,
+  activeMenu,
+  setActiveMenu,
+}: SidebarProps) {
+  const navigate = useNavigate();
   const [indicatorStyle, setIndicatorStyle] = useState({ top: 0, height: 0, opacity: 0 });
-  
-  // 2. Referências para descobrirmos onde cada item está na tela
   const navRef = useRef<HTMLDivElement | null>(null);
   const itemRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
-  // 3. Efeito que roda sempre que o menu ativo muda. 
-  // Ele calcula a posição do item clicado e move o bloco vermelho para lá.
   useEffect(() => {
     const activeEl = itemRefs.current[activeMenu];
     const containerEl = navRef.current;
 
     if (activeEl && containerEl) {
-      // Pega as coordenadas do container e do item ativo
       const containerRect = containerEl.getBoundingClientRect();
       const activeRect = activeEl.getBoundingClientRect();
 
-      // Atualiza a caixinha vermelha para ir exatamente para cima do item
       setIndicatorStyle({
         top: activeRect.top - containerRect.top,
         height: activeRect.height,
-        opacity: 1, // Faz aparecer na primeira renderização
+        opacity: 1,
       });
     }
   }, [activeMenu]);
 
   // Função para renderizar os itens do menu
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("userRole");
+    localStorage.removeItem("usuario");
+    navigate("/");
+  };
+
   const renderMenuItem = (id: string, label: string, Icon: LucideIcon) => {
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("userRole");
+    localStorage.removeItem("usuario");
+    navigate("/");
+  };
+
+  const renderMenuItem = (id: string, label: string, Icon: React.ElementType) => {
     const isActive = activeMenu === id;
 
     return (
       <div
-        // Guarda a referência (posição) deste item
-        ref={(el) => { itemRefs.current[id] = el; }}
+        ref={(el) => {
+          itemRefs.current[id] = el;
+        }}
         onClick={() => setActiveMenu(id)}
-        className={`
-          relative z-10 group flex cursor-pointer items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold 
-          transition-colors duration-300
-          ${isActive 
-            ? 'text-white' // Quando ativo, só muda o texto, o fundo é o bloco que desliza!
-            : 'text-zinc-400 hover:text-white hover:bg-zinc-800/50'
-          }
-        `}
+        className={`relative z-10 group flex cursor-pointer items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold transition-colors duration-300 ${
+          isActive ? "text-white" : "text-zinc-400 hover:text-white hover:bg-zinc-800/50"
+        }`}
       >
-        <Icon 
-          size={18} 
-          className={`transition-colors duration-300 ${isActive ? 'text-white' : 'text-zinc-500 group-hover:text-white'}`} 
+        <Icon
+          size={18}
+          className={`transition-colors duration-300 ${
+            isActive ? "text-white" : "text-zinc-500 group-hover:text-white"
+          }`}
         />
         {label}
       </div>
     );
-
   };
 
-  return (    <>
+  return (
+    <>
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={`fixed top-5 z-50 rounded-lg p-2 transition-all duration-300 shadow-md ${
-          isOpen ? 'left-[230px] bg-black text-white' : 'left-4 bg-red-600 text-white hover:bg-red-700'
+          isOpen ? "left-[230px] bg-black text-white" : "left-4 bg-red-600 text-white hover:bg-red-700"
         }`}
       >
         {isOpen ? <X size={20} /> : <Menu size={20} />}
@@ -84,7 +92,7 @@ interface SidebarProps {
 
       <aside
         className={`fixed top-0 left-0 z-40 h-screen w-64 flex-col bg-black text-white transition-transform duration-300 ease-in-out ${
-          isOpen ? 'translate-x-0' : '-translate-x-full'
+          isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         <div className="flex items-center gap-3 px-6 py-10">
@@ -92,15 +100,12 @@ interface SidebarProps {
             <BookOpen size={24} strokeWidth={2.5} />
           </div>
           <div className="flex flex-col">
-            <span className="text-[15px] font-bold leading-tight tracking-tight">Portal Acadêmico</span>
+            <span className="text-[15px] font-bold leading-tight tracking-tight">Portal Academico</span>
             <span className="text-[11px] font-black tracking-[0.2em] text-red-600">ADMIN</span>
           </div>
         </div>
 
-        {/* CONTAINER DOS MENUS (Onde a mágica do deslizamento acontece) */}
         <div className="relative flex-1 flex flex-col" ref={navRef}>
-          
-          {/* O BLOCO VERMELHO QUE DESLIZA */}
           <div
             className="absolute left-4 right-4 rounded-xl bg-red-600 transition-all duration-500 cubic-bezier(0.4, 0, 0.2, 1) z-0"
             style={{
@@ -110,9 +115,10 @@ interface SidebarProps {
             }}
           />
 
-          <div className="px-6 relative z-10"><hr className="border-zinc-800" /></div>
+          <div className="px-6 relative z-10">
+            <hr className="border-zinc-800" />
+          </div>
 
-          {/* MENU PRINCIPAL */}
           <nav className="space-y-2 px-4 py-6 relative z-10">
             {renderMenuItem('cursos', 'Cursos', Layout)}
             {renderMenuItem('perguntas', 'Perguntas', MessageSquare)}
@@ -120,19 +126,30 @@ interface SidebarProps {
             {renderMenuItem('logs', 'Logs', History)}
           </nav>
 
-          <div className="px-6 relative z-10"><hr className="border-zinc-800" /></div>
+          <div className="px-6 relative z-10">
+            <hr className="border-zinc-800" />
+          </div>
 
-          {/* MENU SECUNDÁRIO */}
           <nav className="space-y-2 px-4 py-6 relative z-10">
             {renderMenuItem('dashboard', 'Dashboard', BarChart2)}
             {renderMenuItem('configuracoes', 'Configurações', Settings)}
           </nav>
+        </div>
 
+        <div className="px-4 pb-6">
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="flex w-full items-center gap-3 rounded-xl bg-red-600 px-3 py-3 text-sm font-bold text-white transition hover:bg-red-700"
+          >
+            <LogOut size={18} />
+            Sair
+          </button>
         </div>
       </aside>
 
       {isOpen && (
-        <div 
+        <div
           className="fixed inset-0 z-30 bg-black/20 backdrop-blur-[2px] md:hidden"
           onClick={() => setIsOpen(false)}
         />

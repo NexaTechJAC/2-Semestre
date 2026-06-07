@@ -1,6 +1,19 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, GraduationCap, Shield, Mail, Lock, Eye, EyeOff} from "lucide-react";
+import { ArrowLeft, GraduationCap, Shield, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { API_URL, type ApiErrorPayload } from "../data/api";
+
+type LoginResponse = {
+  token: string;
+  mustChangePassword?: boolean;
+  usuario?: {
+    id: number;
+    nome: string;
+    email: string;
+    perfil: "administrador" | "secretaria";
+  };
+  perfil?: "administrador" | "secretaria";
+};
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -11,40 +24,43 @@ export default function Login() {
 
   const navigate = useNavigate();
 
-  async function handleSubmit( event: React.SyntheticEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.SyntheticEvent<HTMLFormElement>) {
     event.preventDefault();
 
     setMensagem("");
     setCarregando(true);
 
     try {
-      const resposta = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/auth/login`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email,
-            password: senha,
-          }),
-        }
-      );
+      const resposta = await fetch(`${API_URL}/api/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password: senha,
+        }),
+      });
 
-      const dados = await resposta.json();
+      const dados = (await resposta.json()) as (LoginResponse & ApiErrorPayload);
 
       if (!resposta.ok) {
-        setMensagem(dados?.error ?? "Falha ao fazer login.");
+        const detalhe = Array.isArray(dados?.details) ? dados.details[0]?.message : undefined;
+        setMensagem(detalhe ?? dados?.message ?? dados?.error ?? "Falha ao fazer login.");
         return;
       }
 
-      // Salvar token e informações do usuário
       localStorage.setItem("authToken", dados.token);
-      localStorage.setItem("userRole", dados.perfil || dados.usuario?.perfil);
-      localStorage.setItem("usuario", JSON.stringify(dados.usuario));
+      localStorage.setItem("userRole", dados.perfil || dados.usuario?.perfil || "");
+      localStorage.setItem("usuario", JSON.stringify(dados.usuario ?? {}));
+      localStorage.setItem("mustChangePassword", String(Boolean(dados.mustChangePassword)));
 
-      setMensagem(`Login realizado com sucesso. Bem-vindo, ${dados.usuario?.nome || dados.name}!`);
+      if (dados.mustChangePassword) {
+        navigate("/trocar-senha", { replace: true });
+        return;
+      }
+
+      setMensagem(`Login realizado com sucesso. Bem-vindo, ${dados.usuario?.nome || "usuario"}!`);
 
       // Redirecionar baseado no perfil
       const perfilUsuario = dados.usuario?.perfil ?? dados.perfil;
@@ -55,7 +71,7 @@ export default function Login() {
         navigate("/");
       }
     } catch {
-      setMensagem("Não foi possível conectar ao servidor.");
+      setMensagem("Nao foi possivel conectar ao servidor.");
     } finally {
       setCarregando(false);
     }
@@ -63,10 +79,8 @@ export default function Login() {
 
   return (
     <main className="min-h-screen bg-black text-white relative overflow-hidden">
-      {/* Gradiente de fundo */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(255,255,255,0.12),_transparent_70%)]" />
 
-      {/* Header */}
       <header className="relative z-10 border-b border-white/10 px-6 py-4">
         <button
           onClick={() => navigate("/")}
@@ -77,55 +91,35 @@ export default function Login() {
         </button>
       </header>
 
-      {/* Conteúdo */}
       <section className="relative z-10 flex flex-col items-center justify-center px-4 py-12">
-        {/* Logo */}
         <div className="mb-8 flex flex-col items-center">
           <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-red-600 shadow-lg shadow-red-600/30">
             <GraduationCap size={32} />
           </div>
 
-          <h1 className="text-3xl font-bold">
-            Portal Acadêmico
-          </h1>
-
-          <p className="text-sm text-zinc-400">
-            Acesso Administrativo
-          </p>
+          <h1 className="text-3xl font-bold">Portal Academico</h1>
+          <p className="text-sm text-zinc-400">Acesso Administrativo</p>
         </div>
 
-        {/* Card */}
         <div className="w-full max-w-md rounded-2xl bg-zinc-100 p-8 text-black shadow-2xl">
-          {/* Cabeçalho */}
           <div className="flex items-center gap-4">
             <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-red-700 text-white">
               <Shield size={24} />
             </div>
 
             <div>
-              <h2 className="font-bold">
-                Área do Administrador
-              </h2>
-
-              <p className="text-sm text-zinc-600">
-                Acesso restrito
-              </p>
+              <h2 className="font-bold">Area do Administrador</h2>
+              <p className="text-sm text-zinc-600">Acesso restrito</p>
             </div>
           </div>
 
           <div className="my-6 border-t border-zinc-300" />
 
-          {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Email */}
             <div>
-              <label className="mb-2 block text-sm font-semibold">
-                Email institucional
-              </label>
-
+              <label className="mb-2 block text-sm font-semibold">Email institucional</label>
               <div className="flex items-center rounded-lg border border-zinc-300 bg-white px-3">
                 <Mail size={18} className="text-zinc-400" />
-
                 <input
                   type="email"
                   value={email}
@@ -137,15 +131,10 @@ export default function Login() {
               </div>
             </div>
 
-            {/* Senha */}
             <div>
-              <label className="mb-2 block text-sm font-semibold">
-                Senha
-              </label>
-
+              <label className="mb-2 block text-sm font-semibold">Senha</label>
               <div className="flex items-center rounded-lg border border-zinc-300 bg-white px-3">
                 <Lock size={18} className="text-zinc-400" />
-
                 <input
                   type={mostrarSenha ? "text" : "password"}
                   value={senha}
@@ -158,33 +147,13 @@ export default function Login() {
                 <button
                   type="button"
                   onClick={() => setMostrarSenha(!mostrarSenha)}
-                  className="text-zinc-400hover:text-zinc-700 transition"
+                  className="text-zinc-400 hover:text-zinc-700 transition"
                 >
-                  {mostrarSenha ? (
-                    <EyeOff size={18} />
-                  ) : (
-                    <Eye size={18} />
-                  )}
+                  {mostrarSenha ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
             </div>
 
-            {/* Extras */}
-            <div className="flex items-center justify-between text-sm">
-              <label className="flex items-center gap-2">
-                <input type="checkbox" />
-                Lembrar de mim
-              </label>
-
-              <button
-                type="button"
-                className="font-medium hover:text-red-700"
-              >
-                Esqueci a senha
-              </button>
-            </div>
-
-            {/* Botão */}
             <button
               type="submit"
               disabled={carregando}
@@ -194,17 +163,11 @@ export default function Login() {
             </button>
           </form>
 
-          {/* Mensagem */}
-          {mensagem && (
-            <p className="mt-4 text-sm text-center text-zinc-700">
-              {mensagem}
-            </p>
-          )}
+          {mensagem && <p className="mt-4 text-sm text-center text-zinc-700">{mensagem}</p>}
         </div>
 
-        {/* Footer */}
         <p className="mt-6 text-sm text-zinc-400">
-          Acesso exclusivo para funcionários autorizados.
+          Acesso exclusivo para funcionarios autorizados.
         </p>
       </section>
     </main>

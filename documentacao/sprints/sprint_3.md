@@ -8,7 +8,6 @@ Durante essa sprint foi desenvolvido toda a parte de gestão e avaliação de eq
 ---
 
 ## Backlog da Sprint - 🎯
-
 | Rank | BackLog | User Story (US) | Prioridade | Status | Data de Entrega | Estimativa |
 |:----:|---------|-----------------|:----------:|:------:|:---------------:|:----------:|
 | #10 | FrontEnd: Envio de Email Após ChatBot Não Responder | Como aluno, quero enviar minha dúvida à secretaria, para receber resposta oficial. | Média | ✅ | 24/05/2026 | 1 |

@@ -21,5 +21,13 @@ export default function ProtectedRoute({
     return <Navigate to="/login" replace />;
   }
 
+  if (mustChangePassword) {
+    return <Navigate to="/trocar-senha" replace />;
+  }
+
+  if (userRole !== "administrador") {
+    return <Navigate to="/" replace />;
+  }
+
   return <>{children}</>;
 }

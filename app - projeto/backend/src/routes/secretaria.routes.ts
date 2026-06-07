@@ -7,12 +7,13 @@ import {
   listarDocumentos,
 } from "../controllers/documentoController.js";
 import { getLogs } from "../controllers/adminController.js";
-import { autenticarToken } from "../middlewares/auth.middleware.js";
+import { autenticarToken, exigirSenhaAtualizada } from "../middlewares/auth.middleware.js";
 import { exigirPerfil } from "../middlewares/rbac.middleware.js";
 
 const router = Router();
 
 router.use(autenticarToken);
+router.use(exigirSenhaAtualizada);
 router.use(exigirPerfil("secretaria", "administrador"));
 
 // Perguntas
