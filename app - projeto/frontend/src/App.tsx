@@ -11,11 +11,9 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
-        <Route
-          path="/admin"/>
         <Route path="/trocar-senha" element={<TrocarSenhaPrimeiroAcesso />} />
-        <Route 
-          path="/admin" 
+        <Route
+          path="/admin"
           element={
             <ProtectedRoute perfisPermitidos={["administrador", "secretaria"]}>
               <Admin />

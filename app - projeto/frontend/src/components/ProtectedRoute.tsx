@@ -12,12 +12,9 @@ export default function ProtectedRoute({
 }: ProtectedRouteProps) {
   const token = localStorage.getItem("authToken");
   const userRole = localStorage.getItem("userRole");
+  const mustChangePassword = localStorage.getItem("mustChangePassword") === "true";
 
   if (!token || !userRole) {
-    return <Navigate to="/login" replace />;
-  }
-
-  if (!perfisPermitidos.includes(userRole)) {
     return <Navigate to="/login" replace />;
   }
 
@@ -25,8 +22,8 @@ export default function ProtectedRoute({
     return <Navigate to="/trocar-senha" replace />;
   }
 
-  if (userRole !== "administrador") {
-    return <Navigate to="/" replace />;
+  if (!perfisPermitidos.includes(userRole)) {
+    return <Navigate to="/login" replace />;
   }
 
   return <>{children}</>;

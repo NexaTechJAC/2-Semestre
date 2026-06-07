@@ -37,9 +37,6 @@ export default function SidebarADM({
     }
   }, [activeMenu]);
 
-  // Função para renderizar os itens do menu
-  const navigate = useNavigate();
-
   const handleLogout = () => {
     localStorage.removeItem("authToken");
     localStorage.removeItem("userRole");
@@ -48,21 +45,11 @@ export default function SidebarADM({
   };
 
   const renderMenuItem = (id: string, label: string, Icon: LucideIcon) => {
-  const handleLogout = () => {
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("userRole");
-    localStorage.removeItem("usuario");
-    navigate("/");
-  };
-
-  const renderMenuItem = (id: string, label: string, Icon: React.ElementType) => {
     const isActive = activeMenu === id;
 
     return (
       <div
-        ref={(el) => {
-          itemRefs.current[id] = el;
-        }}
+        ref={(el) => { itemRefs.current[id] = el; }}
         onClick={() => setActiveMenu(id)}
         className={`relative z-10 group flex cursor-pointer items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold transition-colors duration-300 ${
           isActive ? "text-white" : "text-zinc-400 hover:text-white hover:bg-zinc-800/50"
@@ -100,14 +87,14 @@ export default function SidebarADM({
             <BookOpen size={24} strokeWidth={2.5} />
           </div>
           <div className="flex flex-col">
-            <span className="text-[15px] font-bold leading-tight tracking-tight">Portal Academico</span>
+            <span className="text-[15px] font-bold leading-tight tracking-tight">Portal Acadêmico</span>
             <span className="text-[11px] font-black tracking-[0.2em] text-red-600">ADMIN</span>
           </div>
         </div>
 
         <div className="relative flex-1 flex flex-col" ref={navRef}>
           <div
-            className="absolute left-4 right-4 rounded-xl bg-red-600 transition-all duration-500 cubic-bezier(0.4, 0, 0.2, 1) z-0"
+            className="absolute left-4 right-4 rounded-xl bg-red-600 transition-all duration-500 z-0"
             style={{
               top: `${indicatorStyle.top}px`,
               height: `${indicatorStyle.height}px`,
