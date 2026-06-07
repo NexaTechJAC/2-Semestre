@@ -6,13 +6,14 @@ import {
 import {
   listarDocumentos,
 } from "../controllers/documentoController.js";
-import { autenticarToken } from "../middlewares/auth.middleware.js";
+import { getLogs } from "../controllers/adminController.js";
+import { autenticarToken, exigirSenhaAtualizada } from "../middlewares/auth.middleware.js";
 import { exigirPerfil } from "../middlewares/rbac.middleware.js";
 
 const router = Router();
 
-// Todas as rotas da secretaria exigem autenticação e perfil correto
 router.use(autenticarToken);
+router.use(exigirSenhaAtualizada);
 router.use(exigirPerfil("secretaria", "administrador"));
 
 // Perguntas
@@ -21,5 +22,8 @@ router.patch("/perguntas/:id/respondida", marcarRespondida);
 
 // Documentos (somente leitura)
 router.get("/documentos", listarDocumentos);
+
+// Logs (para o dashboard da secretaria)
+router.get("/logs", getLogs);
 
 export default router;

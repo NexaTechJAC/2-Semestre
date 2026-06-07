@@ -5,11 +5,18 @@ import {
   responderPergunta,
 } from "../services/perguntaService.js";
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export async function criarPergunta(req: Request, res: Response) {
   const { nome_aluno, email_aluno, curso_sigla, texto } = req.body;
 
   if (!nome_aluno || !email_aluno || !texto) {
     res.status(400).json({ error: "nome_aluno, email_aluno e texto são obrigatórios." });
+    return;
+  }
+
+  if (!EMAIL_REGEX.test(email_aluno)) {
+    res.status(400).json({ error: "Formato de e-mail inválido." });
     return;
   }
 

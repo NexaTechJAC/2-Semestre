@@ -10,7 +10,6 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 
-// Configuração do multer para upload de PDFs
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const curso = req.body.curso ?? "GERAL";
@@ -23,12 +22,18 @@ const storage = multer.diskStorage({
     cb(null, pasta);
   },
   filename: (req, file, cb) => {
-    cb(null, file.originalname);
+    // Evita sobrescrita: adiciona timestamp ao nome
+    const ext = path.extname(file.originalname);
+    const base = path.basename(file.originalname, ext);
+    cb(null, `${base}_${Date.now()}${ext}`);
   },
 });
 
 export const upload = multer({
   storage,
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 10MB máximo
+  },
   fileFilter: (req, file, cb) => {
     if (file.mimetype === "application/pdf") {
       cb(null, true);
@@ -77,7 +82,7 @@ export async function uploadDocumento(req: Request, res: Response) {
 
   try {
     const curso_pasta = curso ?? "GERAL";
-    const filename = `${curso_pasta}/${req.file.originalname}`;
+    const filename = `${curso_pasta}/${req.file.filename}`;
     const doc = await salvarDocumento({
       topico_id: Number(topico_id),
       nome_exibicao,

@@ -29,9 +29,9 @@ export async function listarEnviadas(data?: string) {
 
   return prisma.perguntaUsuario.findMany({
     where: {
-      status: "enviada",
+      status: { in: ["pendente", "enviada"] },
       ...(filtroData && {
-        enviada_em: {
+        criado_em: {
           gte: filtroData,
           lt: new Date(filtroData.getTime() + 86400000),
         },

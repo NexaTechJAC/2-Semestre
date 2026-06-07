@@ -1,6 +1,5 @@
-import { useState, useRef, useEffect } from 'react';
-import { Menu, X, BookOpen, Users, Layout, Settings, History, MessageSquare, BarChart2, LogOut } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useState, useRef, useEffect } from "react";
+import { Menu, X, BookOpen, BarChart2, MessageSquare } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 interface SidebarProps {
@@ -10,13 +9,12 @@ interface SidebarProps {
   setActiveMenu: (v: string) => void;
 }
 
-export default function SidebarADM({
+export default function SidebarSecretaria({
   isOpen,
   setIsOpen,
   activeMenu,
   setActiveMenu,
 }: SidebarProps) {
-  const navigate = useNavigate();
   const [indicatorStyle, setIndicatorStyle] = useState({ top: 0, height: 0, opacity: 0 });
   const navRef = useRef<HTMLDivElement | null>(null);
   const itemRefs = useRef<Record<string, HTMLDivElement | null>>({});
@@ -28,7 +26,6 @@ export default function SidebarADM({
     if (activeEl && containerEl) {
       const containerRect = containerEl.getBoundingClientRect();
       const activeRect = activeEl.getBoundingClientRect();
-
       setIndicatorStyle({
         top: activeRect.top - containerRect.top,
         height: activeRect.height,
@@ -37,29 +34,24 @@ export default function SidebarADM({
     }
   }, [activeMenu]);
 
-  const handleLogout = () => {
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("userRole");
-    localStorage.removeItem("usuario");
-    navigate("/");
-  };
-
   const renderMenuItem = (id: string, label: string, Icon: LucideIcon) => {
     const isActive = activeMenu === id;
-
     return (
       <div
         ref={(el) => { itemRefs.current[id] = el; }}
         onClick={() => setActiveMenu(id)}
-        className={`relative z-10 group flex cursor-pointer items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold transition-colors duration-300 ${
-          isActive ? "text-white" : "text-zinc-400 hover:text-white hover:bg-zinc-800/50"
-        }`}
+        className={`
+          relative z-10 group flex cursor-pointer items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold
+          transition-colors duration-300
+          ${isActive
+            ? "text-white"
+            : "text-zinc-400 hover:text-white hover:bg-zinc-800/50"
+          }
+        `}
       >
         <Icon
           size={18}
-          className={`transition-colors duration-300 ${
-            isActive ? "text-white" : "text-zinc-500 group-hover:text-white"
-          }`}
+          className={`transition-colors duration-300 ${isActive ? "text-white" : "text-zinc-500 group-hover:text-white"}`}
         />
         {label}
       </div>
@@ -88,7 +80,7 @@ export default function SidebarADM({
           </div>
           <div className="flex flex-col">
             <span className="text-[15px] font-bold leading-tight tracking-tight">Portal Acadêmico</span>
-            <span className="text-[11px] font-black tracking-[0.2em] text-red-600">ADMIN</span>
+            <span className="text-[11px] font-black tracking-[0.2em] text-red-600">SECRETARIA</span>
           </div>
         </div>
 
@@ -102,36 +94,12 @@ export default function SidebarADM({
             }}
           />
 
-          <div className="px-6 relative z-10">
-            <hr className="border-zinc-800" />
-          </div>
+          <div className="px-6 relative z-10"><hr className="border-zinc-800" /></div>
 
           <nav className="space-y-2 px-4 py-6 relative z-10">
-            {renderMenuItem('cursos', 'Cursos', Layout)}
-            {renderMenuItem('perguntas', 'Perguntas', MessageSquare)}
-            {renderMenuItem('membros', 'Membros', Users)}
-            {renderMenuItem('logs', 'Logs', History)}
+            {renderMenuItem("perguntas", "Perguntas", MessageSquare)}
+            {renderMenuItem("dashboard", "Dashboard", BarChart2)}
           </nav>
-
-          <div className="px-6 relative z-10">
-            <hr className="border-zinc-800" />
-          </div>
-
-          <nav className="space-y-2 px-4 py-6 relative z-10">
-            {renderMenuItem('dashboard', 'Dashboard', BarChart2)}
-            {renderMenuItem('configuracoes', 'Configurações', Settings)}
-          </nav>
-        </div>
-
-        <div className="px-4 pb-6">
-          <button
-            type="button"
-            onClick={handleLogout}
-            className="flex w-full items-center gap-3 rounded-xl bg-red-600 px-3 py-3 text-sm font-bold text-white transition hover:bg-red-700"
-          >
-            <LogOut size={18} />
-            Sair
-          </button>
         </div>
       </aside>
 

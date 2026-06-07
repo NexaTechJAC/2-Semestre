@@ -4,11 +4,18 @@ import {
   cadastrarUsuario,
   removerUsuario,
   getLogs,
+  getMembrosSecretaria,
+  cadastrarMembroSecretaria,
+  editarMembroSecretaria,
+  removerMembroSecretaria,
+  atualizarStatusMembroSecretaria,
+  resetarSenhaMembroSecretaria,
 } from "../controllers/adminController.js";
 import {
   listarDocumentos,
   uploadDocumento,
   deletarDocumento,
+  downloadDocumento,
   upload,
 } from "../controllers/documentoController.js";
 import {
@@ -19,22 +26,30 @@ import {
   atualizarSubOpcao,
   deletarSubOpcao,
 } from "../controllers/topicoController.js";
-import { autenticarToken } from "../middlewares/auth.middleware.js";
+import { autenticarToken, exigirSenhaAtualizada } from "../middlewares/auth.middleware.js";
 import { exigirPerfil } from "../middlewares/rbac.middleware.js";
 
 const router = Router();
 
 router.use(autenticarToken);
+router.use(exigirSenhaAtualizada);
 router.use(exigirPerfil("administrador"));
 
 // Usuários
 router.get("/usuarios", getUsuarios);
 router.post("/usuarios", cadastrarUsuario);
 router.delete("/usuarios/:id", removerUsuario);
+router.get("/secretaria/membros", getMembrosSecretaria);
+router.post("/secretaria/membros", cadastrarMembroSecretaria);
+router.put("/secretaria/membros/:id", editarMembroSecretaria);
+router.patch("/secretaria/membros/:id/status", atualizarStatusMembroSecretaria);
+router.patch("/secretaria/membros/:id/senha", resetarSenhaMembroSecretaria);
+router.delete("/secretaria/membros/:id", removerMembroSecretaria);
 
 // Documentos
 router.get("/documentos", listarDocumentos);
 router.post("/documentos", upload.single("pdf"), uploadDocumento);
+router.get("/documentos/:id/download", downloadDocumento);
 router.delete("/documentos/:id", deletarDocumento);
 
 // Logs

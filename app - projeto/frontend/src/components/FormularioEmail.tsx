@@ -1,45 +1,56 @@
 import React, { useState } from "react"
-import { Send, X, Paperclip, FileText } from "lucide-react"
+import { Send, X, FileText } from "lucide-react"
 
 interface FormularioEmailProps {
   onSucesso: () => void;
   onCancelar: () => void;
+  cursoSigla?: string;
 }
 
-export default function FormularioEmail({ onSucesso, onCancelar }: FormularioEmailProps) {
+const API = import.meta.env.VITE_API_URL ?? "http://localhost:3000"
+
+export default function FormularioEmail({ onSucesso, onCancelar, cursoSigla }: FormularioEmailProps) {
   const [enviando, setEnviando] = useState(false)
-  const [arquivo, setArquivo] = useState<File | null>(null)
-  const [erroArquivo, setErroArquivo] = useState("")
+  const [erro, setErro] = useState("")
+  const [nome, setNome] = useState("")
+  const [email, setEmail] = useState("")
+  const [texto, setTexto] = useState("")
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    setErroArquivo("")
-    
-    if (file) {
-      // Validação de segurança no Front-end: Máximo de 5MB
-      if (file.size > 5 * 1024 * 1024) {
-        setErroArquivo("O arquivo é muito grande. O limite máximo é de 5MB.")
-        setArquivo(null)
-      } else {
-        setArquivo(file)
-      }
-    }
-  }
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setErro("")
     setEnviando(true)
-    
-    // Aqui no futuro você colocará a chamada para a sua API enviar o e-mail e o anexo
-    setTimeout(() => {
-      setEnviando(false)
+
+    try {
+      const res = await fetch(`${API}/api/perguntas`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nome_aluno: nome,
+          email_aluno: email,
+          curso_sigla: cursoSigla ?? null,
+          texto,
+        }),
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        setErro(data.error ?? "Erro ao enviar. Tente novamente.")
+        return
+      }
+
       onSucesso()
-    }, 1500)
+    } catch {
+      setErro("Não foi possível conectar ao servidor. Tente novamente.")
+    } finally {
+      setEnviando(false)
+    }
   }
 
   return (
     <div className="w-full max-w-[90%] sm:max-w-[80%] bg-white rounded-2xl border border-gray-200 shadow-md p-5 sm:p-6 relative animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <button 
+      <button
         onClick={onCancelar}
         className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition focus:outline-none"
         title="Cancelar"
@@ -50,77 +61,68 @@ export default function FormularioEmail({ onSucesso, onCancelar }: FormularioEma
       <h3 className="text-[17px] font-bold text-gray-800 mb-4 pr-6">
         Fale com a Secretaria
       </h3>
-      
+
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-1.5">
             <label className="text-[13px] font-semibold text-gray-700">Nome Completo</label>
-            <input 
-              required 
-              type="text" 
-              placeholder="Digite seu nome" 
+            <input
+              required
+              type="text"
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
+              placeholder="Digite seu nome"
               className="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-2.5 text-[14px] text-gray-800 focus:border-red-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-500/20 transition"
             />
           </div>
-          
+
           <div className="space-y-1.5">
-            <label className="text-[13px] font-semibold text-gray-700">RA (Opcional)</label>
-            <input 
-              type="text" 
-              placeholder="Seu Registro Acadêmico" 
-              className="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-2.5 text-[14px] text-gray-800 focus:border-red-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-500/20 transition"
+            <label className="text-[13px] font-semibold text-gray-700">
+              Curso
+            </label>
+            <input
+              type="text"
+              value={cursoSigla ?? "Não informado"}
+              readOnly
+              className="w-full rounded-xl border border-gray-200 bg-gray-100 px-4 py-2.5 text-[14px] text-gray-500 cursor-not-allowed"
             />
           </div>
         </div>
 
         <div className="space-y-1.5">
           <label className="text-[13px] font-semibold text-gray-700">E-mail Institucional ou Pessoal</label>
-          <input 
-            required 
-            type="email" 
-            placeholder="exemplo@fatec.sp.gov.br" 
+          <input
+            required
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="exemplo@fatec.sp.gov.br"
             className="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-2.5 text-[14px] text-gray-800 focus:border-red-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-500/20 transition"
           />
         </div>
 
         <div className="space-y-1.5">
           <label className="text-[13px] font-semibold text-gray-700">Como podemos ajudar?</label>
-          <textarea 
-            required 
+          <textarea
+            required
             rows={3}
-            placeholder="Descreva sua dúvida com detalhes..." 
+            value={texto}
+            onChange={(e) => setTexto(e.target.value)}
+            placeholder="Descreva sua dúvida com detalhes..."
             className="w-full resize-none rounded-xl border border-gray-300 bg-gray-50 px-4 py-2.5 text-[14px] text-gray-800 focus:border-red-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-500/20 transition"
-          ></textarea>
+          />
         </div>
 
-        {/* Câmbio de Envio de Arquivo Seguro */}
-        <div className="space-y-1.5">
-          <label className="text-[13px] font-semibold text-gray-700">Anexar Documento (Opcional)</label>
-          <div className="flex items-center gap-3">
-            <label className="flex cursor-pointer items-center gap-2 rounded-xl border border-gray-300 bg-white px-4 py-2 text-[13px] font-medium text-gray-700 shadow-sm transition hover:bg-gray-50 focus-within:ring-2 focus-within:ring-red-500/20">
-              <Paperclip className="h-4 w-4 text-gray-500" />
-              <span>Escolher Arquivo</span>
-              <input 
-                type="file" 
-                className="hidden" 
-                accept=".pdf, .png, .jpg, .jpeg"
-                onChange={handleFileChange}
-              />
-            </label>
-            
-            {arquivo && (
-              <span className="flex items-center gap-1.5 text-[13px] font-medium text-emerald-600 truncate max-w-[200px]">
-                <FileText className="h-4 w-4 shrink-0" />
-                <span className="truncate">{arquivo.name}</span>
-              </span>
-            )}
-            
-            {erroArquivo && (
-              <span className="text-[12px] font-medium text-red-600">{erroArquivo}</span>
-            )}
-          </div>
-          <p className="text-[11px] text-gray-400">Permitido: PDF, JPG ou PNG (Máx 5MB)</p>
+        <div className="flex items-center gap-2 text-[12px] text-gray-400 bg-gray-50 rounded-xl px-4 py-2.5 border border-gray-200">
+          <FileText className="h-4 w-4 shrink-0 text-gray-400" />
+          <span>Sua dúvida será respondida pela secretaria no prazo de 24 horas.</span>
         </div>
+
+        {erro && (
+          <p className="text-[13px] font-medium text-red-600 bg-red-50 rounded-xl px-4 py-2.5">
+            {erro}
+          </p>
+        )}
 
         <div className="pt-2 flex justify-end gap-3">
           <button
@@ -131,7 +133,7 @@ export default function FormularioEmail({ onSucesso, onCancelar }: FormularioEma
           >
             Cancelar
           </button>
-          
+
           <button
             type="submit"
             disabled={enviando}

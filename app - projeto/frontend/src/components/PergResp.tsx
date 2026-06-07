@@ -22,6 +22,20 @@ type CreatingItem =
   | { type: 'subitem'; topico_id: number; topicoTitle: string }
   | null;
 
+type CursoAPI = {
+  id: string;
+  curso_id: number;
+  title: string;
+  icon: string;
+  categories: {
+    id: string;
+    title: string;
+    tipo: string;
+    conteudo: string;
+    subItems: { id: string; title: string; conteudo: string }[];
+  }[];
+};
+
 const iconMap: { [key: string]: React.ElementType } = {
   Notebook, Globe, MapPin, MonitorPlay,
 };
@@ -64,7 +78,7 @@ export default function GerenciamentoCursos() {
     try {
       setLoading(true);
       const data = await apiFetch(`${API}/api/chatbot/cursos/estruturado/completo`);
-      const cursosFormatados = data.map((curso: any) => ({
+      const cursosFormatados = data.map((curso: CursoAPI) => ({
         ...curso,
         icon: iconMap[curso.icon] || Notebook,
       }));

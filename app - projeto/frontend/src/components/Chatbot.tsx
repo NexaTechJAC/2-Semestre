@@ -23,8 +23,8 @@ export default function Chatbot() {
   const [aguardandoSatisfacao, setAguardandoSatisfacao] = useState(false)
   const [mostrarFormContato, setMostrarFormContato] = useState(false)
   const [topicoAtualNome, setTopicoAtualNome] = useState("")
-  const endOfChatRef = useRef<HTMLDivElement | null>(null)
   const [trilhaAtual, setTrilhaAtual] = useState("")
+  const endOfChatRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     endOfChatRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" })
@@ -34,7 +34,10 @@ export default function Chatbot() {
     fetchCursos()
       .then(setCursos)
       .catch(() => {
-        setHistory(prev => [...prev, { tipo: "bot", texto: "Erro ao conectar com o servidor. Tente novamente mais tarde." }])
+        setHistory(prev => [
+          ...prev,
+          { tipo: "bot", texto: "Erro ao conectar com o servidor. Tente novamente mais tarde." },
+        ])
       })
   }, [])
 
@@ -60,9 +63,8 @@ export default function Chatbot() {
   async function handleTopico(topico: Topico) {
     setLoading(true)
     setTopicoAtualNome(formatarChave(topico.chave))
-    const next: Mensagem[] = [...history, { tipo: "usuario", texto: formatarChave(topico.chave) }]
-
     setTrilhaAtual(`${siglaAtual} > ${formatarChave(topico.chave)}`)
+    const next: Mensagem[] = [...history, { tipo: "usuario", texto: formatarChave(topico.chave) }]
 
     try {
       const data = await fetchResposta(siglaAtual, topico.chave)
@@ -75,6 +77,17 @@ export default function Chatbot() {
       } else if (data.tipo === "simples" && data.resposta) {
         const textoResposta = data.resposta.conteudo || "Sem conteúdo cadastrado."
         next.push({ tipo: "bot", texto: textoResposta })
+
+        // Se tiver documentos vinculados, exibe para download também
+        if (data.documentos && data.documentos.length > 0) {
+          next.push({ tipo: "bot", texto: "Documentos relacionados:" })
+          next.push({
+            tipo: "bot",
+            texto: "",
+            documentos: data.documentos,
+          })
+        }
+
         next.push({ tipo: "bot", texto: "Essa resposta resolveu sua dúvida?" })
         setEtapa({ tipo: "satisfacao" })
         setAguardandoSatisfacao(true)
@@ -109,30 +122,29 @@ export default function Chatbot() {
   }
 
   function handleSubOpcao(opcao: SubOpcao) {
-  setTrilhaAtual(`${siglaAtual} > ${topicoAtualNome} > ${opcao.titulo}`)
+    setTrilhaAtual(`${siglaAtual} > ${topicoAtualNome} > ${opcao.titulo}`)
 
-  setHistory(prev => [
-    ...prev,
-    { tipo: "usuario", texto: opcao.titulo },
-    { tipo: "bot", texto: opcao.conteudo },
-    { tipo: "bot", texto: "Essa resposta resolveu sua dúvida?" },
-  ])
-  setEtapa({ tipo: "satisfacao" })
-  setAguardandoSatisfacao(true)
-}
+    setHistory(prev => [
+      ...prev,
+      { tipo: "usuario", texto: opcao.titulo },
+      { tipo: "bot", texto: opcao.conteudo },
+      { tipo: "bot", texto: "Essa resposta resolveu sua dúvida?" },
+    ])
+    setEtapa({ tipo: "satisfacao" })
+    setAguardandoSatisfacao(true)
+  }
 
   function handleSatisfacao(satisfeito: boolean) {
-
     if (trilhaAtual.trim()) {
-    const logsLocais = JSON.parse(localStorage.getItem("logsTrilhaUsuario") ?? "[]")
-    logsLocais.unshift({
-    id: Date.now(),
-    aluno: "Visitante",
-    trilha: trilhaAtual,
-    satisfacao: satisfeito ? "👍" : "👎",
-    dataHora: new Date().toISOString(),
-     })
-    localStorage.setItem("logsTrilhaUsuario", JSON.stringify(logsLocais.slice(0, 200)))
+      const logsLocais = JSON.parse(localStorage.getItem("logsTrilhaUsuario") ?? "[]")
+      logsLocais.unshift({
+        id: Date.now(),
+        aluno: "Visitante",
+        trilha: trilhaAtual,
+        satisfacao: satisfeito ? "👍" : "👎",
+        dataHora: new Date().toISOString(),
+      })
+      localStorage.setItem("logsTrilhaUsuario", JSON.stringify(logsLocais.slice(0, 200)))
     }
 
     setAguardandoSatisfacao(false)
@@ -148,7 +160,7 @@ export default function Chatbot() {
       setHistory(prev => [
         ...prev,
         { tipo: "usuario", texto: "👎 Não resolveu" },
-        { tipo: "bot", texto: "Lamento que a resposta não tenha sido suficiente. Preencha o formulário abaixo para enviar a sua dúvida (e documentos, se precisar) para a equipe da Secretaria:" },
+        { tipo: "bot", texto: "Lamento que a resposta não tenha sido suficiente. Preencha o formulário abaixo para enviar a sua dúvida para a equipe da Secretaria:" },
       ])
       setMostrarFormContato(true)
     }
@@ -188,7 +200,11 @@ export default function Chatbot() {
       return (
         <div className="flex flex-wrap gap-3 pt-2">
           {topicos.map(topico => (
-            <BotaoOpcao key={topico.id} texto={formatarChave(topico.chave)} onClick={() => handleTopico(topico)} />
+            <BotaoOpcao
+              key={topico.id}
+              texto={formatarChave(topico.chave)}
+              onClick={() => handleTopico(topico)}
+            />
           ))}
         </div>
       )
@@ -282,16 +298,17 @@ export default function Chatbot() {
                       setMostrarFormContato(false)
                       setHistory(prev => [
                         ...prev,
-                        { tipo: "bot", texto: "✅ A sua mensagem e anexos foram enviados com sucesso! A secretaria entrará em contato pelo e-mail informado." }
+                        { tipo: "bot", texto: "✅ Sua mensagem foi enviada com sucesso! A secretaria entrará em contato pelo e-mail informado." },
                       ])
                     }}
                     onCancelar={() => {
                       setMostrarFormContato(false)
                       setHistory(prev => [
                         ...prev,
-                        { tipo: "bot", texto: "Envio cancelado." }
+                        { tipo: "bot", texto: "Envio cancelado." },
                       ])
                     }}
+                    cursoSigla={siglaAtual || undefined}
                   />
                 </div>
               )}
@@ -330,17 +347,32 @@ export default function Chatbot() {
               </h3>
               <ul className="text-[14px] space-y-2.5 font-medium text-[#a31212]">
                 <li>
-                  <a href="https://siga.cps.sp.gov.br/sigaaluno/applogin.aspx" target="_blank" rel="noreferrer" className="hover:underline flex items-center gap-1">
+                  <a
+                    href="https://siga.cps.sp.gov.br/sigaaluno/applogin.aspx"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="hover:underline flex items-center gap-1"
+                  >
                     • Sistema SIGA (Aluno)
                   </a>
                 </li>
                 <li>
-                  <a href="https://www.vestibularfatec.com.br" target="_blank" rel="noreferrer" className="hover:underline flex items-center gap-1">
+                  <a
+                    href="https://www.vestibularfatec.com.br"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="hover:underline flex items-center gap-1"
+                  >
                     • Vestibular FATEC
                   </a>
                 </li>
                 <li>
-                  <a href="https://www.cps.sp.gov.br/" target="_blank" rel="noreferrer" className="hover:underline flex items-center gap-1">
+                  <a
+                    href="https://www.cps.sp.gov.br/"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="hover:underline flex items-center gap-1"
+                  >
                     • Conheça o Site da FATEC
                   </a>
                 </li>
@@ -386,7 +418,7 @@ function ChatMessage({ message }: { message: Mensagem }) {
               {message.documentos.map(doc => (
                 <a
                   key={doc.id}
-                  href={`${doc.caminho_arquivo.split('/').map(encodeURIComponent).join('/')}`}
+                  href={`${import.meta.env.VITE_API_URL ?? "http://localhost:3000"}${doc.caminho_arquivo.split("/").map(encodeURIComponent).join("/")}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 rounded-lg border border-[#a31212]/30 bg-red-50 px-4 py-2.5 text-[14px] font-medium text-[#a31212] transition hover:bg-red-100"

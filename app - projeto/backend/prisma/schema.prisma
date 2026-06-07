@@ -70,13 +70,14 @@ model Documento {
 }
 
 model Usuario {
-  id         Int      @id @default(autoincrement())
-  nome       String
-  email      String   @unique
-  senha_hash String
-  perfil     String   @db.VarChar(20)
-  ativo      Boolean  @default(true)
-  criado_em  DateTime @default(now())
+  id                       Int      @id @default(autoincrement())
+  nome                     String
+  email                    String   @unique
+  senha_hash               String
+  perfil                   String   @db.VarChar(20)
+  ativo                    Boolean  @default(true)
+  troca_senha_obrigatoria  Boolean  @default(false)
+  criado_em                DateTime @default(now())
 
   @@map("usuarios")
 }
