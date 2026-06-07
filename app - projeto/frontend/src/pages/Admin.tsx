@@ -1,50 +1,93 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SidebarADM from "../components/SidebarADM";
+import SidebarSecretaria from "../components/SidebarSecretaria";
 import NavbarADMIN from "../components/NavbarADM";
 import PergResp from "../components/PergResp";
 import LogsNavegacao from "../components/LogsNavegacao";
+import Membros from "../components/Membros";
+import Perguntas from "../components/Perguntas";
+import Dashboard from "../components/Dashboard";
+
+type Perfil = "administrador" | "secretaria";
 
 export default function Admin() {
-  // Estado da Sidebar (aberta/fechada)
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  
-  // ESTADO DO MENU ATIVO AGORA VIVE AQUI!
-  const [activeMenu, setActiveMenu] = useState('cursos');
+  const [activeMenu, setActiveMenu] = useState("");
+  const [perfil, setPerfil] = useState<Perfil>("secretaria");
+
+  useEffect(() => {
+    const perfilSalvo = localStorage.getItem("userRole") as Perfil | null;
+    const perfilFinal: Perfil =
+      perfilSalvo === "administrador" || perfilSalvo === "secretaria"
+        ? perfilSalvo
+        : "secretaria";
+
+    setPerfil(perfilFinal);
+    setActiveMenu(perfilFinal === "administrador" ? "cursos" : "perguntas");
+  }, []);
+
+  function renderConteudo() {
+    // Telas compartilhadas entre admin e secretaria
+    if (activeMenu === "perguntas") return <Perguntas />;
+    if (activeMenu === "dashboard") return <Dashboard />;
+
+    // Telas exclusivas do administrador
+    if (perfil === "administrador") {
+      if (activeMenu === "cursos") return <PergResp />;
+      if (activeMenu === "membros") return <Membros />;
+      if (activeMenu === "logs") return <LogsNavegacao />;
+      if (activeMenu === "configuracoes") return <Configuracoes />;
+    }
+
+    return (
+      <div className="flex items-center justify-center h-48 text-zinc-400">
+        Selecione uma opção no menu.
+      </div>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-gray-50 flex">
-      
-      {/* 1. Passamos o estado e a função para a Sidebar */}
-      <SidebarADM 
-        isOpen={isSidebarOpen} 
-        setIsOpen={setIsSidebarOpen} 
-        activeMenu={activeMenu}
-        setActiveMenu={setActiveMenu}
-      />
 
-      <div className={`transition-all duration-300 ease-in-out flex flex-col min-h-screen w-full ${isSidebarOpen ? 'md:ml-64' : 'ml-0'}`}>
-        
-        {/* 2. Se quiser, você pode até passar o activeMenu para a Navbar 
-            para ela exibir "Cursos", "Membros", etc., de forma dinâmica! */}
+      {perfil === "administrador" ? (
+        <SidebarADM
+          isOpen={isSidebarOpen}
+          setIsOpen={setIsSidebarOpen}
+          activeMenu={activeMenu}
+          setActiveMenu={setActiveMenu}
+        />
+      ) : (
+        <SidebarSecretaria
+          isOpen={isSidebarOpen}
+          setIsOpen={setIsSidebarOpen}
+          activeMenu={activeMenu}
+          setActiveMenu={setActiveMenu}
+        />
+      )}
+
+      <div className={`transition-all duration-300 ease-in-out flex flex-col min-h-screen w-full ${isSidebarOpen ? "md:ml-64" : "ml-0"}`}>
         <NavbarADMIN tituloAtual={activeMenu} />
 
         <div className="p-6 flex-1">
-            
-            {/* 3. A MÁGICA FINAL: Renderizar conteúdos diferentes baseado no clique! */}
-            <div className="rounded-lg bg-white p-6 shadow">
-
-              {/* Lógica simples para trocar o conteúdo */}
-              {activeMenu === 'cursos' &&
-              <PergResp />
-              }
-              {activeMenu === 'membros' && <p>Aqui vai a lista de Alunos/Professores...</p>}
-              {activeMenu === 'dashboard' && <p>Aqui vão os gráficos...</p>}
-              {activeMenu === 'configuracoes' && <p>Aqui vai a tela de opções...</p>}
-              {activeMenu === 'logs' && <LogsNavegacao />}
-            </div>
-
+          <div className="rounded-lg bg-white p-6 shadow">
+            {renderConteudo()}
           </div>
         </div>
+      </div>
     </main>
+  );
+}
+
+// Tela de configurações — placeholder organizado
+function Configuracoes() {
+  return (
+    <div className="space-y-4">
+      <h2 className="text-2xl font-black text-zinc-900 uppercase">
+        Configurações
+      </h2>
+      <div className="rounded-xl border border-zinc-200 bg-zinc-50 px-6 py-10 text-center text-zinc-400">
+        <p className="text-[15px] font-medium">Disponível na próxima sprint.</p>
+      </div>
+    </div>
   );
 }

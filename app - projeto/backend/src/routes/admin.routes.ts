@@ -9,6 +9,7 @@ import {
   listarDocumentos,
   uploadDocumento,
   deletarDocumento,
+  downloadDocumento,
   upload,
 } from "../controllers/documentoController.js";
 import {
@@ -35,6 +36,7 @@ router.delete("/usuarios/:id", removerUsuario);
 // Documentos
 router.get("/documentos", listarDocumentos);
 router.post("/documentos", upload.single("pdf"), uploadDocumento);
+router.get("/documentos/:id/download", downloadDocumento);
 router.delete("/documentos/:id", deletarDocumento);
 
 // Logs

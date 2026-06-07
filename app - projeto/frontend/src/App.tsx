@@ -10,15 +10,14 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
-        <Route 
-          path="/admin" 
+        <Route
+          path="/admin"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute perfisPermitidos={["administrador", "secretaria"]}>
               <Admin />
             </ProtectedRoute>
-          } 
+          }
         />
-
       </Routes>
     </BrowserRouter>
   );

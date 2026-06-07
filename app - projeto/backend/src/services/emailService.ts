@@ -1,7 +1,5 @@
 import { gerarTxt } from "../utils/gerarTxt.js";
-
-// Instância do mailer configurada em infra/
-import { transporter, emailDestino } from "../infra/mailer.js";
+import { transporter, emailDestino, mailerAtivo } from "../infra/mailer.js";
 
 export async function enviarEmailDiario(perguntas: {
   nome_aluno: string;
@@ -10,6 +8,11 @@ export async function enviarEmailDiario(perguntas: {
   texto: string;
   criado_em: Date;
 }[]) {
+  if (!mailerAtivo || !transporter) {
+    console.warn("[EmailService] E-mail não enviado: mailer não configurado.");
+    return;
+  }
+
   const conteudoTxt = gerarTxt(perguntas);
   const dataHoje = new Date().toLocaleDateString("pt-BR");
 

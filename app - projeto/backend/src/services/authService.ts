@@ -20,10 +20,12 @@ export async function autenticar(email: string, password: string) {
     throw new Error("JWT_SECRET não configurado no servidor.");
   }
 
+  const expiresIn = (process.env.JWT_EXPIRES_IN ?? "8h") as jwt.SignOptions["expiresIn"];
+
   const token = jwt.sign(
     { id: usuario.id, perfil: usuario.perfil },
     secret,
-    { expiresIn: "8h" }
+    { expiresIn }
   );
 
   return {

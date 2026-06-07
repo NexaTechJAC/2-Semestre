@@ -47,7 +47,9 @@ export default function Login() {
       setMensagem(`Login realizado com sucesso. Bem-vindo, ${dados.usuario?.nome || dados.name}!`);
 
       // Redirecionar baseado no perfil
-      if (dados.perfil === "administrador" || dados.usuario?.perfil === "administrador") {
+      const perfilUsuario = dados.usuario?.perfil ?? dados.perfil;
+
+      if (perfilUsuario === "administrador" || perfilUsuario === "secretaria") {
         navigate("/admin");
       } else {
         navigate("/");
