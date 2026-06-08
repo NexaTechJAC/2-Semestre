@@ -56,7 +56,7 @@ O desafio consiste na criação de uma **Aplicação Web de Autoatendimento da S
 |------: |---------------|:------:|:------------------------------------------:|  
 | 1      | 📅 04/05/2026 |  ✅    | [Ver Backlog](./documentacao/sprints/sprint_1.md) |  
 | 2      | 📅 26/05/2026 | ✅    | [Ver Backlog](./documentacao/sprints/sprint_2.md) |  
-| 3      | 📅 09/06/2026 | 🚧    | [Ver Backlog](./documentacao/sprints/sprint_3.md) |  
+| 3      | 📅 09/06/2026 | ✅    | [Ver Backlog](./documentacao/sprints/sprint_3.md) |  
 
 </div>  
 
@@ -90,7 +90,7 @@ O desafio consiste na criação de uma **Aplicação Web de Autoatendimento da S
 | #14 | BackEnd: Avaliar as respostas ChatBot | Como aluno, quero avaliar o atendimento, para melhorar a qualidade do serviço. | Média | ✅ | 25/05/2026 | 3 | 3 |
 | #15 | FrontEnd: Avaliar as respostas ChatBot | Como aluno, quero avaliar o atendimento, para melhorar a qualidade do serviço. | Média | ✅ | 20/05/2026 | 3 | 1 |
 | #16 | FrontEnd: Tela de Dashboards | Como aluno, quero avaliar o atendimento, para melhorar a qualidade do serviço. | Alta | ✅ | 04/06/2026 | 3 | 8 |
-| #17 | BackEnd: Tela de Dashboards | Como aluno, quero avaliar o atendimento, para melhorar a qualidade do serviço. | Alta | 🚧 | - | 3 | 13 |
+| #17 | BackEnd: Tela de Dashboards | Como aluno, quero avaliar o atendimento, para melhorar a qualidade do serviço. | Alta | ✅ | 05/06/2026 | 3 | 13 |
 | #18 | FrontEnd: Gerenciamento de Logs | Como administrador, quero acessar os logs, para monitorar o uso do sistema. | Baixa | ✅ | 25/05/2026 | 2 | 3 |
 | #19 | BackEnd: Gerenciamento de Logs | Como administrador, quero acessar os logs, para monitorar o uso do sistema. | Baixa | ✅ | 24/05/2026 | 2 | 8 |
 | #20 | FrontEnd: Tela de Login | Como secretária, quero acessar o sistema com login e senha, para garantir segurança. | Baixa | ✅ | 22/05/2026 | 2 | 5 |
