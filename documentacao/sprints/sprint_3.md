@@ -24,7 +24,7 @@ Durante essa sprint foi desenvolvido toda a parte de gestão e avaliação de eq
 ---
 ## Vídeo do Sistema Desenvolvido na Sprint - 🎥
 
-https://github.com/
+[Sprint 1/](https://youtu.be/cJTpx-UKPug)
 
 ---
 
