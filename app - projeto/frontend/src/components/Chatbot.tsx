@@ -2,7 +2,7 @@ import Cabecalho from "./Cabecalho"
 import { useEffect, useRef, useState } from "react"
 import { RotateCcw, GraduationCap } from "lucide-react"
 
-import { fetchCursos, fetchTopicos, fetchResposta, formatarChave } from "../data/api"
+import { fetchCursos, fetchTopicos, fetchResposta, formatarChave, postAvaliacao } from "../data/api"
 import type { Mensagem, Curso, Topico, SubOpcao, Etapa } from "../types"
 
 import FormularioEmail from "./FormularioEmail"
@@ -134,7 +134,8 @@ export default function Chatbot() {
     setAguardandoSatisfacao(true)
   }
 
-  function handleSatisfacao(satisfeito: boolean) {
+  async function handleSatisfacao(satisfeito: boolean) {
+    // Salva no localStorage para os logs de navegação
     if (trilhaAtual.trim()) {
       const logsLocais = JSON.parse(localStorage.getItem("logsTrilhaUsuario") ?? "[]")
       logsLocais.unshift({
@@ -145,6 +146,24 @@ export default function Chatbot() {
         dataHora: new Date().toISOString(),
       })
       localStorage.setItem("logsTrilhaUsuario", JSON.stringify(logsLocais.slice(0, 200)))
+    }
+
+    // Registra no banco para o dashboard
+    try {
+      const topicoSelecionado = topicos.find(t =>
+        trilhaAtual.includes(formatarChave(t.chave))
+      )
+      const cursoSelecionado = cursos.find(c => c.sigla === siglaAtual)
+
+      if (topicoSelecionado && cursoSelecionado) {
+        await postAvaliacao(
+          topicoSelecionado.id,
+          cursoSelecionado.id,
+          satisfeito ? "gostei" : "nao_gostei"
+        )
+      }
+    } catch {
+      // Falha silenciosa — não interrompe o fluxo do usuário
     }
 
     setAguardandoSatisfacao(false)

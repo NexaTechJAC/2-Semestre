@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
-import { Menu, X, BookOpen, BarChart2, MessageSquare } from "lucide-react";
+import { Menu, X, BookOpen, BarChart2, MessageSquare, LogOut } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import type { LucideIcon } from "lucide-react";
 
 interface SidebarProps {
@@ -15,6 +16,7 @@ export default function SidebarSecretaria({
   activeMenu,
   setActiveMenu,
 }: SidebarProps) {
+  const navigate = useNavigate();
   const [indicatorStyle, setIndicatorStyle] = useState({ top: 0, height: 0, opacity: 0 });
   const navRef = useRef<HTMLDivElement | null>(null);
   const itemRefs = useRef<Record<string, HTMLDivElement | null>>({});
@@ -33,6 +35,13 @@ export default function SidebarSecretaria({
       });
     }
   }, [activeMenu]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("userRole");
+    localStorage.removeItem("usuario");
+    navigate("/");
+  };
 
   const renderMenuItem = (id: string, label: string, Icon: LucideIcon) => {
     const isActive = activeMenu === id;
@@ -100,6 +109,17 @@ export default function SidebarSecretaria({
             {renderMenuItem("perguntas", "Perguntas", MessageSquare)}
             {renderMenuItem("dashboard", "Dashboard", BarChart2)}
           </nav>
+        </div>
+
+        <div className="px-4 pb-6">
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="flex w-full items-center gap-3 rounded-xl bg-red-600 px-3 py-3 text-sm font-bold text-white transition hover:bg-red-700"
+          >
+            <LogOut size={18} />
+            Sair
+          </button>
         </div>
       </aside>
 

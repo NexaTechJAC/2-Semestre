@@ -1,6 +1,5 @@
 import { useState } from "react"
-import { Search, Menu, X, LogOut } from "lucide-react"
-import { useNavigate } from "react-router-dom"
+import { Search, Menu, X } from "lucide-react"
 
 interface NavbarADMINProps {
   tituloAtual?: string;

@@ -2,22 +2,20 @@
 
 ## Sprint - 2️⃣
 
-Durante essa sprint foi desenvolvido toda a parte de gestão e avaliação de equipes ágeis
-
+Durante esta sprint, foi desenvolvido o **Portal de Autoatendimento da Secretaria Acadêmica da Fatec de Jacareí** pelo grupo **Nexatec**. O foco foi a implementação do ChatBot guiado para os alunos, os painéis de gerenciamento para administradores e secretárias, controle de autenticação segura e a estruturação da infraestrutura do sistema.
 
 ---
 
 ## Backlog da Sprint - 🎯
 
-
-|| Rank | BackLog | User Story (US) | Prioridade | Status | Data de Entrega | Estimativa |
+| Rank | BackLog | User Story (US) | Prioridade | Status | Data de Entrega | Estimativa |
 |:----:|---------|-----------------|:----------:|:------:|:---------------:|:----------:|
 | #01 | FrontEnd: Tela ChatBot | Como aluno, quero navegar por menus e perguntas guiadas, para encontrar informações de forma simples e rápida. | Alta | ✅ | 22/05/2026 | 5 |
 | #02 | BackEnd: Tela ChatBot | Como aluno, quero navegar por menus e perguntas guiadas, para encontrar informações de forma simples e rápida. | Alta | ✅ | 24/05/2026 | 8 |
-| #03 | BackEnd: Configurar Banco de Dados Geral | Como aluno, quero navegar por menus e perguntas guiadas, para encontrar informações de forma simples e rápida. | Alta | ✅ | 20/05/2026 | 8 |
+| #03 | BackEnd: Configurar Banco de Dados Geral | Como desenvolvedor, quero configurar o banco de dados geral, para armazenar as informações e dar suporte ao funcionamento do chatbot. | Alta | ✅ | 20/05/2026 | 8 |
 | #04 | FrontEnd: Tela Gerenciamento Perguntas e Respostas | Como administrador, quero organizar perguntas e documentos em um repositório, para garantir respostas padronizadas e confiáveis. | Média | ✅ | 18/05/2026 | 5 |
 | #05 | BackEnd: Tela Perguntas e Respostas | Como administrador, quero organizar perguntas e documentos em um repositório, para garantir respostas padronizadas e confiáveis. | Média | ✅ | 22/05/2026 | 8 |
-| #06 | FrontEnd: AsideBar ADM | Sidebar funcionando conforme alinhado entre o grupo. | Média | ✅ | 22/05/2026 | 3 |
+| #06 | FrontEnd: AsideBar ADM | Como administrador, quero uma barra lateral de navegação (Sidebar), para acessar as funcionalidades do painel administrativo com facilidade. | Média | ✅ | 22/05/2026 | 3 |
 | #18 | FrontEnd: Gerenciamento de Logs | Como administrador, quero acessar os logs, para monitorar o uso do sistema. | Baixa | ✅ | 25/05/2026 | 3 |
 | #19 | BackEnd: Gerenciamento de Logs | Como administrador, quero acessar os logs, para monitorar o uso do sistema. | Baixa | ✅ | 24/05/2026 | 8 |
 | #20 | FrontEnd: Tela de Login | Como secretária, quero acessar o sistema com login e senha, para garantir segurança. | Baixa | ✅ | 22/05/2026 | 5 |
@@ -29,18 +27,16 @@ Durante essa sprint foi desenvolvido toda a parte de gestão e avaliação de eq
 | #28 | Figma: Tela ADM - Logs | Como administrador, quero acessar os logs, para monitorar o uso do sistema. | Alta | ✅ | 24/05/2026 | 1 |
 | #29 | Figma: Tela Secretária – Check E-mail | Como secretária, quero gerenciar perguntas recebidas, para acompanhar e responder solicitações. | Alta | ✅ | 22/05/2026 | 1 |
 | #30 | Figma: Tela ADM - Perguntas e Respostas | Como administrador, quero organizar perguntas e documentos em um repositório, para garantir respostas padronizadas e confiáveis. | Alta | ✅ | 25/05/2026 | 1 |
-<<<<<<< HEAD
 
 ---
-=======
----
 
->>>>>>> 764fc4ecbffb900007757507377a08b72f407cec
 ## Vídeo do Sistema Desenvolvido na Sprint - 🎥
 
-https://github.com/
+O vídeo demonstrando as funcionalidades do portal (como o chatbot de autoatendimento e o painel administrativo) pode ser assistido no link abaixo:
+
+* [Assista ao vídeo da Sprint 2 no YouTube](https://youtu.be/-00aqAXw3OM)
 
 ---
+
 ## Sprint Burndown
 <img src="../imagens/Burndown2ºSem.png" alt="Burndown Chart" width="700"/>
-
