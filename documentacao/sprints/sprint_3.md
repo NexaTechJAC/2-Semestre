@@ -24,9 +24,9 @@ Durante essa sprint foi desenvolvido toda a parte de gestão e avaliação de eq
 ---
 ## Vídeo do Sistema Desenvolvido na Sprint - 🎥
 
-[Sprint 1/](https://youtu.be/cJTpx-UKPug)
+[Sprint 3](https://youtu.be/cJTpx-UKPug)
 
 ---
 
 ## Sprint Burndown
-<img src="../imagens/" alt="Burndown Chart" width="700"/>
+<img src="../imagens/Burndown3.png" alt="Burndown Chart" width="700"/>
