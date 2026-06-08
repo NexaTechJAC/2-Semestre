@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Menu, X, BookOpen, Users, Layout, Settings, History, MessageSquare, BarChart2, LogOut } from "lucide-react";
+import { Menu, X, BookOpen, Users, Layout, History, MessageSquare, BarChart2, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import type { LucideIcon } from "lucide-react";
 
@@ -119,7 +119,6 @@ export default function SidebarADM({
 
           <nav className="space-y-2 px-4 py-6 relative z-10">
             {renderMenuItem('dashboard', 'Dashboard', BarChart2)}
-            {renderMenuItem('configuracoes', 'Configurações', Settings)}
           </nav>
         </div>
 

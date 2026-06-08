@@ -94,8 +94,9 @@ export default function Dashboard() {
   const token = localStorage.getItem("authToken");
 
   const carregarLogs = useCallback(async () => {
+    setLoading(true);
+    setErro(null);
     try {
-      setErro(null);
       const userRole = localStorage.getItem("userRole");
       const rotaLogs = userRole === "administrador"
         ? `${API}/api/admin/logs`
@@ -107,9 +108,9 @@ export default function Dashboard() {
       if (!res.ok) throw new Error("Erro ao carregar dados.");
       const data = await res.json();
       setLogs(data);
+      setLoading(false);
     } catch (err) {
       setErro(err instanceof Error ? err.message : "Erro desconhecido.");
-    } finally {
       setLoading(false);
     }
   }, [token]);
