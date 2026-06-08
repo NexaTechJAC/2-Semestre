@@ -17,8 +17,8 @@ Durante essa sprint foi desenvolvido toda a parte de gestão e avaliação de eq
 | #14 | BackEnd: Avaliar as respostas ChatBot | Como aluno, quero avaliar o atendimento, para melhorar a qualidade do serviço. | Média | ✅ | 25/05/2026 | 3 |
 | #15 | FrontEnd: Avaliar as respostas ChatBot | Como aluno, quero avaliar o atendimento, para melhorar a qualidade do serviço. | Média | ✅ | 20/05/2026 | 1 |
 | #16 | FrontEnd: Tela de Dashboards | Como aluno, quero avaliar o atendimento, para melhorar a qualidade do serviço. | Alta | ✅ | 04/06/2026 | 8 |
-| #17 | BackEnd: Tela de Dashboards | Como aluno, quero avaliar o atendimento, para melhorar a qualidade do serviço. | Alta | 🚧 | - | 13 |
-| #25 | FrontEnd: Tela de Cadastro User | Como secretária, quero acessar o sistema com login e senha, para garantir segurança. | Baixa | ✅ | 27/05/2026 | 3 |
+| #17 | BackEnd: Tela de Dashboards | Como aluno, quero avaliar o atendimento, para melhorar a qualidade do serviço. | Alta | ✅ | 05/06/2026 | 13 |
+| #25 | FrontEnd: Tela de Cadastro User | Como secretária, quero acessar o sistema com login e senha, para garantir segurança. | Baixa | ✅ | 30/06/2026 | 3 |
 | #26 | BackEnd: Tela de Cadastro User | Como secretária, quero acessar o sistema com login e senha, para garantir segurança. | Baixa | ✅ | 01/06/2026 | 5 |
 | #31 | Figma: Tela ADM – Dashboards | Como aluno, quero avaliar o atendimento, para melhorar a qualidade do serviço. | Alta | ✅ | 27/05/2026 | 1 |
 ---
