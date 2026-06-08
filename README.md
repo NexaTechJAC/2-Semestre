@@ -12,6 +12,7 @@
   <a href="#-recursos-do-produto">Recursos do Produto</a> |  
   <a href="#-protótipo-no-figma">Protótipo</a> |  
   <a href="#equipe">Nossa Equipe</a>  
+  <a href="https://trello.com/invite/b/6a0480fd6aebe533b09cc1c4/ATTIa314fbf9395c0da67960ad30fa3178cc1A1E7685/2-dsm-nexatech"> Trello </a>
 </p>  
 
 ---
