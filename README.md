@@ -11,7 +11,7 @@
   <a href="#-entregas-de-sprints">Entrega de Sprints</a> |  
   <a href="#-recursos-do-produto">Recursos do Produto</a> |  
   <a href="#-protótipo-no-figma">Protótipo</a> |  
-  <a href="#equipe">Nossa Equipe</a>  
+  <a href="#equipe">Nossa Equipe</a> |
   <a href="https://trello.com/invite/b/6a0480fd6aebe533b09cc1c4/ATTIa314fbf9395c0da67960ad30fa3178cc1A1E7685/2-dsm-nexatech"> Trello </a>
 </p>  
 
@@ -55,8 +55,8 @@ O desafio consiste na criação de uma **Aplicação Web de Autoatendimento da S
 | Sprint | Entrega       | Status | Relatório |  
 |------: |---------------|:------:|:------------------------------------------:|  
 | 1      | 📅 04/05/2026 |  ✅    | [Ver Backlog](./documentacao/sprints/sprint_1.md) |  
-| 2      | 📅 26/05/2026 | 🚧    | [Ver Backlog](./documentacao/sprints/sprint_2.md) |  
-| 3      | 📅 --/--/---- | `—`    | [Ver Backlog](./documentacao/sprints/sprint_3.md) |  
+| 2      | 📅 26/05/2026 | ✅    | [Ver Backlog](./documentacao/sprints/sprint_2.md) |  
+| 3      | 📅 09/06/2026 | 🚧    | [Ver Backlog](./documentacao/sprints/sprint_3.md) |  
 
 </div>  
 
@@ -84,13 +84,13 @@ O desafio consiste na criação de uma **Aplicação Web de Autoatendimento da S
 | #08 | (removido) | - | - | - | - | - | - |
 | #09 | (removido) | - | - | - | - | - | - |
 | #10 | FrontEnd: Envio de Email Após ChatBot Não Responder | Como aluno, quero enviar minha dúvida à secretaria, para receber resposta oficial. | Média | ✅ | 24/05/2026 | 3 | 1 |
-| #11 | BackEnd: Envio de Email Após ChatBot Não Responder | Como aluno, quero enviar minha dúvida à secretaria, para receber resposta oficial. | Média | 📋 | - | 3 | 5 |
-| #12 | FrontEnd: Tela Secretaria CheckEmail | Como secretária, quero gerenciar perguntas recebidas, para acompanhar e responder solicitações. | Baixa | 📋 | - | 3 | 8 |
-| #13 | BackEnd: Tela Secretaria CheckEmail | Como secretária, quero gerenciar perguntas recebidas, para acompanhar e responder solicitações. | Baixa | 📋 | - | 3 | 13 |
-| #14 | BackEnd: Avaliar as respostas ChatBot | Como aluno, quero avaliar o atendimento, para melhorar a qualidade do serviço. | Média | 📋 | - | 3 | 3 |
-| #15 | FrontEnd: Avaliar as respostas ChatBot | Como aluno, quero avaliar o atendimento, para melhorar a qualidade do serviço. | Média | 📋 | - | 3 | 1 |
-| #16 | FrontEnd: Tela de Dashboards | Como aluno, quero avaliar o atendimento, para melhorar a qualidade do serviço. | Alta | 📋 | - | 3 | 8 |
-| #17 | BackEnd: Tela de Dashboards | Como aluno, quero avaliar o atendimento, para melhorar a qualidade do serviço. | Alta | 📋 | - | 3 | 13 |
+| #11 | BackEnd: Envio de Email Após ChatBot Não Responder | Como aluno, quero enviar minha dúvida à secretaria, para receber resposta oficial. | Média | ✅ | 07/06/2026 | 3 | 5 |
+| #12 | FrontEnd: Tela Secretaria CheckEmail | Como secretária, quero gerenciar perguntas recebidas, para acompanhar e responder solicitações. | Baixa | ✅ | 04/06/2026 | 3 | 8 |
+| #13 | BackEnd: Tela Secretaria CheckEmail | Como secretária, quero gerenciar perguntas recebidas, para acompanhar e responder solicitações. | Baixa | ✅ | 01/06/2026 | 3 | 13 |
+| #14 | BackEnd: Avaliar as respostas ChatBot | Como aluno, quero avaliar o atendimento, para melhorar a qualidade do serviço. | Média | ✅ | 25/05/2026 | 3 | 3 |
+| #15 | FrontEnd: Avaliar as respostas ChatBot | Como aluno, quero avaliar o atendimento, para melhorar a qualidade do serviço. | Média | ✅ | 20/05/2026 | 3 | 1 |
+| #16 | FrontEnd: Tela de Dashboards | Como aluno, quero avaliar o atendimento, para melhorar a qualidade do serviço. | Alta | ✅ | 04/06/2026 | 3 | 8 |
+| #17 | BackEnd: Tela de Dashboards | Como aluno, quero avaliar o atendimento, para melhorar a qualidade do serviço. | Alta | 🚧 | - | 3 | 13 |
 | #18 | FrontEnd: Gerenciamento de Logs | Como administrador, quero acessar os logs, para monitorar o uso do sistema. | Baixa | ✅ | 25/05/2026 | 2 | 3 |
 | #19 | BackEnd: Gerenciamento de Logs | Como administrador, quero acessar os logs, para monitorar o uso do sistema. | Baixa | ✅ | 24/05/2026 | 2 | 8 |
 | #20 | FrontEnd: Tela de Login | Como secretária, quero acessar o sistema com login e senha, para garantir segurança. | Baixa | ✅ | 22/05/2026 | 2 | 5 |
@@ -98,13 +98,13 @@ O desafio consiste na criação de uma **Aplicação Web de Autoatendimento da S
 | #22 | BackEnd: Garantir Segurança de Acesso das Rotas | Como administrador, quero que apenas perfis autorizados acessem rotas administrativas, para proteger dados. | Alta | ✅ | 23/05/2026 | 2 | 8 |
 | #23 | BackEnd: Autenticação JWT com Validação | Como sistema, quero validar tokens antes de liberar acesso, para garantir segurança. | Alta | ✅ | 23/05/2026 | 2 | 13 |
 | #24 | BackEnd: Executar via Docker com PostgreSQL, Backend e Frontend. | Como administrador, quero rodar o sistema em containers, para facilitar implantação. | Alta | ✅ | 18/05/2026 | 2 | 8 |
-| #25 | FrontEnd: Tela de Cadastro User | Como secretária, quero acessar o sistema com login e senha, para garantir segurança. | Baixa | 📋 | - | 3 | 3 |
-| #26 | BackEnd: Tela de Cadastro User | Como secretária, quero acessar o sistema com login e senha, para garantir segurança. | Baixa | 📋 | - | 3 | 5 |
+| #25 | FrontEnd: Tela de Cadastro User | Como secretária, quero acessar o sistema com login e senha, para garantir segurança. | Baixa | ✅ | 27/05/2026 | 3 | 3 |
+| #26 | BackEnd: Tela de Cadastro User | Como secretária, quero acessar o sistema com login e senha, para garantir segurança. | Baixa | ✅ | 01/06/2026 | 3 | 5 |
 | #27 | Figma: Tela ADM - Gerenciamento de Membros | Como administrador, quero gerenciar perfis de acesso, para controlar permissões e responsabilidades. | Alta | ✅ | 22/05/2026 | 2 | 1 |
 | #28 | Figma: Tela ADM - Logs | Como administrador, quero acessar os logs, para monitorar o uso do sistema. | Alta | ✅ | 24/05/2026 | 2 | 1 |
 | #29 | Figma: Tela Secretária – Check E-mail | Como secretária, quero gerenciar perguntas recebidas, para acompanhar e responder solicitações. | Alta | ✅ | 22/05/2026 | 2 | 1 |
 | #30 | Figma: Tela ADM - Perguntas e Respostas | Como administrador, quero organizar perguntas e documentos em um repositório, para garantir respostas padronizadas e confiáveis. | Alta | ✅ | 25/05/2026 | 2 | 1 |
-| #31 | Figma: Tela ADM – Dashboards | Como aluno, quero avaliar o atendimento, para melhorar a qualidade do serviço. | Alta | 🚧 | - | 3 | 1 |
+| #31 | Figma: Tela ADM – Dashboards | Como aluno, quero avaliar o atendimento, para melhorar a qualidade do serviço. | Alta | ✅ | 27/06/2026 | 3 | 1 |
 
 ---
 
